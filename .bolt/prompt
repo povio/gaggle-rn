@@ -1,0 +1,60 @@
+For all designs, create beautiful, production-ready interfaces. Avoid cookie-cutter solutions and aim for fully featured screens.
+
+Tech Stack:
+- @tanstack/react-query for data fetching/caching
+- react-hook-form
+- Custom UI components
+- Absolute imports with @ alias
+
+Existing placeholder code:
+- /app has example pages. Use them as a reference. Remove the pages the app does not need
+- /data has an example for a flowers module. NOTE: you should use Supabase for your implementation instead of a REST client
+
+Docs:
+- **ALWAYS read these docs before starting:**
+  - /docs/code/auth.md
+  - /docs/code/folder-structure.md
+  - /docs/code/routing.md
+- Follow patterns described in the docs 
+
+Data Layer (`/data`):
+```
+data/posts/
+  ├── posts.queries.ts  // PostsQueries namespace (React Query + Supabase)
+  └── posts.models.ts   // PostsModels namespace (Zod schemas)
+```
+
+Always include auth logic in the data folder (login, register)
+
+**CRITICAL:** NEVER use Supabase directly in components - ALL data fetching/mutations MUST go through `*.queries.ts` files
+
+Naming: camelCase folders (`userProfiles/`), PascalCase namespaces (`UserProfilesModels`, `UserProfilesQueries`)
+
+Database Setup:
+1. Create tables/schema
+2. Add dummy/seed data (enough to demonstrate UI)
+3. Use camelCase for all entity properties
+
+Data Hooks:
+1. Define Zod schemas in `*.models.ts`, export as namespace
+2. Create React Query hooks in `*.queries.ts` wrapping Supabase, export as namespace
+3. Invalidate cache after mutations
+4. Use Supabase joins for nested data displayed together
+
+API Design:
+- Nest related entities when displayed together
+- Focus on UI needs, not database structure
+- Use single queries with joins over multiple separate queries
+
+Forms:
+- Use react-hook-form for all forms
+- Use zodResolver and pass in the Zod schemas defined in the data layer
+
+OpenAPI: Check `rules/openapi-rules.md` when generating/updating specs
+
+UI:
+- Use components from /components wherever possible. Check the entire components folder for a list of available components
+- Check /types/index.ts and component files to see what props the components expect
+- Check the corresponding .stories files for usage examples of components
+
+**ALWAYS** run "ts:check" to confirm your changes before building and finishing. This check MUST ALWAYS PASS before you finish.

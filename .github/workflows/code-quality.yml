@@ -1,0 +1,44 @@
+name: Code Quality
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  lint-format-test:
+    name: Lint, format, test
+    runs-on: ubuntu-latest
+    # Let the job post results back to the PR (Sonar, test checks, …)
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      # 1️⃣  Pull the source
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # 3️⃣ Set up Node + cache PNPM store
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: yarn
+
+      # 4️⃣  Install deps (cache hit makes this fast)
+      - name: Install deps
+        run: yarn install --frozen-lockfile
+
+      # 5️⃣  Lint & Format
+      - name: Lint & Format
+        run: yarn lint && yarn format
+
+      # 6️⃣  Type‑check
+      - name: Typecheck
+        run: yarn ts:check
+
+      # 7️⃣  Unit tests (creates coverage/lcov.info)
+      - name: Test
+        run: yarn test

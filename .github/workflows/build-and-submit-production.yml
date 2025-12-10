@@ -1,0 +1,16 @@
+name: Build and Submit production
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  eas-build:
+    name: "Build and Submit"
+    uses: ./.github/workflows/eas-build.yml
+    with:
+      profile: production
+      auto-submit: true
+    secrets:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}

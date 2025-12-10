@@ -1,0 +1,16 @@
+name: Build and Submit staging
+
+on:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  eas-build:
+    name: "Build and Submit"
+    uses: ./.github/workflows/eas-build.yml
+    with:
+      profile: staging
+      auto-submit: true
+    secrets:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}

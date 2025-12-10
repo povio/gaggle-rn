@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "biomejs.biome",
+    "oxc.oxc-vscode",
+    "dbaeumer.vscode-eslint",
+    "expo.vscode-expo-tools",
+    "github.copilot",
+    "github.vscode-github-actions"
+  ]
+}

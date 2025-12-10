@@ -1,0 +1,75 @@
+name: "Create Expo Build"
+
+on:
+  workflow_call:
+    inputs:
+      profile:
+        required: true
+        type: string
+      platform:
+        required: false
+        type: string
+        default: "all"
+      auto-submit:
+        required: false
+        type: boolean
+        default: false
+    secrets:
+      EXPO_TOKEN:
+        required: true
+  workflow_dispatch:
+    inputs:
+      profile:
+        required: true
+        description: "Enter target EAS profile from (eas.json)"
+      platform:
+        required: true
+        type: choice
+        description: "Select target platform"
+        options:
+          - all
+          - ios
+          - android
+      auto-submit:
+        description: "Automatically submit successful build to to GooglePlayConsole/AppStoreConnect?"
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  build:
+    name: "Expo build"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for EXPO_TOKEN
+        run: |
+          if [ -z "${{ secrets.EXPO_TOKEN }}" ]; then
+              echo "You must provide an EXPO_TOKEN secret linked to this project's Expo account in this repo's secrets. Learn more: https://docs.expo.dev/eas-update/github-actions"
+              exit 1
+          fi
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+          cache: yarn
+
+      - name: Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: EAS Build and Submit
+        if: ${{ inputs.auto-submit == 'true' || inputs.auto-submit == true }}
+        run: npx eas-cli build --profile ${{ inputs.profile }} --platform ${{ inputs.platform }} --non-interactive --auto-submit --no-wait
+
+      - name: EAS Build
+        if: ${{ inputs.auto-submit == 'false' || inputs.auto-submit == false }}
+        run: npx eas-cli build --profile ${{ inputs.profile }} --platform ${{ inputs.platform }} --non-interactive --no-wait
