@@ -1,16 +1,15 @@
 import { useFonts } from "expo-font";
 import { SplashScreen } from "expo-router";
-import { type PropsWithChildren, useEffect } from "react";
+import { type PropsWithChildren, useEffect, useState } from "react";
 
-import { STORAGE_KEYS } from "@/constants/storage";
-import { useSecureStorageState } from "@/hooks/useSecureStorageState";
 import { useAuthStore } from "@/modules/auth/stores/authStore";
+import { supabase } from "@/utils/supabase";
 
 void SplashScreen.preventAutoHideAsync();
 
 export default function SplashScreenController({ children }: PropsWithChildren) {
-  const [{ isLoading, value: token }] = useSecureStorageState(STORAGE_KEYS.AUTH_TOKEN);
   const { restore } = useAuthStore();
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
   const [fontsLoaded, fontError] = useFonts({
     "Inter-SemiBold": require("../../../assets/fonts/Inter-SemiBold.otf"),
     "Inter-SemiBold-Italic": require("../../../assets/fonts/Inter-SemiBold-Italic.otf"),
@@ -23,15 +22,24 @@ export default function SplashScreenController({ children }: PropsWithChildren) 
   });
 
   useEffect(() => {
-    if (isLoading || !token) return;
-    restore(token);
-  }, [isLoading, token]);
+    const initAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.access_token) {
+        restore(session.access_token);
+      } else {
+        restore(null);
+      }
+      setIsAuthLoading(false);
+    };
+
+    void initAuth();
+  }, [restore]);
 
   useEffect(() => {
-    if ((fontsLoaded || fontError) && !isLoading) {
+    if ((fontsLoaded || fontError) && !isAuthLoading) {
       SplashScreen.hide();
     }
-  }, [fontsLoaded, fontError, isLoading]);
+  }, [fontsLoaded, fontError, isAuthLoading]);
 
   return <>{children}</>;
 }

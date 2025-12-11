@@ -1,4 +1,8 @@
-/* eslint-env node */
-const { getSentryExpoConfig } = require("@sentry/react-native/metro");
+// metro.config.js
+const { getDefaultConfig } = require("expo/metro-config");
 
-module.exports = getSentryExpoConfig(__dirname);
+const config = getDefaultConfig(__dirname, {
+  isCSSEnabled: true,
+});
+
+module.exports = config;

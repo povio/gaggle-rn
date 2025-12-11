@@ -22,9 +22,7 @@ export namespace UsersModels {
   });
 
   export const profileSetupSchema = z.object({
-    userName: z.string().min(1, "Username is required"),
-    firstName: z.string().optional(),
-    lastName: z.string().optional(),
+    userName: z.string().min(3, "Username is required"),
     streetAddress: z.string().optional(),
     apartment: z.string().optional(),
     city: z.string().optional(),

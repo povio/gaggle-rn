@@ -1,16 +1,14 @@
-import * as React from "react";
-import Svg, { Path, type SvgProps } from "react-native-svg";
+import Svg, { Circle, Path, SvgProps } from 'react-native-svg';
 
 const CloseIcon = (props: SvgProps) => (
-  <Svg
-    width={24}
-    height={24}
-    fill="none"
-    {...props}
-  >
+  <Svg width={53} height={53} viewBox="0 0 53 53" fill="none" {...props}>
+    <Circle cx="26.4658" cy="26.4658" r="26.4658" fill="#04954F" />
     <Path
-      fill="currentColor"
-      d="M17.749 7.463a.857.857 0 1 0-1.212-1.212L12 10.788 7.463 6.25a.857.857 0 0 0-1.212 1.212L10.788 12 6.25 16.537a.857.857 0 1 0 1.212 1.212L12 13.212l4.537 4.537a.857.857 0 1 0 1.212-1.212L13.212 12l4.537-4.537Z"
+      d="M41.9043 15.4388L24.8991 35.8896L15.4385 26.2613"
+      stroke="white"
+      strokeWidth={3.30823}
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
   </Svg>
 );

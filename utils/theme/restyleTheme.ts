@@ -4,6 +4,7 @@ const theme = createTheme({
   colors: {
     transparent: "transparent",
     "elevation-background": "#f9fafbff",
+    "main-theme-active": "#FFD035",
     "elevation-surface-1": "#f3f4f6ff",
     "elevation-outline-1": "#e5e7ebff",
     "elevation-outline-2": "#d1d5dbff",
@@ -65,6 +66,7 @@ const theme = createTheme({
     "pill-filled-border": "#FFD035",
     "pill-outlined-bg": "#E6F5EE",
     "pill-outlined-border": "#04954F",
+    "interactive-active": "#FF6B00",
   },
   borderRadii: {
     none: 0,
@@ -607,6 +609,18 @@ const theme = createTheme({
       borderColorDisabledToggled: "pill-default-border",
       backgroundColorToggled: "pill-outlined-bg",
       borderColorToggled: "pill-outlined-border",
+    },
+    active: {
+      color: "interactive-primary-on",
+      colorPressed: "interactive-primary-on",
+      colorDisabled: "interactive-text-disabled",
+      backgroundColor: "pill-outlined-border",
+      backgroundColorPressed: "pill-outlined-border",
+      backgroundColorDisabled: "interactive-tertiary-idle",
+      borderColor: "pill-outlined-border",
+      borderColorPressed: "pill-outlined-border",
+      borderColorDisabled: "pill-default-border",
+      borderColorDisabledToggled: "pill-default-border",
     },
   },
   textButtonVariants: {

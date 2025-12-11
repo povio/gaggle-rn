@@ -11,7 +11,7 @@ const WaitlistInput = () => {
   const router = useRouter();
 
   const handleGotIt = () => {
-    router.push("/");
+    router.replace("/");
   };
 
   return (

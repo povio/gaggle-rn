@@ -2,7 +2,11 @@ import { useTheme } from "@shopify/restyle";
 import { Tabs } from "expo-router";
 import React from "react";
 
-import { TabBarIcon } from "@/components/navigation/TabBarIcon";
+import BookingsIcon from "@/assets/icons/BookingsIcon";
+import HeartIcon from "@/assets/icons/HeartIcon";
+import HomeIcon from "@/assets/icons/HomeIcon";
+import MessageIcon from "@/assets/icons/MessageIcon";
+import UserIcon from "@/assets/icons/UserIcon";
 import type { Theme } from "@/utils/theme/restyleTheme";
 
 export default function TabLayout() {
@@ -12,10 +16,18 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         animation: "fade",
-        tabBarActiveTintColor: theme.colors["interactive-primary-idle"],
-        tabBarInactiveTintColor: theme.colors["interactive-icon-idle"],
+        headerShown: false,
+        tabBarActiveTintColor: theme.colors["interactive-active"],
+        tabBarInactiveTintColor: "#E5E3EC",
         tabBarStyle: {
-          backgroundColor: theme.colors["elevation-background"],
+          backgroundColor: "#ffffff",
+          height: 78,
+          paddingTop: 12,
+          paddingBottom: 12,
+          paddingLeft: 30,
+          paddingRight: 30,
+          borderRadius: 10,
+          borderColor: "transparent",
         },
         tabBarLabelStyle: {
           fontSize: 12,
@@ -26,23 +38,50 @@ export default function TabLayout() {
         name="index"
         options={{
           title: "Home",
-          tabBarIcon: ({ focused, color }) => (
-            <TabBarIcon
-              name={focused ? "home" : "home-outline"}
-              color={color}
+          tabBarIcon: ({ color }) => (
+            <HomeIcon
+              fill={color}
+              width={25}
+              height={25}
             />
           ),
         }}
       />
       <Tabs.Screen
-        name="flowers"
+        name="bookings"
         options={{
-          title: "Flowers",
-          headerShown: false,
-          tabBarIcon: ({ focused, color }) => (
-            <TabBarIcon
-              name={focused ? "flower" : "flower-outline"}
-              color={color}
+          title: "Bookings",
+          tabBarIcon: ({ color }) => (
+            <BookingsIcon
+              fill={color}
+              width={25}
+              height={25}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="favorites"
+        options={{
+          title: "Favorites",
+          tabBarIcon: ({ color }) => (
+            <HeartIcon
+              fill={color}
+              width={25}
+              height={25}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="messages"
+        options={{
+          title: "Messages",
+          tabBarIcon: ({ color }) => (
+            <MessageIcon
+              fill={color}
+              width={25}
+              height={25}
             />
           ),
         }}
@@ -51,10 +90,11 @@ export default function TabLayout() {
         name="account"
         options={{
           title: "Account",
-          tabBarIcon: ({ focused, color }) => (
-            <TabBarIcon
-              name={focused ? "person" : "person-outline"}
-              color={color}
+          tabBarIcon: ({ color }) => (
+            <UserIcon
+              fill={color}
+              width={25}
+              height={25}
             />
           ),
         }}

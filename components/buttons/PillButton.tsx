@@ -92,8 +92,8 @@ const PillButton = ({
       onPressIn={() => setPressed(true)}
       onPressOut={() => setPressed(false)}
       onPress={onPress}
-      paddingVertical="1-5"
-      paddingHorizontal="2"
+      paddingVertical="1"
+      paddingHorizontal="1-5"
       flexDirection="row"
       gap="interior-icon-to-label-spacing"
       alignSelf="flex-start"

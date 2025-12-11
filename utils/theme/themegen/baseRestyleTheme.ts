@@ -440,6 +440,18 @@ export const baseRestyleConfig: BaseTheme = {
       backgroundColorToggled: "pill-outlined-bg",
       borderColorToggled: "pill-outlined-border",
     },
+    active: {
+      color: "interactive-primary-on",
+      colorPressed: "interactive-primary-on",
+      colorDisabled: "interactive-text-disabled",
+      backgroundColor: "pill-outlined-border",
+      backgroundColorPressed: "pill-outlined-border",
+      backgroundColorDisabled: "interactive-tertiary-idle",
+      borderColor: "pill-outlined-border",
+      borderColorPressed: "pill-outlined-border",
+      borderColorDisabled: "pill-default-border",
+      borderColorDisabledToggled: "pill-default-border",
+    },
   },
   textButtonVariants: {
     dual: {

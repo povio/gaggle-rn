@@ -1,5 +1,5 @@
-import { flowrspotApiUrl } from "@/constants/flowrspot";
+import { gaggleApiUrl } from "@/constants/gaggle";
 
 import { RestClient } from "./restClient";
 
-export const AppRestClient = new RestClient({ config: { baseURL: flowrspotApiUrl } });
+export const AppRestClient = new RestClient({ config: { baseURL: gaggleApiUrl } });

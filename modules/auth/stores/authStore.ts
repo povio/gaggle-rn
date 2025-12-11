@@ -2,6 +2,7 @@ import { create } from "zustand";
 
 import { STORAGE_KEYS } from "@/constants/storage";
 import { removeStorageItemAsync, setStorageItemAsync } from "@/utils/secureStore";
+import { supabase } from "@/utils/supabase";
 
 interface AuthState {
   token?: string | null;
@@ -25,7 +26,8 @@ export const useAuthStore = create<AuthState & AuthActions>((set) => ({
     set({ token, isLoading: false });
     void setStorageItemAsync(STORAGE_KEYS.AUTH_TOKEN, token);
   },
-  logout: () => {
+  logout: async () => {
+    await supabase.auth.signOut();
     set({ token: null, isLoading: false });
     void removeStorageItemAsync(STORAGE_KEYS.AUTH_TOKEN);
   },

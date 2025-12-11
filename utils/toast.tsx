@@ -22,7 +22,7 @@ export const showToast = ({
 
   showToastable({
     message: "",
-    position: "bottom",
+    position: "top",
     swipeDirection: "left",
     offset: parsedOffset,
     renderContent: () => (

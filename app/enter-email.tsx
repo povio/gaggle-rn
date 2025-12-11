@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import React from "react";
+import React, { useState } from "react";
 import { Controller } from "react-hook-form";
 import { View, StyleSheet } from "react-native";
 
@@ -15,9 +15,10 @@ import { useOnboarding } from "@/hooks/useOnboarding";
 
 const EnterEmail = () => {
   const router = useRouter();
-  const { data: emails = [] } = WaitlistQueries.useGetAllEmails();
   const createWaitlistEntry = WaitlistQueries.useCreateWaitlistEntry();
+  const { data: waitlistMap } = WaitlistQueries.useGetAllWaitlistEntries();
   const { setEmailVerified } = useOnboarding();
+  const [isChecking, setIsChecking] = useState(false);
 
   const {
     control,
@@ -25,38 +26,57 @@ const EnterEmail = () => {
     formState: { errors, isValid },
   } = useForm<WaitlistModels.EmailForm>({
     zodSchema: WaitlistModels.emailFormSchema,
-    mode: "onSubmit",
+    mode: "onChange",
   });
 
   const submitEmailRequest = async (data: WaitlistModels.EmailForm) => {
-    if (emails.includes(data.email)) {
-      await setEmailVerified(data.email);
-      router.push("/invitation-code");
+    if (!waitlistMap) return;
+
+    setIsChecking(true);
+
+    const emailInWaitlist = data.email in waitlistMap;
+    const isUsed = waitlistMap[data.email];
+
+    if (!emailInWaitlist) {
+      createWaitlistEntry.mutate(
+        {
+          data: {
+            email: data.email,
+          },
+        },
+        {
+          onSuccess: () => {
+            setIsChecking(false);
+            showToast({
+              variant: "success",
+              message: "Successfully added to waitlist!",
+            });
+            router.replace("/waitlist-input");
+          },
+          onError: () => {
+            setIsChecking(false);
+            showToast({
+              variant: "error",
+              message: "Failed to join waitlist. Please try again.",
+            });
+          },
+        },
+      );
       return;
     }
 
-    createWaitlistEntry.mutate(
-      {
-        data: {
-          email: data.email,
-        },
-      },
-      {
-        onSuccess: () => {
-          showToast({
-            variant: "success",
-            message: "Successfully added to waitlist!",
-          });
-          router.replace("/waitlist-input");
-        },
-        onError: () => {
-          showToast({
-            variant: "error",
-            message: "Failed to join waitlist. Please try again.",
-          });
-        },
-      },
-    );
+    if (isUsed) {
+      setIsChecking(false);
+      showToast({
+        variant: "error",
+        message: "This email is already registered.",
+      });
+      return;
+    }
+
+    await setEmailVerified(data.email);
+    setIsChecking(false);
+    router.push("/invitation-code");
   };
 
   return (
@@ -109,7 +129,7 @@ const EnterEmail = () => {
           width="l"
           variant="secondary"
           disabled={!isValid}
-          loading={createWaitlistEntry.isPending}
+          loading={isChecking || createWaitlistEntry.isPending}
         />
       </Box>     
 

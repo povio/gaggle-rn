@@ -1,7 +1,18 @@
-import { Stack } from "expo-router";
+import { Redirect, Stack } from "expo-router";
+
+import { useAuthStore } from "@/modules/auth/stores/authStore";
 
 export default function AppLayout() {
-  // This renders the navigation stack for all authenticated app routes.
+  const { token, isLoading } = useAuthStore();
+
+  if (isLoading) {
+    return null;
+  }
+
+  if (!token) {
+    return <Redirect href="/" />;
+  }
+
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="(tabs)" />

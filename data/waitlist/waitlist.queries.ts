@@ -5,6 +5,26 @@ import { supabase } from "@/utils/supabase";
 import { WaitlistModels } from "./waitlist.models";
 
 export namespace WaitlistQueries {
+  export const useGetAllWaitlistEntries = () => {
+    return useQuery({
+      queryKey: ["waitlist", "all"],
+      queryFn: async () => {
+        const { data, error } = await supabase
+          .from("waitlist")
+          .select("email, used");
+
+        if (error) throw error;
+
+        const emailMap: Record<string, boolean> = {};
+        for (const entry of data) {
+          emailMap[entry.email] = entry.used;
+        }
+
+        return emailMap;
+      },
+    });
+  };
+
   export const useGetAllEmails = () => {
     return useQuery({
       queryKey: ["waitlist", "emails"],
@@ -50,9 +70,7 @@ export namespace WaitlistQueries {
 
     return useMutation({
       mutationFn: async ({ data }: { data: { email: string } }) => {
-        const code = Math.floor(Math.random() * 10000)
-          .toString()
-          .padStart(4, "0");
+        const code = 1111;
 
         const { data: result, error } = await supabase
           .from("waitlist")
@@ -71,6 +89,7 @@ export namespace WaitlistQueries {
           email: result.email,
           code: result.code,
           createdAt: result.created_at,
+          used: result.used,
         });
       },
       onSuccess: () => {

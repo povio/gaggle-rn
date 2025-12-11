@@ -27,8 +27,6 @@ const ProfileSetup = () => {
     zodSchema: UsersModels.profileSetupSchema,
     defaultValues: {
       userName: "",
-      firstName: "",
-      lastName: "",
       streetAddress: "",
       apartment: "",
       city: "",
@@ -74,6 +72,7 @@ const ProfileSetup = () => {
   };
 
   const onSubmit = (data: UsersModels.ProfileSetupInput) => {
+    console.log("data", data);
     updateProfile.mutate(data, {
       onSuccess: async (response) => {
         await setProfileSetup(response.userId);
@@ -150,32 +149,6 @@ const ProfileSetup = () => {
                   variant="default"
                   onChangeText={onChange}
                   error={error?.message}
-                />
-              )}
-            />
-            <Controller
-              control={control}
-              name="firstName"
-              render={({ field: { onChange, value } }) => (
-                <Input
-                  label=""
-                  placeholder="First Name"
-                  value={value}
-                  variant="default"
-                  onChangeText={onChange}
-                />
-              )}
-            />
-            <Controller
-              control={control}
-              name="lastName"
-              render={({ field: { onChange, value } }) => (
-                <Input
-                  label=""
-                  placeholder="Last Name"
-                  value={value}
-                  variant="default"
-                  onChangeText={onChange}
                 />
               )}
             />

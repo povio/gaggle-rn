@@ -37,7 +37,7 @@ const config: ExpoConfig = {
   },
   plugins: [
     "expo-font",
-    "@sentry/react-native/expo",
+    // "@sentry/react-native/expo",
     "expo-router",
     "expo-secure-store",
     // If you are using EAS Build, you can set the environment variable by creating a secret named SENTRY_AUTH_TOKEN.

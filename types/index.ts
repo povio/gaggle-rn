@@ -53,6 +53,7 @@ export enum PillButtonVariantEnum {
   toggle = "toggle",
   filled = "filled",
   outlined = "outlined",
+  active = "active",
 }
 
 export type PillButtonVariant = keyof typeof PillButtonVariantEnum;

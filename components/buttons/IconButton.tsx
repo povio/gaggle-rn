@@ -18,9 +18,10 @@ export interface IconButtonProps extends PressableProps {
   size?: IconButtonSize;
   loading?: boolean;
   disabled?: boolean;
+  iconColor?: ThemeColor;
 }
 
-const IconButton = ({ variant = "primary", size = "m", icon, disabled, loading, ...rest }: IconButtonProps) => {
+const IconButton = ({ variant = "primary", size = "m", icon, disabled, loading, iconColor, ...rest }: IconButtonProps) => {
   const theme = useTheme<Theme>();
   const [pressed, setPressed] = useState(false);
 
@@ -55,6 +56,7 @@ const IconButton = ({ variant = "primary", size = "m", icon, disabled, loading, 
 
   const getLabelColor = useCallback(
     (pressed: boolean): ThemeColor => {
+      if (iconColor) return iconColor;
       if (!theme?.iconButtonVariants[variant]) {
         return "transparent";
       }
@@ -64,7 +66,7 @@ const IconButton = ({ variant = "primary", size = "m", icon, disabled, loading, 
       if (pressed) return colorPressed;
       return color;
     },
-    [theme, disabled, variant],
+    [theme, disabled, variant, iconColor],
   );
 
   const getHitbox = useCallback((): number => {
