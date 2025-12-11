@@ -30,7 +30,7 @@ export default function TabLayout() {
           borderColor: "transparent",
         },
         tabBarLabelStyle: {
-          fontSize: 12,
+          fontSize: 11,
         },
       }}
     >

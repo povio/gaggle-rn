@@ -128,13 +128,13 @@ const ListItem = ({
           />
           <Box>
             <Text
-              variant="label-2-default"
+              variant="variant-1"
               color={labelColor}
             >
               {label}
             </Text>
             <Text
-              variant="label-3-default"
+              variant="variant-9"
               color={sublabelColor}
             >
               {sublabel}
@@ -145,13 +145,13 @@ const ListItem = ({
       {variant === "single" && (
         <Box>
           <Text
-            variant="label-2-default"
+            variant="variant-1"
             color={labelColor}
           >
             {label}
           </Text>
           <Text
-            variant="label-3-default"
+            variant="variant-9"
             color={sublabelColor}
           >
             {sublabel}

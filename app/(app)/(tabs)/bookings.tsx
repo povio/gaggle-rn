@@ -28,7 +28,7 @@ const Bookings = () => {
       backgroundColor="elevation-background"
     >
       <Text
-        variant="title-1-prominent-1"
+        variant="variant-6-prominent"
         textAlign="center"
         paddingTop="10"
       >
@@ -69,7 +69,7 @@ const Bookings = () => {
           alignItems="center"
         >
           <Text
-            variant="title-1-prominent-1"
+            variant="variant-6-prominent"
             textAlign="center"
             marginBottom="4"
           >
@@ -77,7 +77,7 @@ const Bookings = () => {
           </Text>
 
           <Text
-            variant="body-3-default"
+            variant="variant-4"
             textAlign="center"
             color="text-default-secondary"
           >
@@ -90,6 +90,7 @@ const Bookings = () => {
             label={!isNotified ? "Notify me" : "Keep exploring"}
             onPress={handleNotifyMe}
             width="l"
+            textVariant="variant-2-prominent"
             variant="secondary"
           />
         </Box>

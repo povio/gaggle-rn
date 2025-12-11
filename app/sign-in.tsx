@@ -1,9 +1,9 @@
-import { useRouter } from "expo-router";
-import React from "react";
-import { View, StyleSheet } from "react-native";
-import { ScanFace } from "lucide-react-native";
-import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "expo-router";
+import { ScanFace } from "lucide-react-native";
+import React from "react";
+import { Controller, useForm } from "react-hook-form";
+import { StyleSheet, View } from "react-native";
 
 import Box from "@/components/Box";
 import Button from "@/components/buttons/Button";
@@ -42,8 +42,7 @@ const SignIn = () => {
         router.replace("/(app)/(tabs)");
       },
       onError: (error) => {
-        const errorMessage =
-          error instanceof Error ? error.message : "Failed to sign in";
+        const errorMessage = error instanceof Error ? error.message : "Failed to sign in";
         showToast({
           variant: "error",
           message: errorMessage,
@@ -76,7 +75,10 @@ const SignIn = () => {
         gap="4"
         style={styles.contentContainer}
       >
-        <Text variant="display-3-prominent-1" textAlign="center">
+        <Text
+          variant="variant-6-prominent"
+          textAlign="center"
+        >
           Sign In
         </Text>
 
@@ -109,18 +111,26 @@ const SignIn = () => {
             />
           )}
         />
-        <Button
-          label="Forgot password?"
-          onPress={handleForgotPassword}
-          width="fit"
-          variant="text"
-        />
+        <Box
+          flexDirection="row"
+          width="100%"
+          justifyContent="flex-end"
+          paddingBottom="4"
+        >
+          <Button
+            label="Forgot password?"
+            onPress={handleForgotPassword}
+            width="fit"
+            variant="text"
+          />
+        </Box>
 
         <Button
           label="NEXT"
           onPress={handleSubmit(onSubmit)}
           width="fit"
           variant="secondary"
+          textVariant="variant-2-prominent"
           disabled={!isValid || signIn.isPending}
         />
 
@@ -128,8 +138,14 @@ const SignIn = () => {
           label="ENABLE FACE ID"
           onPress={handleEnableFaceID}
           width="fit"
+          textVariant="variant-2-prominent"
           variant="tertiary"
-          leftElement={<ScanFace size={20} color="#1C1C1C" />}
+          leftElement={
+            <ScanFace
+              size={20}
+              color="#1C1C1C"
+            />
+          }
         />
       </Box>
       <View style={styles.bottomCircle} />

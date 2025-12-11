@@ -1,5 +1,23 @@
 import type { BaseTheme } from "@shopify/restyle";
 
+/**
+ * TEXT VARIANT REFERENCE:
+ *
+ * variant-1: 14px • Medium (500) • Line: 17px
+ * variant-2-prominent: 18px • SemiBold (600) • Line: 27.4px • UPPERCASE
+ * variant-3-prominent: 18px • SemiBold (600) • Line: 24px
+ * variant-4: 14px • Medium (500) • Line: 17px
+ * variant-5-prominent: 26px • SemiBold (600) • Line: 29px
+ * variant-6-prominent: 24px • SemiBold (600) • Line: 29px
+ * variant-7: 15px • Regular (400) • Line: 18px
+ * variant-8: 18px • Medium (500) • Line: 22px
+ * variant-9: 11px • Regular (400) • Line: 11px
+ * variant-10-prominent: 16px • SemiBold (600) • Line: 20px
+ * variant-11: 18px • Medium (500) • Line: 20px
+ * variant-12: 14px • Medium (500) • Line: 15px
+ * variant-13-prominent: 21px • SemiBold (600) • Line: 27px
+ */
+
 // write all your custom non-theme config here
 export const baseRestyleConfig: BaseTheme = {
   colors: {
@@ -14,241 +32,76 @@ export const baseRestyleConfig: BaseTheme = {
     tabletLandscape: 1024,
   },
   textVariants: {
-    "display-1-default": {
-      fontSize: 56,
-      fontFamily: "Syne-Medium",
-      lineHeight: 68,
+    "variant-1": {
+      fontSize: 14,
+      fontFamily: "BalooBhai2-Medium",
+      lineHeight: 17,
     },
-    "display-1-prominent-1": {
-      fontSize: 56,
-      fontFamily: "Syne-SemiBold",
-      lineHeight: 68,
+    "variant-2-prominent": {
+      fontSize: 18,
+      fontFamily: "BalooBhai2-SemiBold",
+      lineHeight: 27.4,
+      textTransform: "uppercase",
     },
-    "display-2-default": {
-      fontSize: 44,
-      fontFamily: "Syne-Medium",
-      lineHeight: 56,
+    "variant-3-prominent": {
+      fontSize: 18,
+      fontFamily: "BalooBhai2-SemiBold",
+      lineHeight: 24,
     },
-    "display-2-prominent-1": {
-      fontSize: 44,
-      fontFamily: "Syne-SemiBold",
-      lineHeight: 56,
+    "variant-4": {
+      fontSize: 14,
+      fontFamily: "BalooBhai2-Medium",
+      lineHeight: 17,
     },
-    "display-3-default": {
-      fontSize: 36,
-      fontFamily: "Syne-Medium",
-      lineHeight: 44,
+    "variant-5-prominent": {
+      fontSize: 26,
+      fontFamily: "BalooBhai2-SemiBold",
+      lineHeight: 29,
     },
-    "display-3-prominent-1": {
-      fontSize: 36,
-      fontFamily: "Syne-SemiBold",
-      lineHeight: 44,
-    },
-    "display-4-default": {
-      fontSize: 32,
-      fontFamily: "Syne-Medium",
-      lineHeight: 40,
-    },
-    "display-4-prominent-1": {
-      fontSize: 32,
-      fontFamily: "Syne-SemiBold",
-      lineHeight: 40,
-    },
-    "title-1-default": {
-      fontSize: 28,
-      fontFamily: "Inter-Regular",
-      lineHeight: 36,
-    },
-    "title-1-prominent-1": {
-      fontSize: 28,
-      fontFamily: "Inter-Medium",
-      lineHeight: 36,
-    },
-    "title-2-default": {
+    "variant-6-prominent": {
       fontSize: 24,
-      fontFamily: "Inter-Regular",
-      lineHeight: 32,
+      fontFamily: "BalooBhai2-SemiBold",
+      lineHeight: 29,
     },
-    "title-2-prominent-1": {
-      fontSize: 24,
-      fontFamily: "Inter-Medium",
-      lineHeight: 32,
-    },
-    "title-3-default": {
-      fontSize: 18,
-      fontFamily: "Inter-Regular",
-      lineHeight: 26,
-    },
-    "title-3-prominent-1": {
-      fontSize: 18,
-      fontFamily: "Inter-Medium",
-      lineHeight: 26,
-    },
-    "title-4-default": {
-      fontSize: 16,
-      fontFamily: "Inter-Regular",
-      lineHeight: 24,
-    },
-    "title-4-prominent-1": {
-      fontSize: 16,
-      fontFamily: "Inter-Medium",
-      lineHeight: 24,
-    },
-    "body-1-default": {
-      fontSize: 18,
-      fontFamily: "Inter-Regular",
-      lineHeight: 28,
-    },
-    "body-1-default-italic": {
-      fontSize: 18,
-      fontFamily: "Inter-Regular-Italic",
-      lineHeight: 28,
-    },
-    "body-1-prominent-1": {
-      fontSize: 18,
-      fontFamily: "Inter-Medium",
-      lineHeight: 28,
-    },
-    "body-1-prominent-1-italic": {
-      fontSize: 18,
-      fontFamily: "Inter-Medium-Italic",
-      lineHeight: 28,
-    },
-    "body-1-prominent-2": {
-      fontSize: 18,
-      fontFamily: "Inter-SemiBold",
-      lineHeight: 28,
-    },
-    "body-1-prominent-2-italic": {
-      fontSize: 18,
-      fontFamily: "Inter-SemiBold-Italic",
-      lineHeight: 28,
-      fontStyle: "italic",
-    },
-    "body-2-default": {
-      fontSize: 16,
-      fontFamily: "Inter-Regular",
-      lineHeight: 28,
-    },
-    "body-2-default-italic": {
-      fontSize: 16,
-      fontFamily: "Inter-Regular-Italic",
-      lineHeight: 28,
-    },
-    "body-2-prominent-1": {
-      fontSize: 16,
-      fontFamily: "Inter-Medium",
-      lineHeight: 28,
-    },
-    "body-2-prominent-1-italic": {
-      fontSize: 16,
-      fontFamily: "Inter-Medium-Italic",
-      lineHeight: 28,
-    },
-    "body-2-prominent-2": {
-      fontSize: 16,
-      fontFamily: "Inter-SemiBold",
-      lineHeight: 28,
-    },
-    "body-2-prominent-2-italic": {
-      fontSize: 16,
-      fontFamily: "Inter-SemiBold-Italic",
-      lineHeight: 28,
-    },
-    "body-3-default": {
+    "variant-7": {
       fontSize: 15,
-      fontFamily: "Inter-Regular",
-      lineHeight: 26,
+      fontFamily: "BalooBhai2-Regular",
+      lineHeight: 18,
     },
-    "body-3-default-italic": {
-      fontSize: 15,
-      fontFamily: "Inter-Regular-Italic",
-      lineHeight: 26,
+    "variant-8": {
+      fontSize: 18,
+      fontFamily: "BalooBhai2-Medium",
+      lineHeight: 22,
     },
-    "body-3-prominent-1": {
-      fontSize: 15,
-      fontFamily: "Inter-Medium",
-      lineHeight: 26,
+    "variant-9": {
+      fontSize: 11,
+      fontFamily: "BalooBhai2-Regular",
+      lineHeight: 11,
     },
-    "body-3-prominent-1-italic": {
-      fontSize: 15,
-      fontFamily: "Inter-Medium-Italic",
-      lineHeight: 26,
-    },
-    "body-3-prominent-2": {
-      fontSize: 15,
-      fontFamily: "Inter-SemiBold",
-      lineHeight: 26,
-    },
-    "body-3-prominent-2-italic": {
-      fontSize: 15,
-      fontFamily: "Inter-SemiBold-Italic",
-      lineHeight: 26,
-    },
-    "body-4-default": {
-      fontSize: 14,
-      fontFamily: "Inter-Regular",
-      lineHeight: 24,
-    },
-    "body-4-default-italic": {
-      fontSize: 14,
-      fontFamily: "Inter-Regular-Italic",
-      lineHeight: 24,
-    },
-    "body-4-prominent-1": {
-      fontSize: 14,
-      fontFamily: "Inter-Medium",
-      lineHeight: 24,
-    },
-    "body-4-prominent-1-italic": {
-      fontSize: 14,
-      fontFamily: "Inter-Medium-Italic",
-      lineHeight: 24,
-    },
-    "body-4-prominent-2": {
-      fontSize: 14,
-      fontFamily: "Inter-SemiBold",
-      lineHeight: 24,
-    },
-    "body-4-prominent-2-italic": {
-      fontSize: 14,
-      fontFamily: "Inter-SemiBold-Italic",
-      lineHeight: 24,
-    },
-    "label-1-default": {
+    "variant-10-prominent": {
       fontSize: 16,
-      fontFamily: "Inter-Medium",
-      lineHeight: 24,
+      fontFamily: "BalooBhai2-SemiBold",
+      lineHeight: 20,
     },
-    "label-1-prominent-1": {
-      fontSize: 16,
-      fontFamily: "Inter-SemiBold",
-      lineHeight: 24,
+    "variant-11": {
+      fontSize: 18,
+      fontFamily: "BalooBhai2-Medium",
+      lineHeight: 20,
     },
-    "label-2-default": {
+    "variant-12": {
       fontSize: 14,
-      fontFamily: "Inter-Medium",
-      lineHeight: 24,
+      fontFamily: "BalooBhai2-Medium",
+      lineHeight: 15,
     },
-    "label-2-prominent-1": {
-      fontSize: 14,
-      fontFamily: "Inter-SemiBold",
-      lineHeight: 24,
-    },
-    "label-3-default": {
-      fontSize: 12,
-      fontFamily: "Inter-Medium",
-      lineHeight: 16,
-    },
-    "label-3-prominent-1": {
-      fontSize: 12,
-      fontFamily: "Inter-SemiBold",
-      lineHeight: 16,
+    "variant-13-prominent": {
+      fontSize: 21,
+      fontFamily: "BalooBhai2-SemiBold",
+      lineHeight: 27,
     },
     defaults: {
       fontSize: 14,
-      fontFamily: "Inter-Regular",
-      lineHeight: 24,
+      fontFamily: "BalooBhai2-Regular",
+      lineHeight: 17,
     },
   },
   buttonVariants: {

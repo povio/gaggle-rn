@@ -46,7 +46,7 @@ export default meta;
 const HomeScreen = () => {
   return (
     <Box>
-      <Text variant="body-1-default">Home Screen</Text>
+      <Text variant="variant-8">Home Screen</Text>
     </Box>
   );
 };

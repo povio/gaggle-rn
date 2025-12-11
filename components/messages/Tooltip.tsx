@@ -246,7 +246,7 @@ const Tooltip = ({ text, position = "bottom", isOpen, onTouch, children }: Toolt
             backgroundColor="interactive-secondary-idle"
           >
             <Text
-              variant="body-4-prominent-1"
+              variant="variant-1"
               color="text-inverted-tertiary"
               style={{ flex: 1, flexWrap: "wrap" }}
             >

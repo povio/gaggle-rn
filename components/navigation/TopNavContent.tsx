@@ -47,7 +47,7 @@ export const CenterNavContent = ({
         />
       </Box>
       <Text
-        variant="title-3-prominent-1"
+        variant="variant-3-prominent"
         color="text-default-primary"
       >
         {routeName}
@@ -109,7 +109,7 @@ export const SideNavContent = ({
           />
         </Box>
         <Text
-          variant="title-3-prominent-1"
+          variant="variant-3-prominent"
           color="text-default-primary"
         >
           {routeName}

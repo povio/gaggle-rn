@@ -23,6 +23,7 @@ export interface ButtonProps {
   leftElement?: ReactNode;
   rightElement?: ReactNode;
   style?: ViewStyle;
+  textVariant?: keyof Theme["textVariants"];
 }
 
 const Button = ({
@@ -36,6 +37,7 @@ const Button = ({
   loading,
   loaderPosition = "right",
   style,
+  textVariant = "variant-1",
   ...rest
 }: ButtonProps) => {
   const theme = useTheme<Theme>();
@@ -135,7 +137,9 @@ const Button = ({
       gap="2"
       style={{
         ...style,
-        padding: calculatedButtonSize,
+        // padding: calculatedButtonSize,
+        paddingHorizontal: calculatedButtonSize * 2,
+        paddingVertical: calculatedButtonSize,
       }}
       {...rest}
     >
@@ -165,7 +169,7 @@ const Button = ({
         </Box>
       )}
       <Text
-        variant="label-2-prominent-1"
+        variant={textVariant || "variant-1"}
         color={labelColor}
       >
         {label}

@@ -58,7 +58,7 @@ export default function Index() {
   }
 
   if (token) {
-    return <Redirect href="/(app)" />;
+    return <Redirect href="/(app)/(tabs)" />;
   }
 
   return <LoadingScreen />;

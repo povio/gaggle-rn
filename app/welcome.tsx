@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
 import React, { useEffect } from "react";
-import { View, StyleSheet, Platform } from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
 
 import Box from "@/components/Box";
 import Button from "@/components/buttons/Button";
@@ -31,12 +31,13 @@ const Welcome = () => {
     router.push("/enter-email");
   };
 
+  const continueAsGuest = () => {};
+
   return (
     <Box
       flex={1}
       backgroundColor="elevation-background"
       justifyContent="space-between"
-      paddingHorizontal="6"
     >
       <View style={styles.topCircle} />
 
@@ -51,20 +52,44 @@ const Welcome = () => {
 
       <Box
         paddingBottom="8"
+        paddingHorizontal="12"
         gap="4"
+        flexDirection="column"
+        justifyContent="center"
+        alignItems="center"
       >
         <Button
           label="Sign up using invitation code"
           onPress={handleSignUpWithCode}
           width="l"
+          size="large"
+          textVariant="variant-11"
           variant="primary"
         />
 
-         <Box alignItems="center" justifyContent="center" width="100%" flexDirection="row">
+        <Box
+          alignItems="center"
+          justifyContent="center"
+          width="100%"
+        >
           <TextButton
             label="JOIN OUR WAITLIST"
             onPress={handleJoinWaitlist}
             variant="secondary"
+            style={styles.textBtn}
+          />
+        </Box>
+
+        <Box
+          alignItems="center"
+          justifyContent="center"
+          width="100%"
+        >
+          <TextButton
+            label="Continue as Guest"
+            onPress={continueAsGuest}
+            variant="secondary"
+            style={styles.textBtn}
           />
         </Box>
       </Box>
@@ -83,6 +108,9 @@ const styles = StyleSheet.create({
     height: 300,
     borderRadius: 150,
     backgroundColor: "#F5C344",
+  },
+  textBtn: {
+    width: "100%",
   },
   bottomCircle: {
     position: "absolute",

@@ -150,13 +150,18 @@ export const FavoritesCards = () => {
                   flexDirection="column"
                   gap="1"
                 >
-                  <Text variant="body-4-default">{item.label}</Text>
+                  <Text variant="variant-3-prominent">{item.label}</Text>
                   <Box
                     flexDirection="row"
                     gap="2"
                   >
-                    <Text variant="body-4-default">{item.provider}</Text>
-                    {item.location && <Text variant="body-4-default">{`| ${item.location}`}</Text>}
+                    <Text variant="variant-4">{item.provider}</Text>
+                    {item.location && (
+                      <Text
+                        variant="variant-4"
+                        color="text-disabled"
+                      >{`| ${item.location}`}</Text>
+                    )}
                   </Box>
                 </Box>
               </Box>

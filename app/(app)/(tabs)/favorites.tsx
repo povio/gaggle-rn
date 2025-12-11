@@ -27,7 +27,7 @@ const Favorites = () => {
     >
       <View>
         <Text
-          variant="title-1-prominent-1"
+          variant="variant-6-prominent"
           textAlign="center"
           paddingTop="10"
         >

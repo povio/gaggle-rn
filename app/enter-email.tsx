@@ -1,17 +1,17 @@
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Controller } from "react-hook-form";
-import { View, StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 import Box from "@/components/Box";
 import Button from "@/components/buttons/Button";
+import Image from "@/components/Image";
 import Input from "@/components/input/Input";
 import Text from "@/components/text/Text";
-import Image from "@/components/Image";
 import { WaitlistModels, WaitlistQueries } from "@/data/waitlist";
 import { useForm } from "@/hooks/useForm";
-import { showToast } from "@/utils/toast";
 import { useOnboarding } from "@/hooks/useOnboarding";
+import { showToast } from "@/utils/toast";
 
 const EnterEmail = () => {
   const router = useRouter();
@@ -96,42 +96,49 @@ const EnterEmail = () => {
         style={styles.contentContainer}
       >
         <Image
-            source={require("@/assets/illustrations/flock_envelope_open.svg")}
-            style={styles.illustration}
-            contentFit="contain"
-          />
+          source={require("@/assets/illustrations/flock_envelope_open.svg")}
+          style={styles.illustration}
+          contentFit="contain"
+        />
 
         <Text
-          variant="display-3-prominent-1"
+          variant="variant-6-prominent"
           textAlign="center"
         >
           Enter your{"\n"}e-mail address
         </Text>
 
-        <Controller
-          control={control}
-          name="email"
-          render={({ field: { onChange, value } }) => (
-            <Input
-              label=""
-              placeholder="Your e-mail"
-              value={value}
-              variant="default"            
-              onChangeText={onChange}
-              error={errors.email?.message}
-            />
-          )}
-        />
+        <Box
+          flexDirection="row"
+          width="100%"
+        >
+          <Controller
+            control={control}
+            name="email"
+            render={({ field: { onChange, value } }) => (
+              <Input
+                label=""
+                placeholder="Your e-mail"
+                value={value}
+                variant="default"
+                onChangeText={onChange}
+                error={errors.email?.message}
+                alignSelf="stretch"
+              />
+            )}
+          />
+        </Box>
 
         <Button
           label="NEXT"
           onPress={handleSubmit(submitEmailRequest)}
-          width="l"
+          width="m"
+          textVariant="variant-2-prominent"
           variant="secondary"
           disabled={!isValid}
           loading={isChecking || createWaitlistEntry.isPending}
         />
-      </Box>     
+      </Box>
 
       <View style={styles.bottomCircle} />
     </Box>
@@ -156,7 +163,7 @@ const styles = StyleSheet.create({
     height: 300,
     borderRadius: 150,
     backgroundColor: "#F5C344",
-    zIndex: -1
+    zIndex: -1,
   },
   yellowCircle: {
     width: 140,

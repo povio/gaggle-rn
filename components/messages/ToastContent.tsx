@@ -66,7 +66,7 @@ const ToastContent = ({
         gap="2"
       >
         <Text
-          variant="label-2-default"
+          variant="variant-1"
           color="interactive-text-on-inverted"
         >
           {message}

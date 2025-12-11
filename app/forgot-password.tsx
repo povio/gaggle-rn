@@ -38,7 +38,7 @@ const ForgotPassword = () => {
         style={styles.contentContainer}
       >
         <Text
-            variant="display-3-prominent-1"
+            variant="variant-6-prominent"
             textAlign="center"
           >
             Enter your email

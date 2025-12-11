@@ -1,10 +1,16 @@
 import React, { useEffect, useRef } from "react";
-import { View, StyleSheet, Dimensions, type NativeScrollEvent, type NativeSyntheticEvent } from "react-native";
-import Animated, { useAnimatedScrollHandler, useSharedValue, useAnimatedStyle, interpolate, type SharedValue } from "react-native-reanimated";
+import { Dimensions, type NativeScrollEvent, type NativeSyntheticEvent, StyleSheet, View } from "react-native";
+import Animated, {
+  type SharedValue,
+  interpolate,
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useSharedValue,
+} from "react-native-reanimated";
 
 import Box from "@/components/Box";
-import Text from "@/components/text/Text";
 import Image from "@/components/Image";
+import Text from "@/components/text/Text";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const CAROUSEL_WIDTH = SCREEN_WIDTH * 0.66;
@@ -82,21 +88,24 @@ export const WelcomeCarousel = () => {
           style={styles.scrollView}
         >
           {CAROUSEL_DATA.map((item, index) => (
-            <View key={index} style={styles.carouselItem}>
+            <View
+              key={index}
+              style={styles.carouselItem}
+            >
               <Image
                 source={item.image}
                 style={styles.illustration}
                 contentFit="contain"
               />
               <Text
-        variant="title-1-default"
-        textAlign="center"
+                variant="variant-6-prominent"
+                textAlign="center"
                 marginBottom="5"
-      >
-        Welcome to Gaggle
-      </Text>
-               <Text
-                variant="body-1-prominent-1"
+              >
+                Welcome to Gaggle
+              </Text>
+              <Text
+                variant="variant-8"
                 textAlign="center"
                 color="text-default-secondary"
               >
@@ -107,14 +116,17 @@ export const WelcomeCarousel = () => {
         </Animated.ScrollView>
       </View>
 
-      
       <Box
         flexDirection="row"
         gap="2"
         marginTop="4"
       >
         {CAROUSEL_DATA.map((_, index) => (
-          <Dot key={index} index={index} scrollX={scrollX} />
+          <Dot
+            key={index}
+            index={index}
+            scrollX={scrollX}
+          />
         ))}
       </Box>
     </>
@@ -123,23 +135,11 @@ export const WelcomeCarousel = () => {
 
 const Dot = ({ index, scrollX }: { index: number; scrollX: SharedValue<number> }) => {
   const animatedStyle = useAnimatedStyle(() => {
-    const inputRange = [
-      (index - 1) * CAROUSEL_WIDTH,
-      index * CAROUSEL_WIDTH,
-      (index + 1) * CAROUSEL_WIDTH,
-    ];
+    const inputRange = [(index - 1) * CAROUSEL_WIDTH, index * CAROUSEL_WIDTH, (index + 1) * CAROUSEL_WIDTH];
 
-    const width = interpolate(
-      scrollX.value,
-      inputRange,
-      [8, 24, 8],
-    );
+    const width = interpolate(scrollX.value, inputRange, [8, 24, 8]);
 
-    const opacity = interpolate(
-      scrollX.value,
-      inputRange,
-      [0.5, 1, 0.5],
-    );
+    const opacity = interpolate(scrollX.value, inputRange, [0.5, 1, 0.5]);
 
     return {
       width,
@@ -147,20 +147,12 @@ const Dot = ({ index, scrollX }: { index: number; scrollX: SharedValue<number> }
     };
   });
 
-  return (
-    <Animated.View
-      style={[
-        styles.dot,
-        animatedStyle,
-        { backgroundColor: "#1F2937" },
-      ]}
-    />
-  );
+  return <Animated.View style={[styles.dot, animatedStyle, { backgroundColor: "#1F2937" }]} />;
 };
 
 const styles = StyleSheet.create({
   carouselContainer: {
-   width: CAROUSEL_WIDTH,
+    width: CAROUSEL_WIDTH,
     height: 572,
   },
   scrollView: {

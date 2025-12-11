@@ -32,7 +32,7 @@ export const ListItem = {
         ListHeaderComponent={
           <Box padding="5">
             <Text
-              variant="body-2-prominent-1"
+              variant="variant-10-prominent"
               mb="4"
             >
               List items
@@ -48,7 +48,7 @@ export const ListItem = {
               keyExtractor={(item) => item.id}
             />
             <Text
-              variant="body-2-prominent-1"
+              variant="variant-10-prominent"
               marginVertical="4"
             >
               List actions
@@ -81,7 +81,7 @@ export const ListItem = {
               keyExtractor={(item) => item.id}
             />
             <Text
-              variant="body-2-prominent-1"
+              variant="variant-10-prominent"
               marginVertical="4"
             >
               Drawer single selection
@@ -99,7 +99,7 @@ export const ListItem = {
               keyExtractor={(item) => item.id}
             />
             <Text
-              variant="body-2-prominent-1"
+              variant="variant-10-prominent"
               marginVertical="4"
             >
               Drawer multiple selection

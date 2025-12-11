@@ -94,7 +94,7 @@ const Slider = ({ title, min, max, unit, onValueChange, disabled }: SliderProps)
       gap="1"
     >
       <Text
-        variant="label-2-prominent-1"
+        variant="variant-1"
         color="text-default-primary"
       >
         {title}
@@ -105,7 +105,7 @@ const Slider = ({ title, min, max, unit, onValueChange, disabled }: SliderProps)
         gap="3"
       >
         <Text
-          variant="label-2-default"
+          variant="variant-1"
           color="text-default-tertiary"
         >
           {min}
@@ -145,7 +145,7 @@ const Slider = ({ title, min, max, unit, onValueChange, disabled }: SliderProps)
                   alignItems="center"
                 >
                   <Text
-                    variant="body-4-prominent-1"
+                    variant="variant-1"
                     color="text-inverted-tertiary"
                   >
                     {`${selectedValue}${unit}`}
@@ -180,7 +180,7 @@ const Slider = ({ title, min, max, unit, onValueChange, disabled }: SliderProps)
           </GestureDetector>
         </Box>
         <Text
-          variant="label-2-default"
+          variant="variant-1"
           color="text-default-tertiary"
         >
           {max}

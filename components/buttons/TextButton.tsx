@@ -15,9 +15,10 @@ export interface TextButtonProps {
   label: string;
   onPress: () => void;
   disabled?: boolean;
+  textVariant?: keyof Theme["textVariants"];
 }
 
-const TextButton = ({ variant = "primary", icon, label, disabled, ...rest }: TextButtonProps) => {
+const TextButton = ({ variant = "primary", icon, label, disabled, textVariant = "variant-1", ...rest }: TextButtonProps) => {
   const theme = useTheme<Theme>();
   const [pressed, setPressed] = useState(false);
 
@@ -96,7 +97,7 @@ const TextButton = ({ variant = "primary", icon, label, disabled, ...rest }: Tex
         </Box>
       )}
       <Text
-        variant="label-2-prominent-1"
+        variant={textVariant}
         color={labelColor}
       >
         {label}

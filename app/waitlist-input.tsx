@@ -1,11 +1,11 @@
 import { useRouter } from "expo-router";
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 import Box from "@/components/Box";
 import Button from "@/components/buttons/Button";
-import Text from "@/components/text/Text";
 import Image from "@/components/Image";
+import Text from "@/components/text/Text";
 
 const WaitlistInput = () => {
   const router = useRouter();
@@ -29,11 +29,11 @@ const WaitlistInput = () => {
         alignItems="center"
         gap="6"
       >
-<Image
-            source={require("@/assets/illustrations/flock_checklist_1.svg")}
-            style={styles.illustration}
-            contentFit="contain"
-          />
+        <Image
+          source={require("@/assets/illustrations/flock_checklist_1.svg")}
+          style={styles.illustration}
+          contentFit="contain"
+        />
 
         <Box
           gap="8"
@@ -41,14 +41,14 @@ const WaitlistInput = () => {
           paddingHorizontal="4"
         >
           <Text
-            variant="display-3-prominent-1"
+            variant="variant-6-prominent"
             textAlign="center"
           >
             You've been added{"\n"}to the waitlist.
           </Text>
 
           <Text
-            variant="label-1-default"
+            variant="variant-4"
             textAlign="center"
             color="text-default-secondary"
           >
@@ -56,11 +56,12 @@ const WaitlistInput = () => {
           </Text>
 
           <Button
-          label="GOT IT"
-          onPress={handleGotIt}
-          width="l"
-          variant="secondary"
-        />
+            label="GOT IT"
+            onPress={handleGotIt}
+            width="l"
+            textVariant="variant-2-prominent"
+            variant="secondary"
+          />
         </Box>
       </Box>
 
@@ -87,7 +88,7 @@ const styles = StyleSheet.create({
     height: 300,
     borderRadius: 150,
     backgroundColor: "#F5C344",
-    zIndex: -1
+    zIndex: -1,
   },
   yellowCircle: {
     width: 140,

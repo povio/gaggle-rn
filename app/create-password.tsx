@@ -1,15 +1,15 @@
 import { useRouter } from "expo-router";
-import React, { useState, useEffect } from "react";
-import { View, StyleSheet } from "react-native";
 import { ScanFace } from "lucide-react-native";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, View } from "react-native";
 
 import Box from "@/components/Box";
 import Button from "@/components/buttons/Button";
 import Input from "@/components/input/Input";
 import Text from "@/components/text/Text";
 import { UsersQueries } from "@/data/users";
-import { showToast } from "@/utils/toast";
 import { useOnboarding } from "@/hooks/useOnboarding";
+import { showToast } from "@/utils/toast";
 
 const CreatePassword = () => {
   const router = useRouter();
@@ -63,7 +63,7 @@ const CreatePassword = () => {
             message: errorMessage,
           });
         },
-      }
+      },
     );
   };
 
@@ -82,25 +82,25 @@ const CreatePassword = () => {
     >
       <View style={styles.topCircle} />
 
-     <Box
+      <Box
         flex={1}
         justifyContent="flex-start"
         alignItems="center"
-        gap="6"
+        gap="4"
         style={styles.contentContainer}
       >
         <Box marginBottom="4">
           <Text
-            variant="display-3-prominent-1"
+            variant="variant-2-prominent"
             textAlign="center"
           >
-            Create <Text variant="display-3-prominent-1" style={styles.yellowText}>Password</Text>
+            Create Password
           </Text>
         </Box>
 
         {error && (
           <Text
-            variant="label-2-default"
+            variant="variant-1"
             textAlign="center"
             color="informational-error"
             marginBottom="4"
@@ -125,6 +125,7 @@ const CreatePassword = () => {
           label="NEXT"
           onPress={handleCreateUser}
           width="fit"
+          textVariant="variant-2-prominent"
           variant="secondary"
           disabled={!isValidPassword}
           loading={createUser.isPending}
@@ -135,7 +136,13 @@ const CreatePassword = () => {
           onPress={handleEnableFaceID}
           width="fit"
           variant="tertiary"
-          leftElement={<ScanFace size={20} color="#1C1C1C" />}
+          textVariant="variant-2-prominent"
+          leftElement={
+            <ScanFace
+              size={20}
+              color="#1C1C1C"
+            />
+          }
         />
       </Box>
 
@@ -144,24 +151,11 @@ const CreatePassword = () => {
         alignItems="center"
       >
         <Text
-          variant="label-3-default"
           textAlign="center"
           color="text-default-secondary"
         >
-          By continuing, you agree to our{" "}
-          <Text
-            variant="label-3-default"
-            style={styles.link}
-          >
-            Terms of Services
-          </Text>
-          {"\n"}and that you have read our{" "}
-          <Text
-            variant="label-3-default"
-            style={styles.link}
-          >
-            Privacy Policy
-          </Text>
+          By continuing, you agree to our <Text style={styles.link}>Terms of Services</Text>
+          {"\n"}and that you have read our <Text style={styles.link}>Privacy Policy</Text>
         </Text>
       </Box>
 
@@ -196,6 +190,7 @@ const styles = StyleSheet.create({
   link: {
     textDecorationLine: "underline",
     color: "#1F2937",
+    fontWeight: 600,
   },
   contentContainer: {
     marginTop: 100,

@@ -11,7 +11,7 @@ const Counter = () => {
 
   return (
     <Box gap="3">
-      <Text variant="body-4-prominent-1">Counter</Text>
+      <Text variant="variant-1">Counter</Text>
       <Box>
         <Text>Zustand count: {count}</Text>
         <Box

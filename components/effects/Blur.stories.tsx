@@ -62,7 +62,7 @@ export const Blur = {
           borderRadius="5xl"
           overflow="hidden"
         >
-          <Text variant="title-1-prominent-1">Hello, my container is blurring contents underneath!</Text>
+          <Text variant="variant-6-prominent">Hello, my container is blurring contents underneath!</Text>
         </BlurredBox>
       </>
     );

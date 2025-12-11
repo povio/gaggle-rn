@@ -1,8 +1,8 @@
-import {StyleSheet, ScrollView } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 
 import Box from "@/components/Box";
-import Text from "@/components/text/Text";
 import Image from "@/components/Image";
+import Text from "@/components/text/Text";
 
 const iconMap: Record<string, any> = {
   "basketball.svg": require("@/assets/illustrations/basketball.svg"),
@@ -20,43 +20,43 @@ const iconMap: Record<string, any> = {
 export const Activities = [
   {
     label: "Basketball",
-    icon: "basketball.svg"
+    icon: "basketball.svg",
   },
   {
     label: "Dancing",
-    icon: "dance.svg"
+    icon: "dance.svg",
   },
   {
     label: "Culinary",
-    icon: "culinary.svg"
+    icon: "culinary.svg",
   },
   {
     label: "Equestrian",
-    icon: "equstrian.svg"
+    icon: "equstrian.svg",
   },
   {
     label: "Camping",
-    icon: "camp.svg"
+    icon: "camp.svg",
   },
   {
     label: "Gymnastics",
-    icon: "gymnastics.svg"
+    icon: "gymnastics.svg",
   },
   {
     label: "Learning",
-    icon: "knowledge.svg"
+    icon: "knowledge.svg",
   },
   {
     label: "Lacrosse",
-    icon: "lacrosee.svg"
+    icon: "lacrosee.svg",
   },
   {
     label: "Martial Arts",
-    icon: "martial_arts.svg"
+    icon: "martial_arts.svg",
   },
-   {
+  {
     label: "Swimming",
-    icon: "swimming.svg"
+    icon: "swimming.svg",
   },
 ];
 
@@ -82,41 +82,47 @@ export const ActivityPreviews = () => {
               paddingRight="10"
               marginRight="4"
             >
-              <Box flex={1} justifyContent="center" alignItems="center" width={50} height={50} style={styles.activityIconContainer} borderRadius='full'>
+              <Box
+                flex={1}
+                justifyContent="center"
+                alignItems="center"
+                width={50}
+                height={50}
+                style={styles.activityIconContainer}
+                borderRadius="full"
+              >
                 <Image
                   source={iconMap[item.icon]}
                   style={styles.activityIcon}
                   contentFit="contain"
                 />
               </Box>
-              <Text>
-                {item.label}
-              </Text>
+              <Text variant="variant-11">{item.label}</Text>
             </Box>
-          )
+          );
         })}
       </ScrollView>
     </Box>
-  )
+  );
 };
 
 const styles = StyleSheet.create({
   scrollContent: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 8,
-    alignItems: 'center',
+    alignItems: "center",
     //padding: 8,
     paddingHorizontal: 8,
-    paddingVertical: 14
+    paddingVertical: 14,
   },
   activityIcon: {
     width: 35,
     height: 35,
   },
   activityContainer: {
-     boxShadow: "rgba(0, 0, 0, 0.1) 0px 6px 15px 1px",
+    boxShadow: "rgba(0, 0, 0, 0.1) 0px 6px 15px 1px",
   },
   activityIconContainer: {
     boxShadow: "rgba(0, 0, 0, 0.1) 0px 3px 10px 2px",
-  }
+  },
 });

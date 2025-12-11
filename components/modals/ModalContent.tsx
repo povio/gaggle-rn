@@ -29,8 +29,8 @@ export const TextOnlyModalContent = ({
       paddingBottom="8"
       paddingRight="8"
     >
-      <Text variant="title-4-prominent-1">{title}</Text>
-      <Text variant="body-3-default">{text}</Text>
+      <Text variant="variant-10-prominent">{title}</Text>
+      <Text variant="variant-7">{text}</Text>
       <Box gap="4">
         <Button
           variant="secondary"
@@ -82,8 +82,8 @@ export const TextImageModalContent = ({
           contentFit="fill"
         />
       </Box>
-      <Text variant="title-4-prominent-1">{title}</Text>
-      <Text variant="body-3-default">{text}</Text>
+      <Text variant="variant-10-prominent">{title}</Text>
+      <Text variant="variant-7">{text}</Text>
       <Box gap="4">
         <Button
           variant="secondary"
@@ -126,8 +126,8 @@ export const InputModalContent = ({
       paddingRight="8"
     >
       <Box gap="4">
-        <Text variant="title-4-prominent-1">{title}</Text>
-        <Text variant="body-3-default">{text}</Text>
+        <Text variant="variant-10-prominent">{title}</Text>
+        <Text variant="variant-7">{text}</Text>
       </Box>
       <Box
         gap="8"
@@ -149,7 +149,7 @@ export const InputModalContent = ({
             checked={checkboxValue}
             onChange={onCheckboxChange}
           />
-          <Text variant="label-1-default">{checkboxLabel}</Text>
+          <Text variant="variant-10-prominent">{checkboxLabel}</Text>
         </Box>
         <Box gap="4">
           <Button
@@ -185,7 +185,7 @@ export const ImageOkayModalContent = ({
       gap="4"
     >
       <Text
-        variant="display-3-default"
+        variant="variant-6-prominent"
         textAlign="center"
       >
         {title}
@@ -200,7 +200,7 @@ export const ImageOkayModalContent = ({
         />
       </Box>
       <Text
-        variant="body-3-default"
+        variant="variant-7"
         textAlign="center"
       >
         {text}

@@ -42,7 +42,7 @@ const Calendar = ({ date, setDate, label, ...rest }: CalendarProps & Partial<typ
         paddingHorizontal="2"
       >
         <Text
-          variant="label-2-prominent-1"
+          variant="variant-1"
           color="text-default-primary"
         >
           {label}

@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
-import React, { useState, useRef, useEffect } from "react";
-import { View, StyleSheet, TextInput as RNTextInput } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { TextInput as RNTextInput, StyleSheet, View } from "react-native";
 
 import Box from "@/components/Box";
 import Button from "@/components/buttons/Button";
@@ -8,8 +8,8 @@ import TextButton from "@/components/buttons/TextButton";
 import Image from "@/components/Image";
 import Text from "@/components/text/Text";
 import { WaitlistQueries } from "@/data/waitlist";
-import { showToast } from "@/utils/toast";
 import { useOnboarding } from "@/hooks/useOnboarding";
+import { showToast } from "@/utils/toast";
 
 const InvitationCode = () => {
   const router = useRouter();
@@ -33,9 +33,9 @@ const InvitationCode = () => {
   }, []);
 
   useEffect(() => {
-    setIsCodeValid(code.every(v => /^\d+$/.test(v)));
-  }, [code])
-  
+    setIsCodeValid(code.every((v) => /^\d+$/.test(v)));
+  }, [code]);
+
   const handleCodeChange = (index: number, value: string) => {
     if (value.length > 1) {
       value = value.slice(-1);
@@ -52,12 +52,12 @@ const InvitationCode = () => {
   };
 
   const handleKeyPress = (index: number, key: string) => {
-  if (!/^\d$/.test(key) && key !== "Backspace") return;
+    if (!/^\d$/.test(key) && key !== "Backspace") return;
 
-  if (key === "Backspace" && !code[index] && index > 0) {
-    inputRefs.current[index - 1]?.focus();
-  }
-};
+    if (key === "Backspace" && !code[index] && index > 0) {
+      inputRefs.current[index - 1]?.focus();
+    }
+  };
 
   const handleNext = async () => {
     if (!email) {
@@ -89,7 +89,7 @@ const InvitationCode = () => {
                   message: "Verification failed",
                 });
               },
-            }
+            },
           );
         },
         onError: () => {
@@ -99,7 +99,7 @@ const InvitationCode = () => {
             message: "Invalid invitation code",
           });
         },
-      }
+      },
     );
   };
 
@@ -128,7 +128,7 @@ const InvitationCode = () => {
         </Box>
 
         <Text
-          variant="title-1-prominent-1"
+          variant="variant-6-prominent"
           textAlign="center"
           marginBottom="2"
         >
@@ -137,7 +137,6 @@ const InvitationCode = () => {
 
         {email && (
           <Text
-            variant="label-2-default"
             textAlign="center"
             color="text-default-secondary"
             marginBottom="6"
@@ -148,7 +147,7 @@ const InvitationCode = () => {
 
         {error && (
           <Text
-            variant="label-2-default"
+            variant="variant-1"
             textAlign="center"
             color="informational-error"
             marginBottom="4"
@@ -172,8 +171,8 @@ const InvitationCode = () => {
               style={styles.codeInput}
               value={digit}
               onChangeText={(value) => {
-    if (/^\d$/.test(value)) handleCodeChange(index, value);
-  }}
+                if (/^\d$/.test(value)) handleCodeChange(index, value);
+              }}
               onKeyPress={({ nativeEvent }) => handleKeyPress(index, nativeEvent.key)}
               keyboardType="number-pad"
               maxLength={1}
@@ -182,20 +181,34 @@ const InvitationCode = () => {
           ))}
         </Box>
 
-        <Box alignItems="center" justifyContent="center" width="100%" flexDirection="row" marginBottom="6">
+        <Box
+          alignItems="center"
+          justifyContent="center"
+          width="100%"
+          flexDirection="row"
+          marginBottom="6"
+        >
           <TextButton
             label="Didn't receive the code?"
-             onPress={() => router.push("/code-resent")}
+            onPress={() => router.push("/code-resent")}
             variant="secondary"
+            textVariant="variant-10-prominent"
           />
         </Box>
 
-        <Box alignItems="center" justifyContent="center" width="100%" flexDirection="row" marginBottom="6">
-        <Button
+        <Box
+          alignItems="center"
+          justifyContent="center"
+          width="100%"
+          flexDirection="row"
+          marginBottom="6"
+        >
+          <Button
             label="NEXT"
             onPress={handleNext}
+            textVariant="variant-2-prominent"
             width="m"
-           disabled={!isCodeValid}
+            disabled={!isCodeValid}
             loading={verifyCode.isPending || markCodeAsUsed.isPending}
             variant="secondary"
           />
@@ -207,24 +220,11 @@ const InvitationCode = () => {
         alignItems="center"
       >
         <Text
-          variant="label-3-default"
           textAlign="center"
           color="text-default-secondary"
         >
-          By continuing, you agree to our{" "}
-          <Text
-            variant="label-3-default"
-            style={styles.link}
-          >
-            Terms of Services
-          </Text>
-          {"\n"}and that you have read our{" "}
-          <Text
-            variant="label-3-default"
-            style={styles.link}
-          >
-            Privacy Policy
-          </Text>
+          By continuing, you agree to our <Text style={styles.link}>Terms of Services</Text>
+          {"\n"}and that you have read our <Text style={styles.link}>Privacy Policy</Text>
         </Text>
       </Box>
     </Box>
@@ -260,6 +260,7 @@ const styles = StyleSheet.create({
   link: {
     textDecorationLine: "underline",
     color: "#1F2937",
+    fontWeight: 600,
   },
 });
 

@@ -31,6 +31,7 @@ export interface InputProps extends BoxProps<Theme> {
   tooltipText?: string;
   onPress?: () => void;
   limit?: number;
+  textVariant?: keyof Theme["textVariants"];
 }
 
 const Input = ({
@@ -50,6 +51,7 @@ const Input = ({
   tooltipText,
   onPress,
   limit,
+  textVariant = "variant-7",
   ...rest
 }: InputProps) => {
   const theme = useTheme<Theme>();
@@ -100,7 +102,7 @@ const Input = ({
         alignItems="center"
       >
         <Text
-          variant="label-2-prominent-1"
+          variant="variant-1"
           color={labelColor}
         >
           {label}
@@ -122,7 +124,7 @@ const Input = ({
       </Box>
       {helperText && (
         <Text
-          variant="label-2-default"
+          variant="variant-7"
           color="text-default-secondary"
         >
           {helperText}
@@ -138,10 +140,10 @@ const Input = ({
         borderWidth={1}
         borderRadius={variant === "default" ? "rounding-button-rounding" : "rounding-input-rounding"}
         height={type === "textArea" ? 96 : undefined}
-        paddingHorizontal={variant === "default" ? "3" : "height-height-m"}
+        paddingHorizontal={variant === "default" ? "5" : "height-height-m"}
         paddingVertical={
           variant === "default"
-            ? "3"
+            ? "4"
             : type === "textArea"
               ? "height-height-s"
               : Platform.select({ default: undefined, ios: "height-height-m" })
@@ -161,11 +163,15 @@ const Input = ({
           placeholder={placeholder}
           // placeholderTextColor={theme.colors["text-default-tertiary"]}
           placeholderTextColor="#111827ff"
-          style={{
-            color: theme.colors[inputColor],
-            fontSize: theme.textVariants["label-1-default"].fontSize,
-            outline: "none",
-          } as any}
+          style={
+            {
+              color: theme.colors[inputColor],
+              fontSize: theme.textVariants[textVariant].fontSize,
+              fontFamily: theme.textVariants[textVariant].fontFamily,
+              lineHeight: theme.textVariants[textVariant].lineHeight,
+              outline: "none",
+            } as any
+          }
           multiline={type === "textArea"}
           textAlignVertical={type === "textArea" ? "top" : "auto"}
           {...rest}
@@ -193,7 +199,7 @@ const Input = ({
         <Box flexShrink={1}>
           {error && (
             <Text
-              variant="label-3-default"
+              variant="variant-9"
               color="informational-error"
             >
               {error}
@@ -203,7 +209,7 @@ const Input = ({
         {!!limit && (
           <Box flexShrink={0}>
             <Text
-              variant="label-3-default"
+              variant="variant-9"
               color={error ? "informational-error" : "text-default-tertiary"}
             >
               {currentValueLength}/{limit}

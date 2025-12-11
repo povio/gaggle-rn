@@ -23,7 +23,7 @@ export const ProvidersList = [
   {
     label: "School of Painting",
     icon: "https://placehold.co/300x200/000000/FFCF48/png",
-    type: "School of learning",
+    type: "Painting",
   },
   {
     label: "Lorem Ipsum",
@@ -46,15 +46,21 @@ export const ProviderCards = () => {
               key={index}
               flexDirection="column"
               gap="4"
-              justifyContent="space-between"
+              justifyContent="flex-start"
               alignItems="center"
               style={styles.activityContainer}
               borderRadius="l"
               marginRight="4"
+              paddingVertical="2"
               width={180}
               height={300}
             >
-              <Text padding="4">{item.type}</Text>
+              <Text
+                variant="variant-13-prominent"
+                padding="2"
+              >
+                {item.type}
+              </Text>
               <Box
                 width="100%"
                 height={150}
@@ -67,7 +73,7 @@ export const ProviderCards = () => {
                   contentPosition="center"
                 />
               </Box>
-              <Text>{item.label}</Text>
+              <Text variant="variant-10-prominent">{item.label}</Text>
             </Box>
           );
         })}

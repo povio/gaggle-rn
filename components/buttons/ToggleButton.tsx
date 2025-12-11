@@ -126,7 +126,7 @@ const ToggleButton = ({
         </Box>
       )}
       <Text
-        variant="label-2-prominent-1"
+        variant="variant-1"
         color={labelColor}
       >
         {label}

@@ -37,7 +37,7 @@ const CodeResent = () => {
         alignItems="center"
       >
         <Text
-          variant="title-1-prominent-1"
+          variant="variant-6-prominent"
           textAlign="center"
           marginBottom="4"
         >
@@ -45,7 +45,7 @@ const CodeResent = () => {
         </Text>
 
         <Text
-          variant="body-3-default"
+          variant="variant-7"
           textAlign="center"
           color="text-default-secondary"
         >

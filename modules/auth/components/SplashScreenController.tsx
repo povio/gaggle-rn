@@ -11,14 +11,11 @@ export default function SplashScreenController({ children }: PropsWithChildren) 
   const { restore } = useAuthStore();
   const [isAuthLoading, setIsAuthLoading] = useState(true);
   const [fontsLoaded, fontError] = useFonts({
-    "Inter-SemiBold": require("../../../assets/fonts/Inter-SemiBold.otf"),
-    "Inter-SemiBold-Italic": require("../../../assets/fonts/Inter-SemiBold-Italic.otf"),
-    "Inter-Medium": require("../../../assets/fonts/Inter-Medium.otf"),
-    "Inter-Medium-Italic": require("../../../assets/fonts/Inter-Medium-Italic.otf"),
-    "Inter-Regular": require("../../../assets/fonts/Inter-Regular.otf"),
-    "Inter-Regular-Italic": require("../../../assets/fonts/Inter-Regular-Italic.otf"),
-    "Syne-Medium": require("../../../assets/fonts/Syne-Medium.ttf"),
-    "Syne-SemiBold": require("../../../assets/fonts/Syne-SemiBold.ttf"),
+    "BalooBhai2-Regular": require("../../../assets/fonts/BalooBhai2-Regular.ttf"),
+    "BalooBhai2-Medium": require("../../../assets/fonts/BalooBhai2-Medium.ttf"),
+    "BalooBhai2-SemiBold": require("../../../assets/fonts/BalooBhai2-SemiBold.ttf"),
+    "BalooBhai2-Bold": require("../../../assets/fonts/BalooBhai2-Bold.ttf"),
+    "BalooBhai2-ExtraBold": require("../../../assets/fonts/BalooBhai2-ExtraBold.ttf"),
   });
 
   useEffect(() => {

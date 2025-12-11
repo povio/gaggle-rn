@@ -37,7 +37,7 @@ const PasswordResentSent = () => {
         alignItems="center"
       >
         <Text
-          variant="title-1-prominent-1"
+          variant="variant-6-prominent"
           textAlign="center"
           marginBottom="4"
         >

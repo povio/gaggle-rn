@@ -212,7 +212,7 @@ const Select = ({
               paddingHorizontal="4"
               paddingVertical={filterable ? "0" : "2"}
             >
-              <Text variant="label-2-prominent-1">{label}</Text>
+              <Text variant="variant-1">{label}</Text>
               <Pressable
                 onPress={handleCloseDrawer}
                 p="1"

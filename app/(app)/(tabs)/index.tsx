@@ -54,7 +54,7 @@ export default function Home() {
             position="relative"
           >
             <Text
-              variant="title-2-default"
+              variant="variant-5-prominent"
               color="interactive-primary-idle"
               textAlign="center"
             >
@@ -87,6 +87,7 @@ export default function Home() {
           >
             <Input
               label=""
+              textVariant="variant-11"
               leftElement={
                 <SearchIcon
                   width={21}
@@ -128,7 +129,7 @@ export default function Home() {
           marginTop="6"
           marginBottom="2"
         >
-          <Text variant="display-3-prominent-1">Quick Search</Text>
+          <Text variant="variant-6-prominent">Quick Search</Text>
         </Box>
         <ActivityPreviews />
 
@@ -137,7 +138,7 @@ export default function Home() {
           marginTop="6"
           marginBottom="2"
         >
-          <Text variant="display-3-prominent-1">Featured Providers</Text>
+          <Text variant="variant-6-prominent">Featured Providers</Text>
         </Box>
         <ProviderCards />
       </ScrollView>
@@ -167,8 +168,8 @@ const styles = StyleSheet.create({
   },
   settingsButton: {
     backgroundColor: "#FFD035",
-    padding: 6,
-    marginTop: 5,
+    padding: 8,
+    marginTop: 6,
     marginRight: -2,
   },
   topIcon: {
