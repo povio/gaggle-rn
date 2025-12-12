@@ -1,9 +1,9 @@
 import type { ExpoConfig } from "expo/config";
 
 const config: ExpoConfig = {
-  name: "react-native-template",
-  slug: "react-native-template",
-  scheme: "react-native-template",
+  name: "Gaggle - Families",
+  slug: "gaggle",
+  scheme: "gaggle",
   version: "1.0.0",
   orientation: "portrait",
   icon: "./assets/icon.png",
@@ -16,20 +16,21 @@ const config: ExpoConfig = {
   assetBundlePatterns: ["**/*"],
   ios: {
     supportsTablet: true,
-    bundleIdentifier: "", // add iOS bundle identifier
+    bundleIdentifier: "com.flock.team.app",
   },
   android: {
     adaptiveIcon: {
       foregroundImage: "./assets/adaptive-icon.png",
       backgroundColor: "#FFFFFF",
     },
-    package: "", // add Android package name
+    package: "com.flock.team.app",
   },
   extra: {
     eas: {
-      projectId: "", // run `eas init` and paste the project ID here
+      projectId: "b27c9db0-d9a2-49cf-929d-a15589bc5149",
     },
   },
+  owner: "gaggle",
   experiments: {
     tsconfigPaths: true,
     reactCompiler: true,
@@ -37,14 +38,16 @@ const config: ExpoConfig = {
   },
   plugins: [
     "expo-font",
-    // "@sentry/react-native/expo",
     "expo-router",
     "expo-secure-store",
     // If you are using EAS Build, you can set the environment variable by creating a secret named SENTRY_AUTH_TOKEN.
-    // {
-    //   organization: process.env.SENTRY_ORG,
-    //   project: process.env.SENTRY_PROJECT,
-    // },
+    // [
+    //  "@sentry/react-native/expo",
+    //  {
+    //    organization: process.env.SENTRY_ORG,
+    //    project: process.env.SENTRY_PROJECT,
+    //  },
+    // ]
   ],
 };
 

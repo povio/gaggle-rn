@@ -1,19 +1,20 @@
 {
+  "cli": {
+    "appVersionSource": "remote"
+  },
   "build": {
     "staging": {
-      "env": {
-        "EXPO_PUBLIC_API_URL": "https://staging.example.com"
-        // "EXPO_PUBLIC_SENTRY_DSN": "",
-        // "SENTRY_ORG": "",
-        // "SENTRY_PROJECT": ""
-      }
+      "env": {}
     },
     "production": {
-      "env": {
-        "EXPO_PUBLIC_API_URL": "https://production.example.com"
-        // "EXPO_PUBLIC_SENTRY_DSN": "",
-        // "SENTRY_ORG": "",
-        // "SENTRY_PROJECT": ""
+      "autoIncrement": true,
+      "env": {}
+    }
+  },
+  "submit": {
+    "production": {
+      "ios": {
+        "ascAppId": "6754703746"
       }
     }
   }
