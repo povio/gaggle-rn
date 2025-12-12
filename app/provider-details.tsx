@@ -1,28 +1,19 @@
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 
 import ArrowLeftIcon from "@/assets/icons/ArrowLeftIcon";
-import GroupIcon from "@/assets/icons/GroupIcon";
 import HeartIcon from "@/assets/icons/HeartIcon";
-import NotificationIcon from "@/assets/icons/NotificationIcon";
-import SearchIcon from "@/assets/icons/SearchIcon";
 import Box from "@/components/Box";
-import Button from "@/components/buttons/Button";
 import IconButton from "@/components/buttons/IconButton";
 import PillButton from "@/components/buttons/PillButton";
 import Image from "@/components/Image";
-import Input from "@/components/input/Input";
 import LoadingScreen from "@/components/LoadingScreen";
 import { ActivityCard } from "@/components/shared/ActivityCard";
 import { ActivityPreviews } from "@/components/shared/ActivityPreview";
-import { EmptyState } from "@/components/shared/EmptyState";
 import type { Card } from "@/components/shared/FavoritesList";
-import { SearchPills } from "@/components/shared/SearchPills";
 import Text from "@/components/text/Text";
 import { cards } from "@/data/mock/activities";
-import { UsersQueries } from "@/data/users";
-import { useSearchStore } from "@/modules/search/stores/searchStore";
 
 interface ProviderDetailsProps {
   id: string;

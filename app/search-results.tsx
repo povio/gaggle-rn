@@ -4,20 +4,15 @@ import { ScrollView, StyleSheet, View } from "react-native";
 
 import ArrowLeftIcon from "@/assets/icons/ArrowLeftIcon";
 import GroupIcon from "@/assets/icons/GroupIcon";
-import NotificationIcon from "@/assets/icons/NotificationIcon";
 import SearchIcon from "@/assets/icons/SearchIcon";
 import Box from "@/components/Box";
-import Button from "@/components/buttons/Button";
 import IconButton from "@/components/buttons/IconButton";
-import Image from "@/components/Image";
 import Input from "@/components/input/Input";
 import { ActivityCard } from "@/components/shared/ActivityCard";
 import { EmptyState } from "@/components/shared/EmptyState";
 import type { Card } from "@/components/shared/FavoritesList";
 import { SearchPills } from "@/components/shared/SearchPills";
-import Text from "@/components/text/Text";
 import { cards } from "@/data/mock/activities";
-import { UsersQueries } from "@/data/users";
 import { useDebounce } from "@/hooks/useDebounce";
 import { FilterId, useSearchStore } from "@/modules/search/stores/searchStore";
 

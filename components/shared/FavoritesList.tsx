@@ -1,9 +1,7 @@
-import { useTheme } from "@shopify/restyle";
 import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet } from "react-native";
 
 import { cards } from "@/data/mock/activities";
-import type { Theme } from "@/utils/theme/restyleTheme";
 
 import LoadingScreen from "../LoadingScreen";
 import { ActivityCard } from "./ActivityCard";

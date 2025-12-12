@@ -1,6 +1,6 @@
 import { useTheme } from "@shopify/restyle";
 import { useRouter } from "expo-router";
-import { ScrollView, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 
 import HeartIcon from "@/assets/icons/HeartIcon";
 import Box from "@/components/Box";

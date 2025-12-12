@@ -5,11 +5,9 @@ import { ScrollView, StyleSheet, View } from "react-native";
 import ArrowLeftIcon from "@/assets/icons/ArrowLeftIcon";
 import HeartIcon from "@/assets/icons/HeartIcon";
 import Box from "@/components/Box";
-import Button from "@/components/buttons/Button";
 import IconButton from "@/components/buttons/IconButton";
 import PillButton from "@/components/buttons/PillButton";
 import Image from "@/components/Image";
-import { ActivityCard } from "@/components/shared/ActivityCard";
 import { ActivityPreviews } from "@/components/shared/ActivityPreview";
 import Text from "@/components/text/Text";
 

@@ -48,7 +48,7 @@ export const SearchPills = ({ results }: SearchPillsProps) => {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
-        {Filters.map((item, index) => {
+        {Filters.map((item) => {
           const count = item.id === FilterId.ALL ? results?.length : item.count;
 
           return (
