@@ -11,24 +11,56 @@ import Button from "@/components/buttons/Button";
 import IconButton from "@/components/buttons/IconButton";
 import Image from "@/components/Image";
 import Input from "@/components/input/Input";
+import { ActivityCard } from "@/components/shared/ActivityCard";
 import { EmptyState } from "@/components/shared/EmptyState";
+import type { Card } from "@/components/shared/FavoritesList";
 import { SearchPills } from "@/components/shared/SearchPills";
 import Text from "@/components/text/Text";
+import { cards } from "@/data/mock/activities";
 import { UsersQueries } from "@/data/users";
-import { useSearchStore } from "@/modules/search/stores/searchStore";
+import { useDebounce } from "@/hooks/useDebounce";
+import { FilterId, useSearchStore } from "@/modules/search/stores/searchStore";
+
+const searchActivities = (searchQuery: string, data: Card[]): Card[] => {
+  if (!searchQuery.trim()) {
+    return data;
+  }
+
+  const query = searchQuery.toLowerCase();
+
+  return data.filter((item) => {
+    const providerMatch = item.provider.toLowerCase().includes(query);
+    const labelMatch = item.label.toLowerCase().includes(query);
+    const locationMatch = item.location?.toLowerCase().includes(query);
+
+    return providerMatch || labelMatch || locationMatch;
+  });
+};
 
 export default function SearchResults() {
   const router = useRouter();
   const { query } = useLocalSearchParams<{ query?: string }>();
   const { data: currentUser } = UsersQueries.useGetCurrentUser();
   const [value, setValue] = useState<string>("");
-  const { filter, setFilter } = useSearchStore();
+  const [activitiesData, setActivitiesData] = useState<Card[] | null>(null);
+  const { filter } = useSearchStore();
+
+  const debouncedSearchQuery = useDebounce(value, 300);
 
   useEffect(() => {
     if (query) {
       setValue(query);
     }
   }, [query]);
+
+  useEffect(() => {
+    setActivitiesData(cards);
+  }, []);
+
+  useEffect(() => {
+    const filteredData = searchActivities(debouncedSearchQuery, cards);
+    setActivitiesData(filteredData);
+  }, [debouncedSearchQuery]);
 
   const onChange = (value: string) => {
     setValue(value);
@@ -110,12 +142,29 @@ export default function SearchResults() {
               </Box>
             </Box>
           </Box>
-          <SearchPills />
+          <SearchPills results={activitiesData} />
         </Box>
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <EmptyState callback={handleBack} />
+        {!activitiesData || activitiesData.length === 0 || filter !== FilterId.ALL ? (
+          <EmptyState callback={handleBack} />
+        ) : (
+          <Box
+            flexDirection="column"
+            gap="3"
+            paddingHorizontal="5"
+            paddingVertical="4"
+          >
+            {activitiesData.map((item) => (
+              <ActivityCard
+                key={item.id}
+                data={item}
+                isFavored={false}
+              />
+            ))}
+          </Box>
+        )}
       </ScrollView>
     </Box>
   );

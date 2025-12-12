@@ -16,7 +16,7 @@ export interface PillButtonProps {
   dismissable?: boolean;
   onPress: () => void;
   disabled?: boolean;
-  textVariant?: keyof Theme["textVariants"];
+  textVariant?: Exclude<keyof Theme["textVariants"], "defaults">;
 }
 
 const PillButton = ({
@@ -105,7 +105,7 @@ const PillButton = ({
       {...rest}
     >
       <Text
-        variant={textVariant}
+        variant={textVariant as Exclude<keyof Theme["textVariants"], "defaults">}
         color={labelColor}
       >
         {label}

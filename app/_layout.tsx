@@ -15,7 +15,7 @@ const RootLayout = () => {
   return (
     <AppProviders>
       <SplashScreenController>
-        <Stack screenOptions={{ headerShown: false, headerBackButtonDisplayMode: "minimal" }}>
+        <Stack screenOptions={{ headerShown: false, headerBackVisible: true }}>
           <Stack.Screen name="(app)" />
           <Stack.Screen name="index" />
           <Stack.Screen name="welcome" />
@@ -24,7 +24,7 @@ const RootLayout = () => {
           <Stack.Screen name="code-resent" />
           <Stack.Screen
             name="invitation-code"
-            options={{ title: "Invitation Code", headerShown: true }}
+            options={{ title: "Invitation Code", headerShown: true, headerBackVisible: true }}
           />
           <Stack.Screen name="create-password" />
           <Stack.Screen name="profile-setup" />
@@ -33,7 +33,10 @@ const RootLayout = () => {
             name="sign-up"
             options={{ title: "Sign Up", headerShown: true }}
           />
-          <Stack.Screen name="forgot-password" />
+          <Stack.Screen
+            name="forgot-password"
+            options={{ title: "Forgot Password", headerShown: true }}
+          />
           <Stack.Screen name="password-reset-sent" />
         </Stack>
         <Toastable />

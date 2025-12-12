@@ -31,7 +31,8 @@ export interface InputProps extends BoxProps<Theme> {
   tooltipText?: string;
   onPress?: () => void;
   limit?: number;
-  textVariant?: keyof Theme["textVariants"];
+  textVariant?: Exclude<keyof Theme["textVariants"], "defaults">;
+  onSubmitEditing?: () => void;
 }
 
 const Input = ({
@@ -52,6 +53,7 @@ const Input = ({
   onPress,
   limit,
   textVariant = "variant-7",
+  onSubmitEditing,
   ...rest
 }: InputProps) => {
   const theme = useTheme<Theme>();
@@ -174,6 +176,7 @@ const Input = ({
           }
           multiline={type === "textArea"}
           textAlignVertical={type === "textArea" ? "top" : "auto"}
+          onSubmitEditing={onSubmitEditing}
           {...rest}
         />
         {rightElement && !loading && type !== "textArea" && <Box>{rightElement}</Box>}

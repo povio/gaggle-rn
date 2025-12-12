@@ -1,4 +1,4 @@
-import { useTheme } from "@shopify/restyle";
+import { type BoxProps, useTheme } from "@shopify/restyle";
 import React, { type ReactElement, cloneElement, useCallback, useState } from "react";
 import type { SvgProps } from "react-native-svg";
 
@@ -9,13 +9,13 @@ import Box from "../Box";
 import Pressable from "../Pressable";
 import Text from "../text/Text";
 
-export interface TextButtonProps {
+export interface TextButtonProps extends BoxProps<Theme> {
   variant?: TextButtonVariant;
   icon?: ReactElement<SvgProps>;
   label: string;
   onPress: () => void;
   disabled?: boolean;
-  textVariant?: keyof Theme["textVariants"];
+  textVariant?: Exclude<keyof Theme["textVariants"], "defaults">;
 }
 
 const TextButton = ({ variant = "primary", icon, label, disabled, textVariant = "variant-1", ...rest }: TextButtonProps) => {
@@ -97,7 +97,7 @@ const TextButton = ({ variant = "primary", icon, label, disabled, textVariant = 
         </Box>
       )}
       <Text
-        variant={textVariant}
+        variant={textVariant as Exclude<keyof Theme["textVariants"], "defaults">}
         color={labelColor}
       >
         {label}

@@ -76,7 +76,7 @@ const Welcome = () => {
             label="JOIN OUR WAITLIST"
             onPress={handleJoinWaitlist}
             variant="secondary"
-            style={styles.textBtn}
+            width="100%"
           />
         </Box>
 
@@ -89,7 +89,7 @@ const Welcome = () => {
             label="Continue as Guest"
             onPress={continueAsGuest}
             variant="secondary"
-            style={styles.textBtn}
+            width="100%"
           />
         </Box>
       </Box>

@@ -1,3 +1,4 @@
+import { useRouter } from "expo-router";
 import { Text } from "react-native";
 
 import Box from "@/components/Box";
@@ -6,9 +7,14 @@ import { useAuthStore } from "@/modules/auth/stores/authStore";
 
 const AccountPage = () => {
   const { logout } = useAuthStore();
+  const router = useRouter();
 
   const handleLogout = () => {
+    console.log('[Account] Logout button clicked');
     logout();
+    console.log('[Account] Logout function completed');
+    console.log('[Account] Navigating to /welcome');
+    router.replace("/welcome");
   };
 
   return (

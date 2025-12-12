@@ -45,7 +45,7 @@ export const FavoritesList = () => {
   if (!data) {
     return <LoadingScreen />;
   }
-  console.log("data", data);
+
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -57,6 +57,7 @@ export const FavoritesList = () => {
             data={item}
             key={item.id}
             callback={handleRemoveFavorites}
+            isFavored
           />
         );
       })}

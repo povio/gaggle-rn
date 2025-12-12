@@ -23,7 +23,7 @@ export interface ButtonProps {
   leftElement?: ReactNode;
   rightElement?: ReactNode;
   style?: ViewStyle;
-  textVariant?: keyof Theme["textVariants"];
+  textVariant?: Exclude<keyof Theme["textVariants"], "defaults">;
 }
 
 const Button = ({
@@ -169,7 +169,7 @@ const Button = ({
         </Box>
       )}
       <Text
-        variant={textVariant || "variant-1"}
+        variant={(textVariant || "variant-1") as Exclude<keyof Theme["textVariants"], "defaults">}
         color={labelColor}
       >
         {label}
