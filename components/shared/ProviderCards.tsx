@@ -1,31 +1,38 @@
+import { useRouter } from "expo-router";
 import { ScrollView, StyleSheet } from "react-native";
 
 import Box from "@/components/Box";
 import Image from "@/components/Image";
+import Pressable from "@/components/Pressable";
 import Text from "@/components/text/Text";
 
 export const ProvidersList = [
   {
+    id: "1",
     label: "Disneyworld",
     icon: "https://placehold.co/300x200/000000/FFCF48/png",
     type: "Disneyworld",
   },
   {
+    id: "2",
     label: "Tramplines!",
     icon: "https://placehold.co/300x200/000000/FFCF48/png",
     type: "Rides for kids",
   },
   {
+    id: "3",
     label: "Go Kart Deluxe!",
     icon: "https://placehold.co/300x200/000000/FFCF48/png",
     type: "Fun park",
   },
   {
+    id: "4",
     label: "School of Painting",
     icon: "https://placehold.co/300x200/000000/FFCF48/png",
     type: "Painting",
   },
   {
+    id: "5",
     label: "Lorem Ipsum",
     icon: "https://placehold.co/300x200/000000/FFCF48/png",
     type: "Other latin words",
@@ -33,6 +40,12 @@ export const ProvidersList = [
 ];
 
 export const ProviderCards = () => {
+  const router = useRouter();
+
+  const handleCardPress = (id: string) => {
+    router.push(`/provider-details?id=${id}`);
+  };
+
   return (
     <Box padding="2">
       <ScrollView
@@ -40,41 +53,45 @@ export const ProviderCards = () => {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
-        {ProvidersList.map((item, index) => {
+        {ProvidersList.map((item) => {
           return (
-            <Box
-              key={index}
-              flexDirection="column"
-              gap="4"
-              justifyContent="flex-start"
-              alignItems="center"
-              style={styles.activityContainer}
-              borderRadius="l"
-              marginRight="4"
-              paddingVertical="2"
-              width={180}
-              height={300}
+            <Pressable
+              key={item.id}
+              onPress={() => handleCardPress(item.id)}
             >
-              <Text
-                variant="variant-13-prominent"
-                padding="2"
-              >
-                {item.type}
-              </Text>
               <Box
-                width="100%"
-                height={150}
-                style={styles.activityIconContainer}
+                flexDirection="column"
+                gap="4"
+                justifyContent="flex-start"
+                alignItems="center"
+                style={styles.activityContainer}
+                borderRadius="l"
+                marginRight="4"
+                paddingVertical="2"
+                width={180}
+                height={300}
               >
-                <Image
-                  source={item.icon}
-                  style={styles.activityIcon}
-                  contentFit="cover"
-                  contentPosition="center"
-                />
+                <Text
+                  variant="variant-13-prominent"
+                  padding="2"
+                >
+                  {item.type}
+                </Text>
+                <Box
+                  width="100%"
+                  height={150}
+                  style={styles.activityIconContainer}
+                >
+                  <Image
+                    source={item.icon}
+                    style={styles.activityIcon}
+                    contentFit="cover"
+                    contentPosition="center"
+                  />
+                </Box>
+                <Text variant="variant-10-prominent">{item.label}</Text>
               </Box>
-              <Text variant="variant-10-prominent">{item.label}</Text>
-            </Box>
+            </Pressable>
           );
         })}
       </ScrollView>

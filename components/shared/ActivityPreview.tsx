@@ -62,7 +62,7 @@ export const Activities = [
 
 export const ActivityPreviews = () => {
   return (
-    <Box padding="2">
+    <Box>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}

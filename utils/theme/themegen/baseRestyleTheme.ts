@@ -16,6 +16,7 @@ import type { BaseTheme } from "@shopify/restyle";
  * variant-11: 18px • Medium (500) • Line: 20px
  * variant-12: 14px • Medium (500) • Line: 15px
  * variant-13-prominent: 21px • SemiBold (600) • Line: 27px
+ * variant-14: 30px • Regular (400) • Line: 19px
  */
 
 // write all your custom non-theme config here
@@ -97,6 +98,11 @@ export const baseRestyleConfig: BaseTheme = {
       fontSize: 21,
       fontFamily: "BalooBhai2-SemiBold",
       lineHeight: 27,
+    },
+    "variant-14": {
+      fontSize: 30,
+      fontFamily: "BalooBhai2-Regular",
+      lineHeight: 19,
     },
     defaults: {
       fontSize: 14,
@@ -264,6 +270,8 @@ export const baseRestyleConfig: BaseTheme = {
       borderColorPressed: "interactive-tertiary-toggled",
       borderColorDisabled: "transparent",
       borderColorDisabledToggled: "interactive-tertiary-on-disabled",
+      backgroundColorToggled: "button-secondary-color",
+      colorToggled: "interactive-primary-on",
     },
     filled: {
       color: "pill-default-text",

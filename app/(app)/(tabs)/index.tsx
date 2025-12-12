@@ -1,3 +1,4 @@
+import { useRouter } from "expo-router";
 import { Bell } from "lucide-react-native";
 import { useState } from "react";
 import { Dimensions, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
@@ -21,11 +22,18 @@ import { UsersQueries } from "@/data/users";
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
 export default function Home() {
+  const router = useRouter();
   const { data: currentUser } = UsersQueries.useGetCurrentUser();
   const [value, setValue] = useState<string>("");
 
   const onChange = (value: string) => {
     setValue(value);
+  };
+
+  const handleSearch = () => {
+    if (value.trim()) {
+      router.push(`/search-results?query=${encodeURIComponent(value)}`);
+    }
   };
 
   const handleActivitySwitch = (activity: string) => {
@@ -63,7 +71,7 @@ export default function Home() {
             <Box
               position="absolute"
               right={20}
-              top={4}
+              top={-15}
             >
               <IconButton
                 variant="secondary"
@@ -98,6 +106,7 @@ export default function Home() {
               variant="default"
               value={value}
               onChangeText={onChange}
+              onSubmitEditing={handleSearch}
             />
             <Box
               position="absolute"
@@ -131,7 +140,9 @@ export default function Home() {
         >
           <Text variant="variant-6-prominent">Quick Search</Text>
         </Box>
-        <ActivityPreviews />
+        <Box paddingLeft="2">
+          <ActivityPreviews />
+        </Box>
 
         <Box
           paddingHorizontal="6"
@@ -158,7 +169,7 @@ const styles = StyleSheet.create({
     width: 550,
     height: 535,
     backgroundColor: "#F5C344",
-    borderRadius: 325, // height / 2 for a proper ellipse
+    borderRadius: 325,
   },
   notificationButton: {
     backgroundColor: "#ffffff",
@@ -178,6 +189,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
+    paddingBottom: 20,
   },
   horizontalScrollContainer: {
     marginTop: 8,

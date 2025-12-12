@@ -1,134 +1,154 @@
+import { useRouter } from "expo-router";
 import { Dimensions, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 
-import CalendarIcon from "@/assets/icons/CalendarIcon";
 import CampIcon from "@/assets/icons/CampIcon";
-import GroupIcon from "@/assets/icons/GroupIcon";
-import NotificationIcon from "@/assets/icons/NotificationIcon";
-import SearchIcon from "@/assets/icons/SearchIcon";
 import Box from "@/components/Box";
-import Button from "@/components/buttons/Button";
 import Image from "@/components/Image";
+import Pressable from "@/components/Pressable";
 import Text from "@/components/text/Text";
+import { FilterId, useSearchStore } from "@/modules/search/stores/searchStore";
 
 export const IndexTopMenu = () => {
+  const router = useRouter();
+  const { setFilter } = useSearchStore();
+
+  const handleFilterClick = (filterId: FilterId) => {
+    setFilter(filterId);
+    router.push("/search-results");
+  };
+
   return (
     <Box
       flexDirection="row"
       justifyContent="center"
       alignItems="center"
-      height={150}
+      height={120}
     >
-      <Box
-        justifyContent="center"
-        alignItems="center"
-        marginRight="4"
-      >
+      <Pressable onPress={() => handleFilterClick(FilterId.CAMPS)}>
         <Box
           justifyContent="center"
           alignItems="center"
-          backgroundColor="elevation-background"
-          borderRadius="full"
-          style={styles.iconButton}
+          marginRight="4"
         >
-          <CampIcon
-            width={28}
-            height={28}
-          />
+          <Box
+            justifyContent="center"
+            alignItems="center"
+            backgroundColor="elevation-background"
+            borderRadius="full"
+            style={styles.iconButton}
+          >
+            <CampIcon
+              width={28}
+              height={28}
+            />
+          </Box>
+          <Text
+            variant="variant-12"
+            color="interactive-primary-idle"
+            textAlign="center"
+            marginTop="2"
+          >
+            Camps
+          </Text>
         </Box>
-        <Text
-          variant="variant-12"
-          color="interactive-primary-idle"
-          textAlign="center"
-          marginTop="2"
-        >
-          Camps
-        </Text>
-      </Box>
+      </Pressable>
 
-      <Box
-        justifyContent="center"
-        alignItems="center"
-        marginRight="4"
+      <Pressable
+        onPress={() => handleFilterClick(FilterId.CLASSES)}
         alignSelf="flex-end"
       >
         <Box
           justifyContent="center"
           alignItems="center"
-          backgroundColor="elevation-background"
-          borderRadius="full"
-          style={styles.iconButton}
+          marginRight="4"
+          alignSelf="flex-end"
         >
-          <Image
-            source={require("@/assets/illustrations/knowledge_1.svg")}
-            style={styles.topIcon}
-            contentFit="contain"
-          />
+          <Box
+            justifyContent="center"
+            alignItems="center"
+            backgroundColor="elevation-background"
+            borderRadius="full"
+            style={styles.iconButton}
+          >
+            <Image
+              source={require("@/assets/illustrations/knowledge_1.svg")}
+              style={styles.topIcon}
+              contentFit="contain"
+            />
+          </Box>
+          <Text
+            variant="variant-12"
+            color="interactive-primary-idle"
+            textAlign="center"
+            marginTop="2"
+          >
+            Classes
+          </Text>
         </Box>
-        <Text
-          variant="variant-12"
-          color="interactive-primary-idle"
-          textAlign="center"
-          marginTop="2"
-        >
-          Classes
-        </Text>
-      </Box>
+      </Pressable>
 
-      <Box
-        justifyContent="center"
-        alignItems="center"
-        marginRight="4"
+      <Pressable
+        onPress={() => handleFilterClick(FilterId.SPORTS)}
         alignSelf="flex-end"
       >
         <Box
           justifyContent="center"
           alignItems="center"
-          backgroundColor="elevation-background"
-          borderRadius="full"
-          style={styles.iconButton}
+          marginRight="4"
+          alignSelf="flex-end"
         >
-          <Image
-            source={require("@/assets/illustrations/basketball.svg")}
-            style={styles.topIcon}
-            contentFit="contain"
-          />
+          <Box
+            justifyContent="center"
+            alignItems="center"
+            backgroundColor="elevation-background"
+            borderRadius="full"
+            style={styles.iconButton}
+          >
+            <Image
+              source={require("@/assets/illustrations/basketball.svg")}
+              style={styles.topIcon}
+              contentFit="contain"
+            />
+          </Box>
+          <Text
+            variant="variant-12"
+            color="interactive-primary-idle"
+            textAlign="center"
+            marginTop="2"
+          >
+            Sports
+          </Text>
         </Box>
-        <Text
-          variant="variant-12"
-          color="interactive-primary-idle"
-          textAlign="center"
-          marginTop="2"
-        >
-          Sports
-        </Text>
-      </Box>
+      </Pressable>
 
-      <Box
-        justifyContent="center"
-        alignItems="center"
-      >
+      <Pressable onPress={() => handleFilterClick(FilterId.PARTY)}>
         <Box
           justifyContent="center"
           alignItems="center"
-          backgroundColor="elevation-background"
-          borderRadius="full"
-          style={styles.iconButton}
         >
-          <Image
-            source={require("@/assets/illustrations/party.svg")}
-            style={styles.topIcon}
-            contentFit="contain"
-          />
+          <Box
+            justifyContent="center"
+            alignItems="center"
+            backgroundColor="elevation-background"
+            borderRadius="full"
+            style={styles.iconButton}
+          >
+            <Image
+              source={require("@/assets/illustrations/party.svg")}
+              style={styles.topIcon}
+              contentFit="contain"
+            />
+          </Box>
+          <Text
+            variant="variant-12"
+            color="interactive-primary-idle"
+            textAlign="center"
+            marginTop="2"
+          >
+            Party
+          </Text>
         </Box>
-        <Text
-          variant="variant-12"
-          color="interactive-primary-idle"
-          textAlign="center"
-          marginTop="2"
-        >
-          Party
-        </Text>
-      </Box>
+      </Pressable>
     </Box>
   );
 };

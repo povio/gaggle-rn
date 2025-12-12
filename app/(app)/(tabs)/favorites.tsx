@@ -1,24 +1,11 @@
-import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import React from "react";
 import { StyleSheet, View } from "react-native";
 
 import Box from "@/components/Box";
-import { FavoritesCards } from "@/components/shared/FavoritesCards";
+import { FavoritesList } from "@/components/shared/FavoritesList";
 import Text from "@/components/text/Text";
 
 const Favorites = () => {
-  const router = useRouter();
-  const [isNotified, setIsNotified] = useState<boolean>(false);
-
-  const handleNotifyMe = () => {
-    if (!isNotified) {
-      setIsNotified(true);
-      return;
-    }
-
-    router.push("./");
-  };
-
   return (
     <Box
       flex={1}
@@ -34,7 +21,7 @@ const Favorites = () => {
           Favorites
         </Text>
       </View>
-      <FavoritesCards />
+      <FavoritesList />
     </Box>
   );
 };

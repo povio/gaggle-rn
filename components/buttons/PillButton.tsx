@@ -55,12 +55,14 @@ const PillButton = ({
         return "transparent";
       }
       const { color, colorPressed, colorDisabled } = theme.pillVariants[variant];
+      const colorToggled = (theme.pillVariants[variant] as any)?.colorToggled;
 
       if (disabled) return colorDisabled;
+      if (checked && !disabled && colorToggled) return colorToggled;
       if (pressed) return colorPressed;
       return color;
     },
-    [theme, disabled, variant],
+    [theme, disabled, variant, checked],
   );
 
   const getBorderColor = useCallback((): ThemeColor => {
