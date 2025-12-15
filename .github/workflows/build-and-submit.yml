@@ -4,6 +4,7 @@ on:
     secrets:
       EXPO_TOKEN:
         required: true
+  workflow_dispatch:
 
 jobs:
   expo:
