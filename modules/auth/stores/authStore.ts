@@ -27,12 +27,9 @@ export const useAuthStore = create<AuthState & AuthActions>((set) => ({
     void setStorageItemAsync(STORAGE_KEYS.AUTH_TOKEN, token);
   },
   logout: () => {
-    console.log("[authStore] logout called");
     set({ token: null, isLoading: false });
-    console.log("[authStore] state set to token: null, isLoading: false");
     void supabase.auth.signOut();
     void removeStorageItemAsync(STORAGE_KEYS.AUTH_TOKEN);
-    console.log("[authStore] cleanup initiated");
   },
   restore: (token: string | null) => {
     set({ token, isLoading: false });

@@ -35,7 +35,7 @@ export const Filters = [
 ];
 
 interface SearchPillsProps {
-  results: Card[];
+  results: Card[] | null;
 }
 
 export const SearchPills = ({ results }: SearchPillsProps) => {

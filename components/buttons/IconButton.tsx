@@ -19,9 +19,10 @@ export interface IconButtonProps extends PressableProps {
   loading?: boolean;
   disabled?: boolean;
   iconColor?: ThemeColor;
+  iconSize?: number;
 }
 
-const IconButton = ({ variant = "primary", size = "m", icon, disabled, loading, iconColor, ...rest }: IconButtonProps) => {
+const IconButton = ({ variant = "primary", size = "m", icon, disabled, loading, iconColor, iconSize, ...rest }: IconButtonProps) => {
   const theme = useTheme<Theme>();
   const [pressed, setPressed] = useState(false);
 
@@ -107,8 +108,8 @@ const IconButton = ({ variant = "primary", size = "m", icon, disabled, loading, 
     >
       {loading && (
         <Box
-          width={24}
-          height={24}
+          width={iconSize ?? 24}
+          height={iconSize ?? 24}
           alignItems="center"
           justifyContent="center"
         >
@@ -120,8 +121,7 @@ const IconButton = ({ variant = "primary", size = "m", icon, disabled, loading, 
       )}
       {icon && !loading && (
         <Box
-          width={24}
-          height={24}
+          {...(iconSize !== undefined && { width: iconSize, height: iconSize })}
         >
           {cloneElement(icon, {
             color: parsableColor,

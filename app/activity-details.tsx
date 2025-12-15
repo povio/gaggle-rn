@@ -9,6 +9,7 @@ import IconButton from "@/components/buttons/IconButton";
 import PillButton from "@/components/buttons/PillButton";
 import Image from "@/components/Image";
 import { ActivityPreviews } from "@/components/shared/ActivityPreview";
+import { BookingDrawer } from "@/components/shared/BookingDrawer";
 import Text from "@/components/text/Text";
 
 interface ActivityDetailsProps {
@@ -20,6 +21,7 @@ export default function ActivityDetails({ id }: ActivityDetailsProps) {
   const [fav, setFav] = useState<boolean>(false);
   const [follow, setFollow] = useState<boolean>(false);
   const [followCount, setFllowCount] = useState<number>(99);
+  const [drawerVisible, setDrawerVisible] = useState(false);
 
   const handleBack = () => {
     router.push("/(app)/(tabs)");
@@ -219,21 +221,8 @@ export default function ActivityDetails({ id }: ActivityDetailsProps) {
               TODO Rating system
             </Text>
           </Box>
-          <Box>
-            <Text
-              variant="variant-6-prominent"
-              textAlign="left"
-            >
-              Booking
-            </Text>
-            <Text
-              variant="variant-7"
-              textAlign="left"
-            >
-              TODO
-            </Text>
-          </Box>
         </Box>
+        <BookingDrawer />
       </ScrollView>
     </Box>
   );

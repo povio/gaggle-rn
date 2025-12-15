@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Dimensions, ScrollView, StyleSheet, View } from "react-native";
 
 import GroupIcon from "@/assets/icons/GroupIcon";
+import NotificationIcon from "@/assets/icons/NotificationIcon";
 import SearchIcon from "@/assets/icons/SearchIcon";
 import Box from "@/components/Box";
 import IconButton from "@/components/buttons/IconButton";
