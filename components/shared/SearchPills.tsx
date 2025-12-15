@@ -4,6 +4,7 @@ import { FilterId, useSearchStore } from "@/modules/search/stores/searchStore";
 
 import Box from "../Box";
 import PillButton from "../buttons/PillButton";
+import type { Card } from "./FavoritesList";
 
 export const Filters = [
   {
@@ -33,7 +34,11 @@ export const Filters = [
   },
 ];
 
-export const SearchPills = () => {
+interface SearchPillsProps {
+  results: Card[];
+}
+
+export const SearchPills = ({ results }: SearchPillsProps) => {
   const { filter, setFilter } = useSearchStore();
 
   return (
@@ -43,10 +48,12 @@ export const SearchPills = () => {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
-        {Filters.map((item, index) => {
+        {Filters.map((item) => {
+          const count = item.id === FilterId.ALL ? results?.length : item.count;
+
           return (
             <PillButton
-              label={`${item.label} • ${item.count}`}
+              label={`${item.label} • ${count}`}
               onPress={() => setFilter(item.id)}
               variant="toggle"
               key={item.id}

@@ -65,6 +65,7 @@ const SignIn = () => {
       backgroundColor="elevation-background"
       justifyContent="space-between"
       paddingHorizontal="6"
+      overflow="hidden"
     >
       <View style={styles.topCircle} />
 
@@ -155,7 +156,7 @@ const SignIn = () => {
 
 const styles = StyleSheet.create({
   topCircle: {
-    position: "absolute",
+    position: "fixed",
     top: -150,
     right: -150,
     width: 300,
@@ -164,7 +165,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F5C344",
   },
   bottomCircle: {
-    position: "absolute",
+    position: "fixed",
     bottom: -150,
     left: -150,
     width: 300,

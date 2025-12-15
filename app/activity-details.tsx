@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 
 import ArrowLeftIcon from "@/assets/icons/ArrowLeftIcon";
@@ -8,31 +8,18 @@ import Box from "@/components/Box";
 import IconButton from "@/components/buttons/IconButton";
 import PillButton from "@/components/buttons/PillButton";
 import Image from "@/components/Image";
-import LoadingScreen from "@/components/LoadingScreen";
-import { ActivityCard } from "@/components/shared/ActivityCard";
 import { ActivityPreviews } from "@/components/shared/ActivityPreview";
-import type { Card } from "@/components/shared/FavoritesList";
 import Text from "@/components/text/Text";
-import { cards } from "@/data/mock/activities";
 
-interface ProviderDetailsProps {
+interface ActivityDetailsProps {
   id: string;
 }
 
-export default function ProviderDetails({ id }: ProviderDetailsProps) {
+export default function ActivityDetails({ id }: ActivityDetailsProps) {
   const router = useRouter();
   const [fav, setFav] = useState<boolean>(false);
   const [follow, setFollow] = useState<boolean>(false);
   const [followCount, setFllowCount] = useState<number>(99);
-  const [data, setData] = useState<Card[] | null>(null);
-
-  useEffect(() => {
-    setData(cards.filter((_, index) => index < 4));
-  }, []);
-
-  if (!data) {
-    return <LoadingScreen />;
-  }
 
   const handleBack = () => {
     router.push("/(app)/(tabs)");
@@ -131,7 +118,7 @@ export default function ProviderDetails({ id }: ProviderDetailsProps) {
               variant="variant-5-prominent"
               textAlign="center"
             >
-              Title Goes Here!
+              Mock data activity page
             </Text>
             <Box
               flexDirection="row"
@@ -140,81 +127,44 @@ export default function ProviderDetails({ id }: ProviderDetailsProps) {
               gap="2"
             >
               <PillButton
-                label="Kids"
+                label="Test"
                 onPress={() => {}}
                 variant="primary"
                 textVariant="variant-11"
               />
               <PillButton
-                label="School"
+                label="Kids 1-4"
                 onPress={() => {}}
                 variant="primary"
                 textVariant="variant-11"
               />
               <PillButton
-                label="Sport"
+                label="Drawing"
                 onPress={() => {}}
                 variant="primary"
                 textVariant="variant-11"
               />
             </Box>
             <Box
-              flexDirection="row"
-              justifyContent="center"
-              alignItems="center"
-              gap="2"
-              paddingTop="3"
+              flexDirection={"row"}
+              justifyContent={"center"}
+              alignItems={"center"}
+              gap={"1"}
             >
-              <Box
-                flexDirection="column"
-                justifyContent="center"
-                alignItems="center"
-                gap="2"
+              <Text
+                variant="variant-7"
+                textAlign="center"
+                color="interactive-icon-disabled"
               >
-                <Text
-                  variant="variant-14"
-                  textAlign="center"
-                >
-                  34
-                </Text>
-                <Text textAlign="center">Places</Text>
-              </Box>
-              <Box
-                flexDirection="column"
-                justifyContent="center"
-                alignItems="center"
-                gap="2"
+                Provider:
+              </Text>
+              <Text
+                variant="variant-7"
+                textAlign="center"
               >
-                <Text
-                  variant="variant-14"
-                  textAlign="center"
-                >
-                  5
-                </Text>
-                <Text textAlign="center">Follwing</Text>
-              </Box>
-              <Box
-                flexDirection="column"
-                justifyContent="center"
-                alignItems="center"
-                gap="2"
-              >
-                <Text
-                  variant="variant-14"
-                  textAlign="center"
-                >
-                  {followCount}
-                </Text>
-                <Text textAlign="center">Followed</Text>
-              </Box>
+                Some provider name
+              </Text>
             </Box>
-            <Button
-              label={follow ? "Unfollow" : "Follow"}
-              onPress={handleFallowProvider}
-              width="l"
-              textVariant="variant-2-prominent"
-              variant={follow ? "outlined" : "secondary"}
-            />
           </Box>
         </View>
         <Box
@@ -231,7 +181,7 @@ export default function ProviderDetails({ id }: ProviderDetailsProps) {
               variant="variant-6-prominent"
               textAlign="left"
             >
-              Our Take
+              About
             </Text>
             <Text
               variant="variant-7"
@@ -251,7 +201,7 @@ export default function ProviderDetails({ id }: ProviderDetailsProps) {
               variant="variant-6-prominent"
               textAlign="left"
             >
-              Parents also choose:
+              Parents also choose
             </Text>
             <ActivityPreviews />
           </Box>
@@ -260,35 +210,28 @@ export default function ProviderDetails({ id }: ProviderDetailsProps) {
               variant="variant-6-prominent"
               textAlign="left"
             >
-              Locations
+              What parents say
             </Text>
             <Text
               variant="variant-7"
               textAlign="left"
-              color="interactive-tertiary-on"
             >
-              Rockville; Potomac; Gaithersburg; Rockville; Potomac; Gaithersburg; Rockville; Potomac; Gaithersburg;
-              Rockville; Potomac; Gaithersburg;
+              TODO Rating system
             </Text>
           </Box>
-          <Box
-            flex={1}
-            gap="4"
-          >
+          <Box>
             <Text
               variant="variant-6-prominent"
               textAlign="left"
             >
-              Services
+              Booking
             </Text>
-            {data &&
-              data?.map((card) => (
-                <ActivityCard
-                  isFavored={false}
-                  data={card}
-                  key={card.id}
-                />
-              ))}
+            <Text
+              variant="variant-7"
+              textAlign="left"
+            >
+              TODO
+            </Text>
           </Box>
         </Box>
       </ScrollView>

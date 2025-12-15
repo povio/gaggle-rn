@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { Dimensions, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+import { StyleSheet } from "react-native";
 
 import CampIcon from "@/assets/icons/CampIcon";
 import Box from "@/components/Box";

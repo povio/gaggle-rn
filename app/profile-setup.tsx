@@ -388,7 +388,6 @@ const ProfileSetup = () => {
             onPress={handleAddChild}
             variant="secondary"
             textVariant="variant-11"
-            style={styles.textBtn}
           />
         </Box>
 

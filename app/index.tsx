@@ -11,14 +11,23 @@ export default function Index() {
   const { token, isLoading } = useAuthStore();
   const [hasNavigated, setHasNavigated] = useState(false);
 
+  console.log('[Index] Component render - token:', token, 'isLoading:', isLoading, 'hasNavigated:', hasNavigated);
+  console.log('[Index] About to check render conditions - token truthy?', !!token, 'isLoading?', isLoading);
+
   useEffect(() => {
+    console.log('[Index] useEffect fired - token:', token, 'isLoading:', isLoading, 'hasNavigated:', hasNavigated);
+
     if (isLoading || hasNavigated) {
+      console.log('[Index] Early return - isLoading:', isLoading, 'hasNavigated:', hasNavigated);
       return;
     }
 
     if (token) {
+      console.log('[Index] Early return - token exists');
       return;
     }
+
+    console.log('[Index] Starting checkOnboardingAndNavigate');
 
     const checkOnboardingAndNavigate = async () => {
       try {
@@ -54,12 +63,15 @@ export default function Index() {
   }, [router, token, isLoading, getOnboardingStep, hasNavigated]);
 
   if (isLoading) {
+    console.log('[Index] Rendering null - isLoading true');
     return null;
   }
 
   if (token) {
+    console.log('[Index] Token exists, redirecting to /(app)/(tabs)');
     return <Redirect href="/(app)/(tabs)" />;
   }
 
+  console.log('[Index] Rendering LoadingScreen');
   return <LoadingScreen />;
 }

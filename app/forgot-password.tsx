@@ -1,7 +1,6 @@
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
-import { ScanFace } from "lucide-react-native";
 
 import Box from "@/components/Box";
 import Button from "@/components/buttons/Button";

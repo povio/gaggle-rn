@@ -1,17 +1,11 @@
 import { useRouter } from "expo-router";
-import { Bell } from "lucide-react-native";
 import { useState } from "react";
-import { Dimensions, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Dimensions, ScrollView, StyleSheet, View } from "react-native";
 
-import CalendarIcon from "@/assets/icons/CalendarIcon";
-import CampIcon from "@/assets/icons/CampIcon";
 import GroupIcon from "@/assets/icons/GroupIcon";
-import NotificationIcon from "@/assets/icons/NotificationIcon";
 import SearchIcon from "@/assets/icons/SearchIcon";
 import Box from "@/components/Box";
-import Button from "@/components/buttons/Button";
 import IconButton from "@/components/buttons/IconButton";
-import Image from "@/components/Image";
 import Input from "@/components/input/Input";
 import { ActivityPreviews } from "@/components/shared/ActivityPreview";
 import { IndexTopMenu } from "@/components/shared/IndexTopMenu";

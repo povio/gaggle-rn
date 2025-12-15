@@ -1,9 +1,11 @@
 import { useTheme } from "@shopify/restyle";
-import { ScrollView, StyleSheet } from "react-native";
+import { useRouter } from "expo-router";
+import { StyleSheet } from "react-native";
 
 import HeartIcon from "@/assets/icons/HeartIcon";
 import Box from "@/components/Box";
 import Image from "@/components/Image";
+import Pressable from "@/components/Pressable";
 import Text from "@/components/text/Text";
 import type { Theme } from "@/utils/theme/restyleTheme";
 
@@ -14,101 +16,118 @@ import type { Card } from "./FavoritesList";
 interface ActivityCardProps {
   data: Card;
   callback?: (id: string | number) => void;
+  isFavored: boolean;
 }
 
-export const ActivityCard = ({ data, callback }: ActivityCardProps) => {
+export const ActivityCard = ({ data, callback, isFavored }: ActivityCardProps) => {
   const theme = useTheme<Theme>();
+  const router = useRouter();
+
+  const handleCardPress = () => {
+    router.push(`/activity-details?id=${data.id}`);
+  };
 
   return (
-    <Box
-      flexDirection="column"
-      gap="4"
-      justifyContent="center"
-      alignItems="center"
-      style={styles.container}
-      borderRadius="l"
-      width="100%"
-      paddingHorizontal="3"
-      paddingVertical="4"
+    <Pressable
+      onPress={handleCardPress}
+      width={"100%"}
     >
       <Box
-        flexDirection="row"
-        justifyContent="space-between"
+        flexDirection="column"
+        gap="4"
+        justifyContent="center"
+        alignItems="center"
+        style={styles.container}
+        borderRadius="l"
         width="100%"
+        paddingHorizontal="3"
+        paddingVertical="4"
       >
         <Box
           flexDirection="row"
-          gap="2"
+          justifyContent="space-between"
+          width="100%"
         >
-          {/* <Image
-            source={require(data.icon)}
-            style={styles.activityIcon}
-            contentFit="contain"
-          /> */}
-          <Box
-            flexDirection="column"
-            gap="1"
-          >
-            <Text variant="variant-3-prominent">{data.label}</Text>
-            <Box
-              flexDirection="row"
-              gap="2"
-            >
-              <Text variant="variant-4">{data.provider}</Text>
-              {data.location && (
-                <Text
-                  variant="variant-4"
-                  color="text-disabled"
-                >{`| ${data.location}`}</Text>
-              )}
-            </Box>
-          </Box>
-        </Box>
-        <Box>
-          <IconButton
-            variant="transparent"
-            onPress={() => callback?.(data.id)}
-            iconColor="interactive-active"
-            icon={
-              <HeartIcon
-                width={25}
-                height={22}
-                fill={theme.colors["interactive-active"]}
-              />
-            }
-          />
-        </Box>
-      </Box>
-      <Box
-        flexDirection="row"
-        gap="2"
-        width="100%"
-        justifyContent="space-between"
-      >
-        {data.tags.length > 0 && (
           <Box
             flexDirection="row"
             gap="2"
           >
-            {data.tags.map((tag) => {
-              return (
-                <PillButton
-                  label={tag}
-                  onPress={() => {}}
-                />
-              );
-            })}
+            <Image
+              source={data.icon}
+              style={styles.activityIcon}
+              contentFit="contain"
+            />
+            <Box
+              flexDirection="column"
+              gap="1"
+            >
+              <Text
+                variant="variant-3-prominent"
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                maxWidth={250}
+              >
+                {data.label}
+              </Text>
+              <Box
+                flexDirection="row"
+                gap="2"
+              >
+                <Text variant="variant-4">{data.provider}</Text>
+                {data.location && (
+                  <Text
+                    variant="variant-4"
+                    color="text-disabled"
+                  >{`| ${data.location}`}</Text>
+                )}
+              </Box>
+            </Box>
           </Box>
-        )}
-        {data.price && (
-          <PillButton
-            label={data.price}
-            onPress={() => {}}
-            variant="active"
-          />
-        )}
+          <Box>
+            <IconButton
+              variant="transparent"
+              onPress={() => callback?.(data.id)}
+              iconColor={isFavored ? "interactive-active" : "interactive-icon-disabled"}
+              icon={
+                <HeartIcon
+                  width={25}
+                  height={22}
+                />
+              }
+            />
+          </Box>
+        </Box>
+        <Box
+          flexDirection="row"
+          gap="2"
+          width="100%"
+          justifyContent="space-between"
+        >
+          {data.tags.length > 0 && (
+            <Box
+              flexDirection="row"
+              gap="2"
+            >
+              {data.tags.map((tag) => {
+                return (
+                  <PillButton
+                    label={tag}
+                    onPress={() => {}}
+                  />
+                );
+              })}
+            </Box>
+          )}
+          {data.price && (
+            <PillButton
+              label={data.price}
+              onPress={() => {}}
+              variant="active"
+            />
+          )}
+        </Box>
       </Box>
-    </Box>
+    </Pressable>
   );
 };
 
