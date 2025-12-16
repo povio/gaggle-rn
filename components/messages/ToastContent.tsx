@@ -1,7 +1,7 @@
 import { useTheme } from "@shopify/restyle";
 import React, { useCallback } from "react";
 
-import CloseIcon from "@/assets/icons/CloseIcon";
+import CloseIcon from "@/assets/icons/CheckIconAlt";
 import type { ToastVariant } from "@/types";
 import type { Theme, ThemeColor } from "@/utils/theme/restyleTheme";
 

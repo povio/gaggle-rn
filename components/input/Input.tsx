@@ -137,7 +137,7 @@ const Input = ({
         alignItems={type === "textArea" ? "flex-start" : "center"}
         gap="2"
         marginVertical="1"
-        backgroundColor={backgroundColor}
+        backgroundColor={type === "textArea" ? "background-light-gray" : backgroundColor}
         borderColor={borderColor}
         borderWidth={1}
         borderRadius={variant === "default" ? "rounding-button-rounding" : "rounding-input-rounding"}

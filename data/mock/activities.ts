@@ -9,6 +9,8 @@ export const cards: Card[] = [
     icon: require("@/assets/illustrations/basketball.svg"),
     label: "Junior Camp: Intermediate Division",
     tags: ["sports", "kids"],
+    startDate: "2025-12-15T09:13:33.296Z",
+    endDate: "2025-12-15T12:43:00.296Z",
   },
   {
     id: 2,
@@ -18,6 +20,8 @@ export const cards: Card[] = [
     icon: require("@/assets/illustrations/dance.svg"),
     label: "Musical Production Camp JR",
     tags: ["music", "dance"],
+    startDate: "2025-12-15T09:13:33.296Z",
+    endDate: "2025-12-15T12:43:00.296Z",
   },
   {
     id: 3,
@@ -36,6 +40,8 @@ export const cards: Card[] = [
     icon: require("@/assets/illustrations/equestrian.svg"),
     label: "Beginner Horse Riding Camp",
     tags: ["outdoor", "animals"],
+    startDate: "2025-12-15T09:13:33.296Z",
+    endDate: "2025-12-15T12:43:00.296Z",
   },
   {
     id: 5,
@@ -54,6 +60,8 @@ export const cards: Card[] = [
     icon: require("@/assets/illustrations/gymnastics.svg"),
     label: "Junior Gymnastics Program",
     tags: ["fitness", "gymnastics"],
+    startDate: "2025-12-15T09:13:33.296Z",
+    endDate: "2025-12-15T12:43:00.296Z",
   },
   {
     id: 7,
@@ -72,6 +80,8 @@ export const cards: Card[] = [
     icon: require("@/assets/illustrations/lacrosse.svg"),
     label: "Youth Lacrosse Training",
     tags: ["sports", "team"],
+    startDate: "2025-12-15T09:13:33.296Z",
+    endDate: "2025-12-15T12:43:00.296Z",
   },
   {
     id: 9,
@@ -90,6 +100,8 @@ export const cards: Card[] = [
     icon: require("@/assets/illustrations/swimming.svg"),
     label: "Private 1 on 1 LTS Classes",
     tags: ["swimming", "safety"],
+    startDate: "2025-12-15T09:13:33.296Z",
+    endDate: "2025-12-15T12:43:00.296Z",
   },
   {
     id: 11,
@@ -99,6 +111,8 @@ export const cards: Card[] = [
     icon: require("@/assets/illustrations/basketball.svg"),
     label: "Advanced Shooting Clinic",
     tags: ["basketball", "training"],
+    startDate: "2025-12-15T09:13:33.296Z",
+    endDate: "2025-12-15T12:43:00.296Z",
   },
   {
     id: 12,
@@ -108,6 +122,8 @@ export const cards: Card[] = [
     icon: require("@/assets/illustrations/dance.svg"),
     label: "Urban Dance Kids Program",
     tags: ["dance", "movement"],
+    startDate: "2025-12-15T09:13:33.296Z",
+    endDate: "2025-12-15T12:43:00.296Z",
   },
   {
     id: 13,

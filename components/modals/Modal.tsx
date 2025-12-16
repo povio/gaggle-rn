@@ -1,6 +1,6 @@
 import { useTheme } from "@shopify/restyle";
 import React from "react";
-import { Modal as RNModal, type ModalProps as RNModalProps, TouchableWithoutFeedback } from "react-native";
+import { Modal as RNModal, type ModalProps as RNModalProps, StyleSheet, TouchableWithoutFeedback } from "react-native";
 
 import CloseIcon from "@/assets/icons/CloseIcon";
 import type { Theme } from "@/utils/theme/restyleTheme";
@@ -37,21 +37,20 @@ const Modal = ({ visible, onClose, children, ...rest }: ModalProps) => {
             left={0}
             height="100%"
             width="100%"
-            backgroundColor="elevation-surface-2"
+            style={styles.container}
           />
         </TouchableWithoutFeedback>
         <Box
           backgroundColor="interactive-primary-on"
-          margin="4"
-          borderRadius="ml"
+          margin="12"
+          borderRadius="2xl"
           flex={1}
         >
           <Box alignItems="flex-end">
             <Pressable
               onPress={onClose}
-              width={24}
-              height={24}
-              margin="2"
+              paddingTop="5"
+              paddingRight="5"
             >
               <CloseIcon color={theme.colors["interactive-icon-idle"]} />
             </Pressable>
@@ -62,5 +61,11 @@ const Modal = ({ visible, onClose, children, ...rest }: ModalProps) => {
     </RNModal>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "rgba(0,0,0,0.4)",
+  },
+});
 
 export default Modal;

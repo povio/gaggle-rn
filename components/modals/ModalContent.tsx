@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 import Box from "../Box";
 import Button from "../buttons/Button";
@@ -211,6 +211,100 @@ export const ImageOkayModalContent = ({
           label={primaryButtonText}
           onPress={onPrimaryButtonPress}
           width="l"
+        />
+      </Box>
+    </Box>
+  );
+};
+
+export const IconTextModalContent = ({
+  title,
+  text,
+  icon,
+  btnIcon,
+  primaryButtonText,
+  onPrimaryButtonPress,
+}: {
+  title: string;
+  text?: string;
+  btnIcon?: React.ReactNode;
+  icon: React.ReactNode;
+  primaryButtonText: string;
+  onPrimaryButtonPress: () => void;
+}) => {
+  return (
+    <Box
+      paddingLeft="8"
+      paddingBottom="8"
+      paddingRight="8"
+      gap="4"
+    >
+      <Box
+        width={48}
+        height={48}
+        justifyContent={"center"}
+        alignItems={"center"}
+        borderRadius={"full"}
+        backgroundColor="main-theme-active"
+        alignSelf={"center"}
+      >
+        {icon}
+      </Box>
+      <Text
+        variant="variant-11"
+        textAlign="center"
+      >
+        {title}
+      </Text>
+      {text && (
+        <Text
+          variant="variant-5-prominent"
+          textAlign="center"
+        >
+          {text}
+        </Text>
+      )}
+      <Box alignItems="center">
+        <Button
+          variant="secondary"
+          leftElement={btnIcon}
+          textVariant="variant-2-prominent"
+          label={primaryButtonText}
+          onPress={onPrimaryButtonPress}
+          width="l"
+        />
+      </Box>
+    </Box>
+  );
+};
+
+export const FilterModalContent = ({
+  title,
+  primaryButtonText,
+  onPrimaryButtonPress,
+  filters,
+}: {
+  title: string;
+  filters: Element | React.ReactNode;
+  primaryButtonText: string;
+  onPrimaryButtonPress: () => void;
+}) => {
+  return (
+    <Box
+      gap="4"
+      paddingLeft="8"
+      paddingBottom="8"
+      paddingRight="8"
+    >
+      <Text variant="variant-13-prominent">{title}</Text>
+      {filters}
+      <Box gap="4">
+        <Button
+          variant="secondary"
+          textVariant="variant-2-prominent"
+          label={primaryButtonText}
+          onPress={onPrimaryButtonPress}
+          width="fit"
         />
       </Box>
     </Box>

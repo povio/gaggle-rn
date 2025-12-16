@@ -7,11 +7,14 @@ import {
 import { useTheme } from "@shopify/restyle";
 import type React from "react";
 import { useEffect, useMemo, useRef } from "react";
+import { StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import CloseIcon from "@/assets/icons/CloseIcon";
 import type { Theme } from "@/utils/theme/restyleTheme";
 
 import Box from "../Box";
+import IconButton from "../buttons/IconButton";
 import TextButton from "../buttons/TextButton";
 import ListItem from "../input/ListItem";
 
@@ -39,7 +42,7 @@ const Drawer = ({
   const insets = useSafeAreaInsets();
   const theme = useTheme<Theme>();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-  const snapPoints = useMemo(() => ["1%"], []); // TODO: figure out if there is a less hacky way to handle dynamic content size
+  const snapPoints = useMemo(() => ["1%"], []);
 
   useEffect(() => {
     if (visible) {
@@ -89,6 +92,19 @@ const Drawer = ({
             backgroundColor: theme.colors["elevation-surface-1"],
           }}
         >
+          <Box
+            position={"absolute"}
+            right={8}
+            top={-9}
+            zIndex={1}
+          >
+            <IconButton
+              size="m"
+              icon={<CloseIcon />}
+              onPress={onClose}
+              variant="transparent"
+            />
+          </Box>
           <Box backgroundColor="elevation-surface-1">{children}</Box>
           {hasActions && (
             <Box
@@ -128,5 +144,9 @@ const Drawer = ({
     </BottomSheetModal>
   );
 };
+
+const styles = StyleSheet.create({
+  closeBtn: {},
+});
 
 export default Drawer;

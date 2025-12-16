@@ -7,21 +7,33 @@ import Box from "@/components/Box";
 import Image from "@/components/Image";
 import Pressable from "@/components/Pressable";
 import Text from "@/components/text/Text";
+import { DateUtils } from "@/utils/date.utils";
 import type { Theme } from "@/utils/theme/restyleTheme";
 
 import IconButton from "../buttons/IconButton";
 import PillButton from "../buttons/PillButton";
 import type { Card } from "./FavoritesList";
 
+export enum ActivityCardVariant {
+  ACTIVITY = "activity",
+  SESSION = "session",
+}
 interface ActivityCardProps {
   data: Card;
   callback?: (id: string | number) => void;
   isFavored: boolean;
+  variant?: ActivityCardVariant;
 }
 
-export const ActivityCard = ({ data, callback, isFavored }: ActivityCardProps) => {
+export const ActivityCard = ({
+  data,
+  callback,
+  isFavored,
+  variant = ActivityCardVariant.ACTIVITY,
+}: ActivityCardProps) => {
   const theme = useTheme<Theme>();
   const router = useRouter();
+  const isSession = variant === ActivityCardVariant.SESSION;
 
   const handleCardPress = () => {
     router.push(`/activity-details?id=${data.id}`);
@@ -37,7 +49,7 @@ export const ActivityCard = ({ data, callback, isFavored }: ActivityCardProps) =
         gap="4"
         justifyContent="center"
         alignItems="center"
-        style={styles.container}
+        style={variant === ActivityCardVariant.ACTIVITY ? styles.containerActivity : styles.containerSession}
         borderRadius="l"
         width="100%"
         paddingHorizontal="3"
@@ -73,7 +85,10 @@ export const ActivityCard = ({ data, callback, isFavored }: ActivityCardProps) =
                 flexDirection="row"
                 gap="2"
               >
-                <Text variant="variant-4">{data.provider}</Text>
+                {isSession && data.startDate && data.endDate && (
+                  <Text variant="variant-4">{`${DateUtils.formatIsoDate(data.startDate, "MMM d")} - ${DateUtils.formatIsoDate(data.endDate, "MMM d")}`}</Text>
+                )}
+                {!isSession && <Text variant="variant-4">{data.provider}</Text>}
                 {data.location && (
                   <Text
                     variant="variant-4"
@@ -81,21 +96,57 @@ export const ActivityCard = ({ data, callback, isFavored }: ActivityCardProps) =
                   >{`| ${data.location}`}</Text>
                 )}
               </Box>
+              {isSession && data.startDate && data.endDate && (
+                <Box
+                  flexDirection="row"
+                  gap="1"
+                >
+                  <Text
+                    variant="variant-4"
+                    color="text-disabled"
+                  >
+                    Start:{" "}
+                    <Text
+                      color="button-text-color"
+                      variant="variant-4"
+                    >
+                      {DateUtils.formatIsoDate(data.startDate, "HH:mm a")}
+                    </Text>
+                  </Text>
+                  <Text
+                    variant="variant-4"
+                    color="text-disabled"
+                  >
+                    |
+                  </Text>
+                  <Text
+                    variant="variant-4"
+                    color="text-disabled"
+                  >
+                    End:{" "}
+                    <Text
+                      color="button-text-color"
+                      variant="variant-4"
+                    >
+                      {DateUtils.formatIsoDate(data.endDate, "HH:mm a")}
+                    </Text>
+                  </Text>
+                </Box>
+              )}
             </Box>
           </Box>
-          <Box>
-            <IconButton
-              variant="transparent"
-              onPress={() => callback?.(data.id)}
-              iconColor={isFavored ? "interactive-active" : "interactive-icon-disabled"}
-              icon={
-                <HeartIcon
-                  width={25}
-                  height={22}
-                />
-              }
-            />
-          </Box>
+          <IconButton
+            variant="transparent"
+            onPress={() => callback?.(data.id)}
+            style={styles.heartIcon}
+            iconColor={isFavored ? "interactive-active" : "interactive-icon-inactive"}
+            icon={
+              <HeartIcon
+                width={25}
+                height={22}
+              />
+            }
+          />
         </Box>
         <Box
           flexDirection="row"
@@ -143,7 +194,14 @@ const styles = StyleSheet.create({
     width: 45,
     height: 45,
   },
-  container: {
+  heartIcon: {
+    padding: 0,
+  },
+  containerActivity: {
     boxShadow: "rgba(0, 0, 0, 0.1) 0px 6px 15px 1px",
+  },
+  containerSession: {
+    borderWidth: 1,
+    borderColor: "#EFF0F6",
   },
 });

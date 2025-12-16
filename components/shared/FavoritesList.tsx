@@ -27,6 +27,8 @@ export interface Card {
   label: string;
   tags: string[];
   id: number | string;
+  startDate?: string;
+  endDate?: string;
 }
 
 export const FavoritesList = () => {

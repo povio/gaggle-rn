@@ -9,10 +9,13 @@ import Box from "@/components/Box";
 import IconButton from "@/components/buttons/IconButton";
 import Input from "@/components/input/Input";
 import { ActivityPreviews } from "@/components/shared/ActivityPreview";
+import { SearchFiltersEnum } from "@/components/shared/filters/list";
 import { IndexTopMenu } from "@/components/shared/IndexTopMenu";
 import { ProviderCards } from "@/components/shared/ProviderCards";
+import { SearchFilterDrawer } from "@/components/shared/SearchFilterDrawer";
 import Text from "@/components/text/Text";
 import { UsersQueries } from "@/data/users";
+import { FilterId } from "@/modules/search/stores/searchStore";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
@@ -20,6 +23,7 @@ export default function Home() {
   const router = useRouter();
   const { data: currentUser } = UsersQueries.useGetCurrentUser();
   const [value, setValue] = useState<string>("");
+  const [drawerVisible, setDrawerVisible] = useState(false);
 
   const onChange = (value: string) => {
     setValue(value);
@@ -33,6 +37,19 @@ export default function Home() {
 
   const handleActivitySwitch = (activity: string) => {
     console.log(activity);
+  };
+
+  const handleCloseDrawer = () => {
+    setDrawerVisible(false);
+  };
+
+  const getFilterList = () => {
+    return [
+      SearchFiltersEnum.enum.dayOfWeek,
+      SearchFiltersEnum.enum.price,
+      SearchFiltersEnum.enum.rating,
+      SearchFiltersEnum.enum.startTime,
+    ];
   };
 
   return (
@@ -117,7 +134,7 @@ export default function Home() {
                     height={24}
                   />
                 }
-                onPress={() => {}}
+                onPress={() => setDrawerVisible(true)}
                 style={styles.settingsButton}
               />
             </Box>
@@ -148,6 +165,13 @@ export default function Home() {
         </Box>
         <ProviderCards />
       </ScrollView>
+
+      <SearchFilterDrawer
+        isOpen={drawerVisible}
+        onClose={handleCloseDrawer}
+        filters={getFilterList()}
+        onCallback={handleSearch}
+      />
     </Box>
   );
 }

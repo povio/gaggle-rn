@@ -17,11 +17,14 @@ import { createTheme } from "@shopify/restyle";
  * variant-12: 14px • Medium (500) • Line: 15px
  * variant-13-prominent: 21px • SemiBold (600) • Line: 27px
  * variant-14: 30px • Regular (400) • Line: 19px
+ * variant-15-prominent: 30px • Bold (700) • Line: 32px
+ * variant-16: 54px • Regular (400) • Line: normal
  */
 const theme = createTheme({
   colors: {
     transparent: "transparent",
     "elevation-background": "#f9fafbff",
+    "background-light-gray": "#EFF0F6",
     "main-theme-active": "#FFD035",
     "elevation-surface-1": "#f3f4f6ff",
     "elevation-outline-1": "#e5e7ebff",
@@ -235,6 +238,16 @@ const theme = createTheme({
       fontFamily: "BalooBhai2-Regular",
       lineHeight: 19,
     },
+    "variant-15-prominent": {
+      fontSize: 30,
+      fontFamily: "BalooBhai2-SemiBold",
+      lineHeight: 32,
+    },
+    "variant-16": {
+      fontSize: 54,
+      fontFamily: "BalooBhai2-Regular",
+      lineHeight: 51,
+    },
     defaults: {
       fontSize: 14,
       fontFamily: "BalooBhai2-Regular",
@@ -357,6 +370,7 @@ const theme = createTheme({
     },
   },
   iconButtonSizes: {
+    xs: "0",
     s: "height-height-s",
     m: "height-height-m",
     l: "height-height-l",

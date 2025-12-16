@@ -5,6 +5,7 @@ import { ScrollView, StyleSheet, View } from "react-native";
 import ArrowLeftIcon from "@/assets/icons/ArrowLeftIcon";
 import HeartIcon from "@/assets/icons/HeartIcon";
 import Box from "@/components/Box";
+import Button from "@/components/buttons/Button";
 import IconButton from "@/components/buttons/IconButton";
 import PillButton from "@/components/buttons/PillButton";
 import Image from "@/components/Image";
@@ -112,20 +113,10 @@ export default function ProviderDetails({ id }: ProviderDetailsProps) {
               <Box
                 justifyContent="center"
                 alignContent="center"
-                backgroundColor="elevation-background"
                 width={38}
                 height={38}
-                borderRadius="full"
-                style={styles.iconContainer}
-              >
-                <IconButton
-                  icon={<HeartIcon />}
-                  iconColor={!fav ? "interactive-icon-inactive" : "interactive-active"}
-                  onPress={handleFavorite}
-                  variant="transparent"
-                  style={styles.headerIcon}
-                />
-              </Box>
+                visible
+              />
             </Box>
             <Text
               variant="variant-5-prominent"
@@ -220,7 +211,7 @@ export default function ProviderDetails({ id }: ProviderDetailsProps) {
         <Box
           paddingHorizontal="5"
           paddingTop="4"
-          paddingBottom="10"
+          paddingBottom="4"
           gap="2"
         >
           <Box
@@ -272,7 +263,9 @@ export default function ProviderDetails({ id }: ProviderDetailsProps) {
             </Text>
           </Box>
           <Box
-            flex={1}
+            flexDirection={"column"}
+            width={"100%"}
+            paddingBottom={"4"}
             gap="4"
           >
             <Text

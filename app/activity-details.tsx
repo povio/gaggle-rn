@@ -4,12 +4,15 @@ import { ScrollView, StyleSheet, View } from "react-native";
 
 import ArrowLeftIcon from "@/assets/icons/ArrowLeftIcon";
 import HeartIcon from "@/assets/icons/HeartIcon";
+import StarIcon from "@/assets/icons/StarIcon";
 import Box from "@/components/Box";
+import Button from "@/components/buttons/Button";
 import IconButton from "@/components/buttons/IconButton";
 import PillButton from "@/components/buttons/PillButton";
 import Image from "@/components/Image";
 import { ActivityPreviews } from "@/components/shared/ActivityPreview";
 import { BookingDrawer } from "@/components/shared/BookingDrawer";
+import ReviewSegment from "@/components/shared/ReviewSegment";
 import Text from "@/components/text/Text";
 
 interface ActivityDetailsProps {
@@ -207,20 +210,8 @@ export default function ActivityDetails({ id }: ActivityDetailsProps) {
             </Text>
             <ActivityPreviews />
           </Box>
-          <Box>
-            <Text
-              variant="variant-6-prominent"
-              textAlign="left"
-            >
-              What parents say
-            </Text>
-            <Text
-              variant="variant-7"
-              textAlign="left"
-            >
-              TODO Rating system
-            </Text>
-          </Box>
+
+          <ReviewSegment />
         </Box>
         <BookingDrawer />
       </ScrollView>
@@ -239,6 +230,12 @@ const styles = StyleSheet.create({
     left: 0,
     width: "100%",
     height: 150,
+  },
+  reviewBtn: {
+    alignSelf: "flex-start",
+    textDecorationLine: "underline",
+    marginTop: 15,
+    marginBottom: 20,
   },
   iconContainer: {
     boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 10px 3px",

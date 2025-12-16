@@ -30,6 +30,7 @@ export enum LoaderPositionEnum {
 }
 
 export enum IconButtonSizeEnum {
+  xs = "xs",
   s = "s",
   m = "m",
   l = "l",

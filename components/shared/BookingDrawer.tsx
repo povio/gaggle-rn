@@ -1,67 +1,32 @@
-import { ChevronDown } from "lucide-react-native";
-import { useState } from "react";
+import { InfoIcon } from "lucide-react-native";
+import { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 
-import ArrowDownIcon from "@/assets/icons/ArrowDownIcon";
+import CheckCircleIcon from "@/assets/icons/CheckCircleIcon";
+import CopyIcon from "@/assets/icons/CopyIcon";
 import LetterIcon from "@/assets/icons/LetterIcon";
 import PhoneIcon from "@/assets/icons/PhoneIcon";
+import { cards } from "@/data/mock/activities";
 
 import Box from "../Box";
 import Accordion from "../buttons/Accordion";
 import Button from "../buttons/Button";
 import IconButton from "../buttons/IconButton";
-import Text from "../text/Text";
-
-const Trigger = () => {
-  return (
-    <Box
-      flexDirection={"row"}
-      justifyContent={"space-between"}
-      alignItems={"center"}
-      width={"100%"}
-      paddingHorizontal={"5"}
-      paddingVertical={"3"}
-      borderColor={"text-disabled"}
-      borderRadius={"m"}
-      borderWidth={1}
-    >
-      <Text
-        flexGrow={1}
-        variant={"variant-11"}
-      >
-        Choose a Session
-      </Text>
-      <Box
-        flexDirection={"row"}
-        justifyContent={"center"}
-        alignItems={"center"}
-        gap={"3"}
-      >
-        <Text
-          variant={"variant-11"}
-          color="text-disabled"
-        >
-          3
-        </Text>
-        <Box
-          backgroundColor={"main-theme-active"}
-          width={23}
-          height={23}
-          flexDirection={"row"}
-          justifyContent={"center"}
-          alignItems={"center"}
-          flexGrow={0}
-          borderRadius={"full"}
-        >
-          <ChevronDown width={16} />
-        </Box>
-      </Box>
-    </Box>
-  );
-};
+import Modal from "../modals/Modal";
+import { IconTextModalContent } from "../modals/ModalContent";
+import { ActivityCard, ActivityCardVariant } from "./ActivityCard";
+import type { Card } from "./FavoritesList";
 
 export const BookingDrawer = () => {
   const [drawerVisible, setDrawerVisible] = useState(true);
+  const [data, setData] = useState<Card[] | null>(null);
+  const [modalBooking, setModalBooking] = useState(false);
+  const [modalBookingClosed, setModalBookingClosed] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    setData(cards.filter((_, index) => index < 3));
+  }, []);
 
   return (
     <Box alignItems="center">
@@ -76,15 +41,26 @@ export const BookingDrawer = () => {
         borderRadius="m"
         style={styles.container}
       >
-        <Accordion trigger={<Trigger />}>
+        <Accordion
+          trigger="Choose a session"
+          helperText="3"
+        >
           <Box
             alignItems="center"
             justifyContent="center"
-            flexDirection={"row"}
+            flexDirection={"column"}
             width={"100%"}
             gap="2"
           >
-            asdasdasda
+            {data &&
+              data?.map((card) => (
+                <ActivityCard
+                  isFavored={false}
+                  data={card}
+                  variant={ActivityCardVariant.SESSION}
+                  key={card.id}
+                />
+              ))}
           </Box>
         </Accordion>
         <Box
@@ -108,7 +84,7 @@ export const BookingDrawer = () => {
             iconColor="interactive-primary-on"
             variant="transparent"
             style={styles.bookingIcon}
-            onPress={() => {}}
+            onPress={() => setModalBooking(true)}
             size={"l"}
           />
           <IconButton
@@ -116,11 +92,35 @@ export const BookingDrawer = () => {
             iconColor="interactive-primary-on"
             variant="transparent"
             style={styles.bookingIcon}
-            onPress={() => {}}
+            onPress={() => setModalBookingClosed(true)}
             size={"m"}
           />
         </Box>
       </Box>
+      <Modal
+        visible={modalBooking}
+        onClose={() => setModalBooking(false)}
+      >
+        <IconTextModalContent
+          title="Lorem Ipsum Text"
+          text="(301) 280-1660"
+          icon={<PhoneIcon />}
+          primaryButtonText="COPY PHONE"
+          btnIcon={copied ? <CheckCircleIcon /> : <CopyIcon />}
+          onPrimaryButtonPress={() => setCopied(true)}
+        />
+      </Modal>
+      <Modal
+        visible={modalBookingClosed}
+        onClose={() => setModalBookingClosed(false)}
+      >
+        <IconTextModalContent
+          title="Imagination Stage does not currently support direct booking"
+          icon={<InfoIcon />}
+          primaryButtonText="GOT IT"
+          onPrimaryButtonPress={() => setModalBookingClosed(false)}
+        />
+      </Modal>
     </Box>
   );
 };
