@@ -19,6 +19,7 @@ import { createTheme } from "@shopify/restyle";
  * variant-14: 30px • Regular (400) • Line: 19px
  * variant-15-prominent: 30px • Bold (700) • Line: 32px
  * variant-16: 54px • Regular (400) • Line: normal
+ * variant-17-prominent: 20px • SemiBold (600) • Line: 24px
  */
 const theme = createTheme({
   colors: {
@@ -248,6 +249,11 @@ const theme = createTheme({
       fontFamily: "BalooBhai2-Regular",
       lineHeight: 51,
     },
+    "variant-17-prominent": {
+      fontSize: 20,
+      fontFamily: "BalooBhai2-SemiBold",
+      lineHeight: 24,
+    },
     defaults: {
       fontSize: 14,
       fontFamily: "BalooBhai2-Regular",
@@ -270,7 +276,7 @@ const theme = createTheme({
       color: "interactive-secondary-on",
       colorPressed: "interactive-secondary-on",
       colorDisabled: "button-disabled-text",
-      backgroundColor: "interactive-secondary-idle",
+      backgroundColor: "button-secondary-color",
       backgroundColorPressed: "interactive-secondary-pressed",
       backgroundColorDisabled: "button-disabled-bg",
       borderColor: "transparent",

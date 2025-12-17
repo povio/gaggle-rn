@@ -1,0 +1,54 @@
+import Svg, { Path, type SvgProps } from "react-native-svg";
+
+const ShareIcon = (props: SvgProps) => (
+  <Svg
+    viewBox="0 0 24 24"
+    fill="none"
+    {...props}
+  >
+    <Path
+      d="M16.96 6.16992C18.96 7.55992 20.34 9.76992 20.62 12.3199"
+      stroke={props.color || props.fill || "#B1B1B1"}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <Path
+      d="M3.48999 12.3697C3.74999 9.82973 5.10999 7.61973 7.08999 6.21973"
+      stroke={props.color || props.fill || "#B1B1B1"}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <Path
+      d="M8.18994 20.9404C9.34994 21.5304 10.6699 21.8604 12.0599 21.8604C13.3999 21.8604 14.6599 21.5604 15.7899 21.0104"
+      stroke={props.color || props.fill || "#B1B1B1"}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <Path
+      d="M12.06 7.69965C13.5954 7.69965 14.84 6.455 14.84 4.91965C14.84 3.3843 13.5954 2.13965 12.06 2.13965C10.5247 2.13965 9.28003 3.3843 9.28003 4.91965C9.28003 6.455 10.5247 7.69965 12.06 7.69965Z"
+      stroke={props.color || props.fill || "#B1B1B1"}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <Path
+      d="M4.83005 19.9204C6.3654 19.9204 7.61005 18.6757 7.61005 17.1404C7.61005 15.605 6.3654 14.3604 4.83005 14.3604C3.2947 14.3604 2.05005 15.605 2.05005 17.1404C2.05005 18.6757 3.2947 19.9204 4.83005 19.9204Z"
+      stroke={props.color || props.fill || "#B1B1B1"}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <Path
+      d="M19.1699 19.9204C20.7052 19.9204 21.9499 18.6757 21.9499 17.1404C21.9499 15.605 20.7052 14.3604 19.1699 14.3604C17.6345 14.3604 16.3899 15.605 16.3899 17.1404C16.3899 18.6757 17.6345 19.9204 19.1699 19.9204Z"
+      stroke={props.color || props.fill || "#B1B1B1"}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </Svg>
+);
+
+export default ShareIcon;

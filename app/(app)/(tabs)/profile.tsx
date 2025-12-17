@@ -3,55 +3,36 @@ import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 
 import ArrowLeftIcon from "@/assets/icons/ArrowLeftIcon";
+import CogIcon from "@/assets/icons/CogIcon";
+import EditIcon from "@/assets/icons/EditIcon";
 import Box from "@/components/Box";
-import Button from "@/components/buttons/Button";
 import IconButton from "@/components/buttons/IconButton";
-import PillButton from "@/components/buttons/PillButton";
 import Image from "@/components/Image";
 import LoadingScreen from "@/components/LoadingScreen";
 import { ActivityCard } from "@/components/shared/ActivityCard";
-import { ActivityPreviews } from "@/components/shared/ActivityPreview";
 import type { Card } from "@/components/shared/FavoritesList";
 import Text from "@/components/text/Text";
 import { cards } from "@/data/mock/activities";
 
-interface ProviderDetailsProps {
-  id: string;
-}
-
-export default function ProviderDetails({ id }: ProviderDetailsProps) {
+const ProfilePage = () => {
   const router = useRouter();
-  const [fav, setFav] = useState<boolean>(false);
-  const [follow, setFollow] = useState<boolean>(false);
-  const [followCount, setFllowCount] = useState<number>(99);
   const [data, setData] = useState<Card[] | null>(null);
 
   useEffect(() => {
     setData(cards.filter((_, index) => index < 4));
   }, []);
 
+  const handleEditProfile = () => {
+    router.push("/edit-profile");
+  };
+
+  const handleProfileSettings = () => {
+    router.push("/profile-settings");
+  };
+
   if (!data) {
     return <LoadingScreen />;
   }
-
-  const handleBack = () => {
-    router.push("/(app)/(tabs)");
-  };
-
-  const handleFavorite = () => {
-    setFav(!fav);
-  };
-
-  const handleFallowProvider = () => {
-    setFllowCount((state) => {
-      if (follow) {
-        return state - 1;
-      }
-
-      return state + 1;
-    });
-    setFollow(!follow);
-  };
 
   return (
     <Box
@@ -91,8 +72,13 @@ export default function ProviderDetails({ id }: ProviderDetailsProps) {
                 style={styles.iconContainer}
               >
                 <IconButton
-                  icon={<ArrowLeftIcon />}
-                  onPress={handleBack}
+                  icon={
+                    <CogIcon
+                      width={20}
+                      height={20}
+                    />
+                  }
+                  onPress={handleProfileSettings}
                   variant="transparent"
                   style={styles.headerIcon}
                 />
@@ -104,7 +90,7 @@ export default function ProviderDetails({ id }: ProviderDetailsProps) {
                 overflow="hidden"
               >
                 <Image
-                  source={require("@/assets/illustrations/camp.svg")}
+                  source={require("@/assets/illustrations/basketball.svg")}
                   style={styles.providerImage}
                   contentFit="contain"
                 />
@@ -112,63 +98,38 @@ export default function ProviderDetails({ id }: ProviderDetailsProps) {
               <Box
                 justifyContent="center"
                 alignContent="center"
+                backgroundColor="elevation-background"
                 width={38}
                 height={38}
-                visible
-              />
+                borderRadius="full"
+                style={styles.iconContainer}
+              >
+                <IconButton
+                  icon={
+                    <EditIcon
+                      width={20}
+                      height={20}
+                    />
+                  }
+                  onPress={handleEditProfile}
+                  variant="transparent"
+                  style={styles.headerIcon}
+                />
+              </Box>
             </Box>
             <Text
               variant="variant-5-prominent"
               textAlign="center"
             >
-              Title Goes Here!
+              Tsukimoto Yakashi
             </Text>
             <Box
               flexDirection="row"
               justifyContent="center"
               alignItems="center"
-              gap="2"
-            >
-              <PillButton
-                label="Kids"
-                onPress={() => {}}
-                variant="primary"
-                textVariant="variant-11"
-              />
-              <PillButton
-                label="School"
-                onPress={() => {}}
-                variant="primary"
-                textVariant="variant-11"
-              />
-              <PillButton
-                label="Sport"
-                onPress={() => {}}
-                variant="primary"
-                textVariant="variant-11"
-              />
-            </Box>
-            <Box
-              flexDirection="row"
-              justifyContent="center"
-              alignItems="center"
-              gap="2"
+              gap="4"
               paddingTop="3"
             >
-              <Box
-                flexDirection="column"
-                justifyContent="center"
-                alignItems="center"
-                gap="2"
-              >
-                <Text
-                  variant="variant-14"
-                  textAlign="center"
-                >
-                  34
-                </Text>
-                <Text textAlign="center">Places</Text>
-              </Box>
               <Box
                 flexDirection="column"
                 justifyContent="center"
@@ -193,18 +154,11 @@ export default function ProviderDetails({ id }: ProviderDetailsProps) {
                   variant="variant-14"
                   textAlign="center"
                 >
-                  {followCount}
+                  43
                 </Text>
                 <Text textAlign="center">Followed</Text>
               </Box>
             </Box>
-            <Button
-              label={follow ? "Unfollow" : "Follow"}
-              onPress={handleFallowProvider}
-              width="l"
-              textVariant="variant-2-prominent"
-              variant={follow ? "outlined" : "secondary"}
-            />
           </Box>
         </View>
         <Box
@@ -213,54 +167,6 @@ export default function ProviderDetails({ id }: ProviderDetailsProps) {
           paddingBottom="4"
           gap="2"
         >
-          <Box
-            flex={1}
-            gap="2"
-          >
-            <Text
-              variant="variant-6-prominent"
-              textAlign="left"
-            >
-              Our Take
-            </Text>
-            <Text
-              variant="variant-7"
-              textAlign="left"
-            >
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut vitae tempor ex. Suspendisse consequat sapien
-              at laoreet blandit. Proin vel elit feugiat, tempus augue eget, vehicula metus. Proin vel nisl bibendum,
-              laoreet ligula et, feugiat mauris. Integer volutpat volutpat est aliquam ultrices. Nulla molestie
-              vulputate ullamcorper. {"\n\n"} Fusce non dolor venenatis mi venenatis eleifend. Etiam aliquam ornare
-              felis, ac eleifend enim blandit sit amet. Phasellus auctor porttitor erat vel tempor. Praesent ultricies
-              mi a placerat interdum. Donec nisl orci, finibus quis rhoncus dignissim, luctus ac nibh. Pellentesque quis
-              consectetur ligula, a vestibulum sapien.
-            </Text>
-          </Box>
-          <Box>
-            <Text
-              variant="variant-6-prominent"
-              textAlign="left"
-            >
-              Parents also choose:
-            </Text>
-            <ActivityPreviews />
-          </Box>
-          <Box>
-            <Text
-              variant="variant-6-prominent"
-              textAlign="left"
-            >
-              Locations
-            </Text>
-            <Text
-              variant="variant-7"
-              textAlign="left"
-              color="interactive-tertiary-on"
-            >
-              Rockville; Potomac; Gaithersburg; Rockville; Potomac; Gaithersburg; Rockville; Potomac; Gaithersburg;
-              Rockville; Potomac; Gaithersburg;
-            </Text>
-          </Box>
           <Box
             flexDirection={"column"}
             width={"100%"}
@@ -271,7 +177,7 @@ export default function ProviderDetails({ id }: ProviderDetailsProps) {
               variant="variant-6-prominent"
               textAlign="left"
             >
-              Services
+              Your Favorites
             </Text>
             {data &&
               data?.map((card) => (
@@ -286,7 +192,7 @@ export default function ProviderDetails({ id }: ProviderDetailsProps) {
       </ScrollView>
     </Box>
   );
-}
+};
 
 const styles = StyleSheet.create({
   header: {
@@ -323,3 +229,5 @@ const styles = StyleSheet.create({
     boxShadow: "0px 3px 9px 9px rgba(0,0,0,0.1)",
   },
 });
+
+export default ProfilePage;

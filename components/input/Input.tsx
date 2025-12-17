@@ -33,6 +33,8 @@ export interface InputProps extends BoxProps<Theme> {
   limit?: number;
   textVariant?: Exclude<keyof Theme["textVariants"], "defaults">;
   onSubmitEditing?: () => void;
+  borderRadius?: keyof Theme["borderRadii"];
+  borderColor?: ThemeColor;
 }
 
 const Input = ({
@@ -54,6 +56,8 @@ const Input = ({
   limit,
   textVariant = "variant-7",
   onSubmitEditing,
+  borderRadius,
+  borderColor: customBorderColor,
   ...rest
 }: InputProps) => {
   const theme = useTheme<Theme>();
@@ -86,7 +90,7 @@ const Input = ({
   );
 
   const backgroundColor = getBackgroundColor(active);
-  const borderColor = getBorderColor(active);
+  const borderColor = customBorderColor ?? getBorderColor(active);
   const labelColor = getLabelColor(active);
   const inputColor = getInputColor(active);
 
@@ -137,10 +141,10 @@ const Input = ({
         alignItems={type === "textArea" ? "flex-start" : "center"}
         gap="2"
         marginVertical="1"
-        backgroundColor={type === "textArea" ? "background-light-gray" : backgroundColor}
+        backgroundColor={backgroundColor}
         borderColor={borderColor}
         borderWidth={1}
-        borderRadius={variant === "default" ? "rounding-button-rounding" : "rounding-input-rounding"}
+        borderRadius={borderRadius ?? (variant === "default" ? "rounding-button-rounding" : "rounding-input-rounding")}
         height={type === "textArea" ? 96 : undefined}
         paddingHorizontal={variant === "default" ? "5" : "height-height-m"}
         paddingVertical={
