@@ -1,5 +1,6 @@
 import { useTheme } from "@shopify/restyle";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { PanResponder, Platform } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { clamp, runOnJS, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 
@@ -8,58 +9,209 @@ import type { Theme } from "@/utils/theme/restyleTheme";
 import Box, { AnimatedBox } from "../Box";
 import Text from "../text/Text";
 
-const KNOB_WIDTH = 24;
+const KNOB_WIDTH = 28;
 const TOOLTIP_OFFSET = 12;
 
 export interface SliderProps {
   min: number;
   max: number;
   title: string;
-  onValueChange: (value: number) => void;
+  onValueChange?: (value: number) => void;
+  onRangeChange?: (range: { min: number; max: number }) => void;
   unit?: string;
   disabled?: boolean;
+  rangeMode?: boolean;
+  initialValue?: number;
+  initialRange?: { min: number; max: number };
 }
 
-const Slider = ({ title, min, max, unit, onValueChange, disabled }: SliderProps) => {
+const Slider = ({
+  title,
+  min,
+  max,
+  unit,
+  onValueChange,
+  onRangeChange,
+  disabled,
+  rangeMode = false,
+  initialValue,
+  initialRange,
+}: SliderProps) => {
   const theme = useTheme<Theme>();
-  const isPressed = useSharedValue(false);
-  const thumbX = useSharedValue(0);
-  const prevThumbX = useSharedValue(0);
+  const isPressedMin = useSharedValue(false);
+  const isPressedMax = useSharedValue(false);
+  const thumbMinX = useSharedValue(0);
+  const thumbMaxX = useSharedValue(0);
+  const prevThumbMinX = useSharedValue(0);
+  const prevThumbMaxX = useSharedValue(0);
   const sliderWidth = useSharedValue(0);
 
-  const [selectedValue, setSelectedValue] = useState(0);
+  const [selectedMinValue, setSelectedMinValue] = useState(min);
+  const [selectedMaxValue, setSelectedMaxValue] = useState(max);
+  const isDraggingMin = useRef(false);
+  const isDraggingMax = useRef(false);
 
   const handleChange = (value: number) => {
-    onValueChange(value);
-    setSelectedValue(value);
+    onValueChange?.(value);
+    setSelectedMaxValue(value);
   };
 
-  const gesture = Gesture.Pan()
+  const handleRangeChange = (minVal: number, maxVal: number) => {
+    setSelectedMinValue(minVal);
+    setSelectedMaxValue(maxVal);
+    onRangeChange?.({ min: minVal, max: maxVal });
+  };
+
+  const initializeKnobs = (width: number) => {
+    if (rangeMode) {
+      const rangeMin = initialRange?.min ?? min;
+      const rangeMax = initialRange?.max ?? max;
+
+      // Calculate positions based on initial values
+      const minPosition = ((rangeMin - min) / (max - min)) * (width - KNOB_WIDTH);
+      const maxPosition = ((rangeMax - min) / (max - min)) * (width - KNOB_WIDTH);
+
+      thumbMinX.value = minPosition;
+      thumbMaxX.value = maxPosition;
+      setSelectedMinValue(rangeMin);
+      setSelectedMaxValue(rangeMax);
+    } else {
+      const value = initialValue ?? min;
+      const position = ((value - min) / (max - min)) * (width - KNOB_WIDTH);
+
+      thumbMaxX.value = position;
+      setSelectedMaxValue(value);
+    }
+  };
+
+  const panResponderMin = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => !disabled && rangeMode,
+      onMoveShouldSetPanResponder: () => !disabled && rangeMode,
+      onPanResponderGrant: () => {
+        isDraggingMin.current = true;
+        isPressedMin.value = true;
+        prevThumbMinX.value = thumbMinX.value;
+      },
+      onPanResponderMove: (_, gestureState) => {
+        if (disabled) return;
+        const newX = clamp(gestureState.dx + prevThumbMinX.value, 0, thumbMaxX.value - KNOB_WIDTH);
+        thumbMinX.value = newX;
+        const normalizedMin = Math.round((newX / (sliderWidth.value - KNOB_WIDTH)) * (max - min) + min);
+        const normalizedMax = Math.round((thumbMaxX.value / (sliderWidth.value - KNOB_WIDTH)) * (max - min) + min);
+        handleRangeChange(normalizedMin, normalizedMax);
+      },
+      onPanResponderRelease: () => {
+        isDraggingMin.current = false;
+        isPressedMin.value = false;
+      },
+    }),
+  ).current;
+
+  const panResponderMax = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => !disabled,
+      onMoveShouldSetPanResponder: () => !disabled,
+      onPanResponderGrant: () => {
+        isDraggingMax.current = true;
+        isPressedMax.value = true;
+        prevThumbMaxX.value = thumbMaxX.value;
+      },
+      onPanResponderMove: (_, gestureState) => {
+        if (disabled) return;
+        const minBound = rangeMode ? thumbMinX.value + KNOB_WIDTH : 0;
+        const newX = clamp(gestureState.dx + prevThumbMaxX.value, minBound, sliderWidth.value - KNOB_WIDTH);
+        thumbMaxX.value = newX;
+
+        if (rangeMode) {
+          const normalizedMin = Math.round((thumbMinX.value / (sliderWidth.value - KNOB_WIDTH)) * (max - min) + min);
+          const normalizedMax = Math.round((newX / (sliderWidth.value - KNOB_WIDTH)) * (max - min) + min);
+          handleRangeChange(normalizedMin, normalizedMax);
+        } else {
+          const normalizedValue = Math.round((newX / (sliderWidth.value - KNOB_WIDTH)) * (max - min) + min);
+          handleChange(normalizedValue);
+        }
+      },
+      onPanResponderRelease: () => {
+        isDraggingMax.current = false;
+        isPressedMax.value = false;
+      },
+    }),
+  ).current;
+
+  const gestureMin = Gesture.Pan()
+    .manualActivation(true)
+    .enabled(rangeMode)
     .onBegin(() => {
-      isPressed.value = true;
-      prevThumbX.value = thumbX.value;
+      isPressedMin.value = true;
+      prevThumbMinX.value = thumbMinX.value;
+    })
+    .onTouchesDown((e, state) => {
+      state.activate();
     })
     .onUpdate((e) => {
       if (disabled) return;
-      thumbX.value = clamp(e.translationX + prevThumbX.value, 0, sliderWidth.value - KNOB_WIDTH);
-      const normalizedValue = Math.round((thumbX.value / (sliderWidth.value - KNOB_WIDTH)) * (max - min) + min);
-      runOnJS(handleChange)(normalizedValue);
+      thumbMinX.value = clamp(e.translationX + prevThumbMinX.value, 0, thumbMaxX.value - KNOB_WIDTH);
+      const normalizedMin = Math.round((thumbMinX.value / (sliderWidth.value - KNOB_WIDTH)) * (max - min) + min);
+      const normalizedMax = Math.round((thumbMaxX.value / (sliderWidth.value - KNOB_WIDTH)) * (max - min) + min);
+      runOnJS(handleRangeChange)(normalizedMin, normalizedMax);
     })
     .onEnd(() => {
-      isPressed.value = false;
+      isPressedMin.value = false;
     });
 
-  const knobStyle = useAnimatedStyle(() => {
+  const gestureMax = Gesture.Pan()
+    .manualActivation(true)
+    .onBegin(() => {
+      isPressedMax.value = true;
+      prevThumbMaxX.value = thumbMaxX.value;
+    })
+    .onTouchesDown((e, state) => {
+      state.activate();
+    })
+    .onUpdate((e) => {
+      if (disabled) return;
+      const minBound = rangeMode ? thumbMinX.value + KNOB_WIDTH : 0;
+      thumbMaxX.value = clamp(e.translationX + prevThumbMaxX.value, minBound, sliderWidth.value - KNOB_WIDTH);
+
+      if (rangeMode) {
+        const normalizedMin = Math.round((thumbMinX.value / (sliderWidth.value - KNOB_WIDTH)) * (max - min) + min);
+        const normalizedMax = Math.round((thumbMaxX.value / (sliderWidth.value - KNOB_WIDTH)) * (max - min) + min);
+        runOnJS(handleRangeChange)(normalizedMin, normalizedMax);
+      } else {
+        const normalizedValue = Math.round((thumbMaxX.value / (sliderWidth.value - KNOB_WIDTH)) * (max - min) + min);
+        runOnJS(handleChange)(normalizedValue);
+      }
+    })
+    .onEnd(() => {
+      isPressedMax.value = false;
+    });
+
+  const knobMinStyle = useAnimatedStyle(() => {
     const getKnobBackgroundColor = (isPressed: boolean) => {
       if (disabled) {
         return theme.colors["interactive-primary-disabled"];
       }
-      return isPressed ? theme.colors["interactive-primary-pressed"] : theme.colors["interactive-primary-idle"];
+      return isPressed ? theme.colors["interactive-icon-pressed"] : theme.colors["interactive-icon-idle-2"];
     };
 
     return {
-      backgroundColor: getKnobBackgroundColor(isPressed.value),
-      transform: [{ translateX: thumbX.value }],
+      backgroundColor: getKnobBackgroundColor(isPressedMin.value),
+      transform: [{ translateX: thumbMinX.value }],
+    };
+  });
+
+  const knobMaxStyle = useAnimatedStyle(() => {
+    const getKnobBackgroundColor = (isPressed: boolean) => {
+      if (disabled) {
+        return theme.colors["interactive-primary-disabled"];
+      }
+      return isPressed ? theme.colors["interactive-icon-pressed"] : theme.colors["interactive-icon-idle-2"];
+    };
+
+    return {
+      backgroundColor: getKnobBackgroundColor(isPressedMax.value),
+      transform: [{ translateX: thumbMaxX.value }],
     };
   });
 
@@ -73,17 +225,32 @@ const Slider = ({ title, min, max, unit, onValueChange, disabled }: SliderProps)
   });
 
   const trackOverlayStyle = useAnimatedStyle(() => {
+    if (rangeMode) {
+      return {
+        width: withTiming(thumbMaxX.value - thumbMinX.value + KNOB_WIDTH / 2, {
+          duration: 5,
+        }),
+        marginTop: -2,
+        marginLeft: thumbMinX.value + KNOB_WIDTH / 2,
+      };
+    }
     return {
-      width: withTiming(thumbX.value + KNOB_WIDTH / 2, {
+      width: withTiming(thumbMaxX.value + KNOB_WIDTH / 2, {
         duration: 5,
       }),
       marginTop: -2,
     };
   });
 
-  const tooltipStyle = useAnimatedStyle(() => {
+  const tooltipMinStyle = useAnimatedStyle(() => {
     return {
-      opacity: withTiming(isPressed.value ? 1 : 0),
+      opacity: withTiming(isPressedMin.value ? 1 : 0),
+    };
+  });
+
+  const tooltipMaxStyle = useAnimatedStyle(() => {
+    return {
+      opacity: withTiming(isPressedMax.value ? 1 : 0),
     };
   });
 
@@ -91,6 +258,7 @@ const Slider = ({ title, min, max, unit, onValueChange, disabled }: SliderProps)
     <Box
       alignItems="flex-start"
       flexDirection="column"
+      width={"100%"}
       gap="1"
     >
       <Text
@@ -103,6 +271,7 @@ const Slider = ({ title, min, max, unit, onValueChange, disabled }: SliderProps)
         flexDirection="row"
         alignItems="center"
         gap="3"
+        width={"100%"}
       >
         <Text
           variant="variant-1"
@@ -115,6 +284,7 @@ const Slider = ({ title, min, max, unit, onValueChange, disabled }: SliderProps)
           onLayout={(event) => {
             const { width } = event.nativeEvent.layout;
             sliderWidth.value = width;
+            initializeKnobs(width);
           }}
           flex={1}
         >
@@ -125,59 +295,150 @@ const Slider = ({ title, min, max, unit, onValueChange, disabled }: SliderProps)
             style={trackStyle}
           />
           <AnimatedBox
-            backgroundColor="interactive-primary-idle"
+            backgroundColor="interactive-icon-pressed"
             borderRadius="xs"
             height={4}
             style={trackOverlayStyle}
             position="absolute"
           />
-          <GestureDetector gesture={gesture}>
-            <Box position="relative">
-              <AnimatedBox style={tooltipStyle}>
-                <AnimatedBox
-                  position="absolute"
-                  bottom={KNOB_WIDTH}
-                  paddingVertical="2"
-                  width={KNOB_WIDTH + TOOLTIP_OFFSET * 2}
-                  borderRadius="sm"
-                  backgroundColor="interactive-secondary-idle"
-                  left={thumbX.value - TOOLTIP_OFFSET}
-                  alignItems="center"
-                >
-                  <Text
-                    variant="variant-1"
-                    color="text-inverted-tertiary"
+          <Box position="relative">
+            {rangeMode && (
+              <>
+                <AnimatedBox style={tooltipMinStyle}>
+                  <AnimatedBox
+                    position="absolute"
+                    bottom={KNOB_WIDTH}
+                    paddingVertical="2"
+                    width={KNOB_WIDTH + TOOLTIP_OFFSET * 2}
+                    borderRadius="sm"
+                    backgroundColor="interactive-icon-pressed"
+                    left={thumbMinX.value - TOOLTIP_OFFSET}
+                    alignItems="center"
                   >
-                    {`${selectedValue}${unit}`}
-                  </Text>
+                    <Text
+                      variant="variant-1"
+                      color="text-inverted-tertiary"
+                    >
+                      {`${selectedMinValue}${unit}`}
+                    </Text>
+                  </AnimatedBox>
+                  <AnimatedBox
+                    backgroundColor="interactive-icon-pressed"
+                    height={13}
+                    width={13}
+                    position="absolute"
+                    bottom={20}
+                    left={thumbMinX.value + KNOB_WIDTH / 4}
+                    style={{
+                      transform: [{ rotate: "45deg" }],
+                    }}
+                  />
                 </AnimatedBox>
-                <AnimatedBox
-                  backgroundColor="interactive-secondary-idle"
-                  height={13}
-                  width={13}
-                  position="absolute"
-                  bottom={20}
-                  left={thumbX.value + KNOB_WIDTH / 4}
-                  style={{
-                    transform: [{ rotate: "45deg" }],
-                  }}
-                />
+                {Platform.OS === "web" ? (
+                  <AnimatedBox
+                    {...panResponderMin.panHandlers}
+                    position="absolute"
+                    height={KNOB_WIDTH}
+                    width={KNOB_WIDTH}
+                    borderRadius="full"
+                    backgroundColor="interactive-primary-on"
+                    borderWidth={4}
+                    borderColor="interactive-icon-on"
+                    style={[
+                      {
+                        marginTop: -14,
+                      },
+                      knobMinStyle,
+                    ]}
+                  />
+                ) : (
+                  <GestureDetector gesture={gestureMin}>
+                    <AnimatedBox
+                      position="absolute"
+                      height={KNOB_WIDTH}
+                      width={KNOB_WIDTH}
+                      borderRadius="full"
+                      backgroundColor="interactive-primary-on"
+                      borderWidth={4}
+                      borderColor="interactive-icon-on"
+                      style={[
+                        {
+                          marginTop: -14,
+                        },
+                        knobMinStyle,
+                      ]}
+                    />
+                  </GestureDetector>
+                )}
+              </>
+            )}
+            <AnimatedBox style={tooltipMaxStyle}>
+              <AnimatedBox
+                position="absolute"
+                bottom={KNOB_WIDTH}
+                paddingVertical="2"
+                width={KNOB_WIDTH + TOOLTIP_OFFSET * 2}
+                borderRadius="sm"
+                backgroundColor="interactive-icon-pressed"
+                left={thumbMaxX.value - TOOLTIP_OFFSET}
+                alignItems="center"
+              >
+                <Text
+                  variant="variant-1"
+                  color="text-inverted-tertiary"
+                >
+                  {`${selectedMaxValue}${unit}`}
+                </Text>
               </AnimatedBox>
               <AnimatedBox
+                backgroundColor="interactive-icon-pressed"
+                height={13}
+                width={13}
+                position="absolute"
+                bottom={20}
+                left={thumbMaxX.value + KNOB_WIDTH / 4}
+                style={{
+                  transform: [{ rotate: "45deg" }],
+                }}
+              />
+            </AnimatedBox>
+            {Platform.OS === "web" ? (
+              <AnimatedBox
+                {...panResponderMax.panHandlers}
                 position="absolute"
                 height={KNOB_WIDTH}
                 width={KNOB_WIDTH}
                 borderRadius="full"
                 backgroundColor="interactive-primary-on"
+                borderWidth={4}
+                borderColor="interactive-icon-on"
                 style={[
                   {
                     marginTop: -14,
                   },
-                  knobStyle,
+                  knobMaxStyle,
                 ]}
               />
-            </Box>
-          </GestureDetector>
+            ) : (
+              <GestureDetector gesture={gestureMax}>
+                <AnimatedBox
+                  position="absolute"
+                  height={KNOB_WIDTH}
+                  width={KNOB_WIDTH}
+                  borderRadius="full"
+                  backgroundColor="interactive-primary-on"
+                  borderWidth={4}
+                  borderColor="interactive-icon-on"
+                  style={[
+                    {
+                      marginTop: -14,
+                    },
+                    knobMaxStyle,
+                  ]}
+                />
+              </GestureDetector>
+            )}
+          </Box>
         </Box>
         <Text
           variant="variant-1"

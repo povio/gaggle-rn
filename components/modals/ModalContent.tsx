@@ -1,8 +1,14 @@
 import type React from "react";
+import { cloneElement } from "react";
+
+import ArrowLeftIcon from "@/assets/icons/ArrowLeftIcon";
 
 import Box from "../Box";
 import Button from "../buttons/Button";
 import Checkbox from "../buttons/Checkbox";
+import IconButton from "../buttons/IconButton";
+import Toggle from "../buttons/Toggle";
+import ToggleButton from "../buttons/ToggleButton";
 import Image from "../Image";
 import Input from "../input/Input";
 import Text from "../text/Text";
@@ -148,6 +154,7 @@ export const InputModalContent = ({
           <Checkbox
             checked={checkboxValue}
             onChange={onCheckboxChange}
+            id="id"
           />
           <Text variant="variant-10-prominent">{checkboxLabel}</Text>
         </Box>
@@ -283,11 +290,17 @@ export const FilterModalContent = ({
   primaryButtonText,
   onPrimaryButtonPress,
   filters,
+  selectedFilter,
+  selectedFilterIcon,
+  onBackToList,
 }: {
   title: string;
   filters: Element | React.ReactNode;
   primaryButtonText: string;
   onPrimaryButtonPress: () => void;
+  selectedFilter?: string | null;
+  selectedFilterIcon?: React.ReactElement | null;
+  onBackToList?: () => void;
 }) => {
   return (
     <Box
@@ -296,9 +309,42 @@ export const FilterModalContent = ({
       paddingBottom="8"
       paddingRight="8"
     >
-      <Text variant="variant-13-prominent">{title}</Text>
+      {selectedFilter && onBackToList ? (
+        <Box
+          flexDirection="row"
+          alignItems="center"
+          gap="2"
+        >
+          <IconButton
+            icon={
+              <ArrowLeftIcon
+                width={20}
+                height={20}
+              />
+            }
+            onPress={onBackToList}
+            size="xs"
+            variant="transparent"
+            iconColor="text-primary"
+          />
+          {selectedFilterIcon && (
+            <Box
+              width={20}
+              height={20}
+            >
+              {cloneElement(selectedFilterIcon)}
+            </Box>
+          )}
+          <Text variant="variant-13-prominent">{selectedFilter}</Text>
+        </Box>
+      ) : (
+        <Text variant="variant-13-prominent">{title}</Text>
+      )}
       {filters}
-      <Box gap="4">
+      <Box
+        gap="4"
+        marginTop={"4"}
+      >
         <Button
           variant="secondary"
           textVariant="variant-2-prominent"

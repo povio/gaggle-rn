@@ -62,8 +62,8 @@ const theme = createTheme({
     "interactive-outlined-on-toggled": "#ffffffff",
     "interactive-outlined-toggled": "#111827ff",
     "interactive-icon-idle": "#374151ff",
-    "interactive-icon-idle-2": "#2b51d4ff",
-    "interactive-icon-pressed": "#477feaff",
+    "interactive-icon-idle-2": "#058747",
+    "interactive-icon-pressed": "#04954F",
     "interactive-icon-disabled": "#6b7280ff",
     "interactive-icon-inactive": "#E5E3EC",
     "interactive-icon-on": "#ffffffff",
@@ -321,6 +321,11 @@ const theme = createTheme({
     small: "height-height-s",
     default: "height-height-m",
     large: "height-height-l",
+  },
+  pillSizes: {
+    s: { vertical: 4, horizontal: 6 },
+    m: { vertical: 8, horizontal: 10 },
+    l: { vertical: 10, horizontal: 12 },
   },
   iconButtonVariants: {
     primary: {

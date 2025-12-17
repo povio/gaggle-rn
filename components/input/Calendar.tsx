@@ -1,4 +1,5 @@
 import { useTheme } from "@shopify/restyle";
+import { ChevronLeftCircle, ChevronRightCircle } from "lucide-react-native";
 import React from "react";
 import type { TextStyle } from "react-native";
 import DateTimePicker, { type DateType, useDefaultStyles } from "react-native-ui-datepicker";
@@ -14,11 +15,18 @@ export interface CalendarProps {
   date: Date | undefined;
   setDate: (newDate: Date | undefined) => void;
   label: string;
+  showControls?: boolean;
 }
 
-const Calendar = ({ date, setDate, label, ...rest }: CalendarProps & Partial<typeof DateTimePicker>) => {
+const Calendar = ({
+  date,
+  setDate,
+  label,
+  showControls = true,
+  ...rest
+}: CalendarProps & Partial<typeof DateTimePicker>) => {
   const theme = useTheme<Theme>();
-  const defaultStyles = useDefaultStyles();
+  const defaultStyles = useDefaultStyles("light");
 
   const handleChange = (change: { date: DateType }) => {
     if (change?.date) {
@@ -36,7 +44,7 @@ const Calendar = ({ date, setDate, label, ...rest }: CalendarProps & Partial<typ
   };
 
   return (
-    <Box p="4">
+    <Box width={"100%"}>
       <Box
         pb="4"
         paddingHorizontal="2"
@@ -53,11 +61,16 @@ const Calendar = ({ date, setDate, label, ...rest }: CalendarProps & Partial<typ
         date={date}
         onChange={handleChange}
         showOutsideDays
+        navigationPosition="around"
+        components={{
+          IconPrev: <ChevronLeftCircle />,
+          IconNext: <ChevronRightCircle />,
+        }}
         styles={{
           ...defaultStyles,
           selected: {
             ...defaultStyles.selected,
-            backgroundColor: theme.colors["interactive-primary-idle"],
+            backgroundColor: theme.colors["pill-outlined-border"],
           },
           day: {
             ...defaultStyles.day,
@@ -69,54 +82,108 @@ const Calendar = ({ date, setDate, label, ...rest }: CalendarProps & Partial<typ
           },
           day_label: {
             ...defaultStyles.day_label,
-            fontSize: theme.textVariants["label-2-default"].fontSize,
-            fontFamily: theme.textVariants["label-2-default"].fontFamily,
-            color: theme.colors["interactive-text-on-bg"],
+            fontSize: theme.textVariants["variant-8"].fontSize,
+            fontFamily: theme.textVariants["variant-8"].fontFamily,
+            color: theme.colors["button-text-color"],
           } as TextStyle,
           weekday_label: {
             ...defaultStyles.weekday_label,
-            fontSize: theme.textVariants["label-2-default"].fontSize,
-            fontFamily: theme.textVariants["label-2-default"].fontFamily,
-            color: theme.colors["interactive-primary-idle"],
+            fontSize: theme.textVariants["variant-2-prominent"].fontSize,
+            fontFamily: theme.textVariants["variant-2-prominent"].fontFamily,
+            color: theme.colors["button-text-color"],
           } as TextStyle,
+          year_selector_label: {
+            fontSize: theme.textVariants["variant-2-prominent"].fontSize,
+            fontFamily: theme.textVariants["variant-2-prominent"].fontFamily,
+            backgroundColor: theme.colors["transparent"],
+          },
+          year: {
+            fontSize: theme.textVariants["variant-2-prominent"].fontSize,
+            fontFamily: theme.textVariants["variant-2-prominent"].fontFamily,
+            backgroundColor: theme.colors["transparent"],
+            borderColor: theme.colors["transparent"],
+            borderWidth: 0,
+            borderRadius: theme.borderRadii["rounding-button-rounding"],
+          },
+          month_selector_label: {
+            borderColor: theme.colors["transparent"],
+            borderWidth: 0,
+            backgroundColor: theme.colors["transparent"],
+            fontSize: theme.textVariants["variant-2-prominent"].fontSize,
+            fontFamily: theme.textVariants["variant-2-prominent"].fontFamily,
+          },
+          month_selector: {
+            borderColor: theme.colors["transparent"],
+            borderWidth: 0,
+            backgroundColor: theme.colors["transparent"],
+            fontSize: theme.textVariants["variant-2-prominent"].fontSize,
+            fontFamily: theme.textVariants["variant-2-prominent"].fontFamily,
+          },
+          year_label: {
+            fontSize: theme.textVariants["variant-2-prominent"].fontSize,
+            fontFamily: theme.textVariants["variant-2-prominent"].fontFamily,
+            backgroundColor: theme.colors["transparent"],
+            borderColor: theme.colors["transparent"],
+            borderWidth: 0,
+            borderRadius: theme.borderRadii["rounding-button-rounding"],
+          },
           weekdays: {
             ...defaultStyles.weekdays,
-            borderBottomWidth: 0,
-            borderTopWidth: 1,
+            borderBottomWidth: 1,
+            borderBottomColor: theme.colors["text-disabled"],
+            paddingBottom: 10,
+            borderTopWidth: 0,
+          },
+          selected_month: {
+            backgroundColor: theme.colors["pill-outlined-border"],
+            borderRadius: theme.borderRadii["rounding-button-rounding"],
+          },
+          months: {
+            fontSize: theme.textVariants["variant-2-prominent"].fontSize,
+            fontFamily: theme.textVariants["variant-2-prominent"].fontFamily,
+          },
+          selected_year: {
+            backgroundColor: theme.colors["pill-outlined-border"],
+            borderRadius: theme.borderRadii["rounding-button-rounding"],
           },
           month: {
             ...defaultStyles.month,
+            borderColor: theme.colors["transparent"],
+            borderWidth: 0,
             backgroundColor: theme.colors["transparent"],
-            borderWidth: 1,
-            borderColor: theme.colors["elevation-outline-1"],
             margin: theme.spacing["2"],
+            fontSize: theme.textVariants["variant-2-prominent"].fontSize,
+            fontFamily: theme.textVariants["variant-2-prominent"].fontFamily,
           },
           header: {
             marginRight: theme.spacing["2"],
-            backgroundColor: theme.colors["interactive-tertiary-idle"],
+            backgroundColor: theme.colors["trasnaparent"],
+            marginBottom: theme.spacing["4"],
           },
         }}
         {...rest}
       />
-      <ListItem
-        label=""
-        variant="action"
-        mt="8"
-        leftElement={
-          <TextButton
-            label="Today"
-            variant="primary"
-            onPress={handleTodayPress}
-          />
-        }
-        rightElement={
-          <TextButton
-            label="Clear"
-            variant="secondary"
-            onPress={handleClearPress}
-          />
-        }
-      />
+      {showControls && (
+        <ListItem
+          label=""
+          variant="action"
+          mt="8"
+          leftElement={
+            <TextButton
+              label="Today"
+              variant="primary"
+              onPress={handleTodayPress}
+            />
+          }
+          rightElement={
+            <TextButton
+              label="Clear"
+              variant="secondary"
+              onPress={handleClearPress}
+            />
+          }
+        />
+      )}
     </Box>
   );
 };

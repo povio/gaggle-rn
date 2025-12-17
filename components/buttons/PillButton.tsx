@@ -17,6 +17,7 @@ export interface PillButtonProps {
   onPress: () => void;
   disabled?: boolean;
   textVariant?: Exclude<keyof Theme["textVariants"], "defaults">;
+  size?: "s" | "m" | "l";
 }
 
 const PillButton = ({
@@ -27,6 +28,7 @@ const PillButton = ({
   onPress,
   disabled,
   textVariant = "variant-12",
+  size = "s",
   ...rest
 }: PillButtonProps) => {
   const theme = useTheme<Theme>();
@@ -85,6 +87,7 @@ const PillButton = ({
   const labelColor = getLabelColor(pressed);
   const borderColor = getBorderColor();
   const hitSlop = theme.spacing["hitbox-hitbox-xs"];
+  const pillSize = theme.pillSizes[size];
 
   return (
     <Pressable
@@ -96,12 +99,14 @@ const PillButton = ({
       onPressIn={() => setPressed(true)}
       onPressOut={() => setPressed(false)}
       onPress={onPress}
-      paddingVertical="1"
-      paddingHorizontal="1-5"
       flexDirection="row"
       gap="interior-icon-to-label-spacing"
       alignSelf="flex-start"
       hitSlop={{ bottom: hitSlop, top: hitSlop, left: hitSlop, right: hitSlop }}
+      style={{
+        paddingHorizontal: pillSize.horizontal,
+        paddingVertical: pillSize.vertical,
+      }}
       {...rest}
     >
       <Text

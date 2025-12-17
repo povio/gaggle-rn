@@ -47,6 +47,7 @@ export default function TabLayout() {
           ),
         }}
       />
+      {/* tmp disabled for MVP
       <Tabs.Screen
         name="bookings"
         options={{
@@ -59,7 +60,7 @@ export default function TabLayout() {
             />
           ),
         }}
-      />
+      /> */}
       <Tabs.Screen
         name="favorites"
         options={{
@@ -73,7 +74,8 @@ export default function TabLayout() {
           ),
         }}
       />
-      <Tabs.Screen
+      {/* tmp disabled for MVP
+       <Tabs.Screen
         name="messages"
         options={{
           title: "Messages",
@@ -85,7 +87,7 @@ export default function TabLayout() {
             />
           ),
         }}
-      />
+      /> */}
       <Tabs.Screen
         name="account"
         options={{

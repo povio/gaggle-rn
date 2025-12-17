@@ -10,13 +10,14 @@ import { AnimatedBox } from "../Box";
 export interface ToggleProps {
   checked?: boolean;
   disabled?: boolean;
-  onChange: (checked: boolean) => void;
+  onChange: (checked: boolean, id: string) => void;
+  id: string;
 }
 
 const TRANSLATE_Y_CHECKED = 19;
 const TRANSLATE_Y_UNCHECKED = 2;
 
-const Toggle = ({ onChange, checked, disabled }: ToggleProps) => {
+const Toggle = ({ onChange, checked, disabled, id }: ToggleProps) => {
   const [pressed, setPressed] = useState(false);
   const theme = useTheme<Theme>();
   const initialValue = checked ? TRANSLATE_Y_CHECKED : TRANSLATE_Y_UNCHECKED;
@@ -41,7 +42,7 @@ const Toggle = ({ onChange, checked, disabled }: ToggleProps) => {
   }, [checked, translate, disabled, theme.colors, pressed]);
 
   const handlePress = () => {
-    onChange(!checked);
+    onChange(!checked, id);
   };
 
   const hitSlop = theme.spacing["hitbox-hitbox-xxs"];

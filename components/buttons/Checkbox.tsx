@@ -11,10 +11,11 @@ import Box from "../Box";
 export interface CheckboxProps {
   checked?: boolean | "indeterminate";
   disabled?: boolean;
-  onChange: () => void;
+  onChange: (id) => void;
+  id: string;
 }
 
-const Checkbox = ({ checked, onChange, disabled, ...rest }: CheckboxProps) => {
+const Checkbox = ({ id, checked, onChange, disabled, ...rest }: CheckboxProps) => {
   const theme = useTheme<Theme>();
   const [pressed, setPressed] = useState(false);
 
@@ -33,7 +34,7 @@ const Checkbox = ({ checked, onChange, disabled, ...rest }: CheckboxProps) => {
 
   return (
     <BasePressable
-      onPress={onChange}
+      onPress={() => onChange(id)}
       onPressIn={() => setPressed(true)}
       onPressOut={() => setPressed(false)}
       style={{
@@ -60,7 +61,12 @@ const Checkbox = ({ checked, onChange, disabled, ...rest }: CheckboxProps) => {
           backgroundColor={textColor}
           borderRadius="xs"
         />
-        {checked === true && <CheckIcon color={calculatedTextColor} />}
+        {checked === true && (
+          <CheckIcon
+            color={calculatedTextColor}
+            width={10}
+          />
+        )}
         {checked === "indeterminate" && <IndeterminateIcon color={calculatedTextColor} />}
       </Box>
     </BasePressable>

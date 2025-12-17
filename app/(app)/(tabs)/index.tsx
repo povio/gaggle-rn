@@ -9,15 +9,12 @@ import Box from "@/components/Box";
 import IconButton from "@/components/buttons/IconButton";
 import Input from "@/components/input/Input";
 import { ActivityPreviews } from "@/components/shared/ActivityPreview";
-import { SearchFiltersEnum } from "@/components/shared/filters/list";
 import { IndexTopMenu } from "@/components/shared/IndexTopMenu";
 import { ProviderCards } from "@/components/shared/ProviderCards";
 import { SearchFilterDrawer } from "@/components/shared/SearchFilterDrawer";
 import Text from "@/components/text/Text";
 import { UsersQueries } from "@/data/users";
-import { FilterId } from "@/modules/search/stores/searchStore";
-
-const SCREEN_WIDTH = Dimensions.get("window").width;
+import { SearchFiltersEnum } from "@/modules/search/stores/filterStore";
 
 export default function Home() {
   const router = useRouter();
@@ -35,10 +32,6 @@ export default function Home() {
     }
   };
 
-  const handleActivitySwitch = (activity: string) => {
-    console.log(activity);
-  };
-
   const handleCloseDrawer = () => {
     setDrawerVisible(false);
   };
@@ -49,6 +42,10 @@ export default function Home() {
       SearchFiltersEnum.enum.price,
       SearchFiltersEnum.enum.rating,
       SearchFiltersEnum.enum.startTime,
+      SearchFiltersEnum.enum.endDate,
+      SearchFiltersEnum.enum.duration,
+      SearchFiltersEnum.enum.toggleTester,
+      SearchFiltersEnum.enum["embeded-toggle"],
     ];
   };
 
