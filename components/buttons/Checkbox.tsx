@@ -56,15 +56,18 @@ const Checkbox = ({ id, checked, onChange, disabled, ...rest }: CheckboxProps) =
         backgroundColor={backgroundColor}
       >
         <Box
-          width={checked ? 0 : 16}
-          height={checked ? 0 : 16}
+          width={checked ? 0 : 20}
+          height={checked ? 0 : 20}
           backgroundColor={textColor}
           borderRadius="xs"
+          borderColor={"pill-default-border"}
+          borderWidth={1}
         />
         {checked === true && (
           <CheckIcon
             color={calculatedTextColor}
             width={10}
+            height={19}
           />
         )}
         {checked === "indeterminate" && <IndeterminateIcon color={calculatedTextColor} />}

@@ -1,10 +1,11 @@
 import { useState } from "react";
 
+import { FilterList, type SearchFilters } from "@/modules/search/stores/filterStore";
+
 import Box from "../Box";
 import Drawer, { type DrawerProps } from "../modals/Drawer";
 import { FilterModalContent } from "../modals/ModalContent";
-import { FilterList, type SearchFilters } from "@/modules/search/stores/filterStore";
-import { FilterBuilder } from "./filters/list";
+import { FilterBuilder } from "./filters/FilterBuilder";
 
 interface SearchFilterDrawerProps {
   isOpen: boolean;

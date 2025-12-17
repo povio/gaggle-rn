@@ -18,7 +18,14 @@ export interface TextButtonProps extends BoxProps<Theme> {
   textVariant?: Exclude<keyof Theme["textVariants"], "defaults">;
 }
 
-const TextButton = ({ variant = "primary", icon, label, disabled, textVariant = "variant-1", ...rest }: TextButtonProps) => {
+const TextButton = ({
+  variant = "primary",
+  icon,
+  label,
+  disabled,
+  textVariant = "variant-1",
+  ...rest
+}: TextButtonProps) => {
   const theme = useTheme<Theme>();
   const [pressed, setPressed] = useState(false);
 

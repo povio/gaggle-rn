@@ -1,15 +1,19 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { supabase } from "@/utils/supabase";
-import { UsersModels } from "./users.models";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
 import { STORAGE_KEYS } from "@/constants/storage";
+import { supabase } from "@/utils/supabase";
+
+import type { UsersModels } from "./users.models";
 
 export namespace UsersQueries {
   export const useGetCurrentUser = () => {
     return useQuery({
       queryKey: ["currentUser"],
       queryFn: async () => {
-        const { data: { user } } = await supabase.auth.getUser();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
 
         if (!user) throw new Error("User not authenticated");
 
@@ -39,12 +43,10 @@ export namespace UsersQueries {
         if (error) throw error;
         if (!data.user) throw new Error("Failed to create user");
 
-        const { error: insertError } = await supabase
-          .from("users")
-          .insert({
-            id: data.user.id,
-            email: data.user.email,
-          });
+        const { error: insertError } = await supabase.from("users").insert({
+          id: data.user.id,
+          email: data.user.email,
+        });
 
         if (insertError) throw insertError;
 
@@ -82,28 +84,22 @@ export namespace UsersQueries {
 
         if (profileError) throw profileError;
 
-        const { data: userData } = await supabase
-          .from("users")
-          .select("id")
-          .eq("email", userCreated)
-          .maybeSingle();
+        const { data: userData } = await supabase.from("users").select("id").eq("email", userCreated).maybeSingle();
 
         if (!userData) throw new Error("User not found");
 
         if (input.children && input.children.length > 0) {
-          const childrenToInsert = input.children.map(child => ({
+          const childrenToInsert = input.children.map((child) => ({
             user_id: userData.id,
-            first_name: child.firstName || '',
-            last_name: child.lastName || '',
-            birthdate: child.birthdate || '',
-            gender: child.gender || '',
-            age: child.age || '',
-            school_name: child.schoolName || '',
+            first_name: child.firstName || "",
+            last_name: child.lastName || "",
+            birthdate: child.birthdate || "",
+            gender: child.gender || "",
+            age: child.age || "",
+            school_name: child.schoolName || "",
           }));
 
-          const { error: childrenError } = await supabase
-            .from("children")
-            .insert(childrenToInsert);
+          const { error: childrenError } = await supabase.from("children").insert(childrenToInsert);
 
           if (childrenError) throw childrenError;
         }

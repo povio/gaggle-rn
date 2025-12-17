@@ -1,7 +1,13 @@
-import Svg, { Path, SvgProps } from "react-native-svg";
+import Svg, { Path, type SvgProps } from "react-native-svg";
 
 const UserIcon = (props: SvgProps) => (
-  <Svg width={24} height={24} viewBox="0 0 24 24" fill="none" {...props}>
+  <Svg
+    width={24}
+    height={24}
+    viewBox="0 0 24 24"
+    fill="none"
+    {...props}
+  >
     <Path
       d="M12 0C8.51067 0 5.67188 2.8388 5.67188 6.32812C5.67188 9.81745 8.51067 12.6562 12 12.6562C15.4893 12.6562 18.3281 9.81745 18.3281 6.32812C18.3281 2.8388 15.4893 0 12 0Z"
       fill={props.fill || "#E5E3EC"}

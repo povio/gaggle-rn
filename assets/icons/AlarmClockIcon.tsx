@@ -1,7 +1,11 @@
 import Svg, { Path, type SvgProps } from "react-native-svg";
 
 const AlarmClockIcon = (props: SvgProps) => (
-  <Svg viewBox="0 0 17 17" fill="none" {...props}>
+  <Svg
+    viewBox="0 0 17 17"
+    fill="none"
+    {...props}
+  >
     <Path
       fillRule="evenodd"
       clipRule="evenodd"

@@ -1,6 +1,19 @@
 import * as SecureStore from "expo-secure-store";
 import { Platform } from "react-native";
 
+export async function getStorageItemAsync(key: string): Promise<string | null> {
+  if (Platform.OS === "web") {
+    try {
+      return localStorage.getItem(key);
+    } catch (e) {
+      console.error("Local storage is unavailable:", e);
+      return null;
+    }
+  } else {
+    return await SecureStore.getItemAsync(key);
+  }
+}
+
 export async function setStorageItemAsync(key: string, value: string) {
   if (Platform.OS === "web") {
     try {

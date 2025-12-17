@@ -9,9 +9,7 @@ export namespace WaitlistQueries {
     return useQuery({
       queryKey: ["waitlist", "all"],
       queryFn: async () => {
-        const { data, error } = await supabase
-          .from("waitlist")
-          .select("email, used");
+        const { data, error } = await supabase.from("waitlist").select("email, used");
 
         if (error) throw error;
 
@@ -29,9 +27,7 @@ export namespace WaitlistQueries {
     return useQuery({
       queryKey: ["waitlist", "emails"],
       queryFn: async () => {
-        const { data, error } = await supabase
-          .from("waitlist")
-          .select("email");
+        const { data, error } = await supabase.from("waitlist").select("email");
 
         if (error) throw error;
 
@@ -44,11 +40,7 @@ export namespace WaitlistQueries {
     return useQuery({
       queryKey: ["waitlist", "entry", email],
       queryFn: async () => {
-        const { data, error } = await supabase
-          .from("waitlist")
-          .select("*")
-          .eq("email", email)
-          .maybeSingle();
+        const { data, error } = await supabase.from("waitlist").select("*").eq("email", email).maybeSingle();
 
         if (error) throw error;
         if (!data) return null;

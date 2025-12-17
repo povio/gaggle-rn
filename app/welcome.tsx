@@ -1,14 +1,17 @@
 import { useRouter } from "expo-router";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Platform, StyleSheet, View } from "react-native";
 
 import Box from "@/components/Box";
 import Button from "@/components/buttons/Button";
 import TextButton from "@/components/buttons/TextButton";
 import { WelcomeCarousel } from "@/components/WelcomeCarousel";
+import { STORAGE_KEYS } from "@/constants/storage";
+import { getStorageItemAsync } from "@/utils/secureStore";
 
 const Welcome = () => {
   const router = useRouter();
+  const [lastEmail, setLastEmail] = useState<string | null>(null);
 
   useEffect(() => {
     const checkUserCreated = () => {
@@ -20,11 +23,21 @@ const Welcome = () => {
       }
     };
 
+    const loadLastEmail = async () => {
+      const email = await getStorageItemAsync(STORAGE_KEYS.LAST_SIGNED_IN_EMAIL);
+      setLastEmail(email);
+    };
+
     checkUserCreated();
+    loadLastEmail();
   }, [router]);
 
   const handleSignUpWithCode = () => {
     router.push("/enter-email");
+  };
+
+  const handleSignIn = () => {
+    router.push("/sign-in");
   };
 
   const handleJoinWaitlist = () => {
@@ -59,26 +72,28 @@ const Welcome = () => {
         alignItems="center"
       >
         <Button
-          label="Sign up using invitation code"
-          onPress={handleSignUpWithCode}
+          label={lastEmail ? "Sign In" : "Sign up using invitation code"}
+          onPress={lastEmail ? handleSignIn : handleSignUpWithCode}
           width="l"
           size="large"
           textVariant="variant-11"
           variant="primary"
         />
 
-        <Box
-          alignItems="center"
-          justifyContent="center"
-          width="100%"
-        >
-          <TextButton
-            label="JOIN OUR WAITLIST"
-            onPress={handleJoinWaitlist}
-            variant="secondary"
+        {!lastEmail && (
+          <Box
+            alignItems="center"
+            justifyContent="center"
             width="100%"
-          />
-        </Box>
+          >
+            <TextButton
+              label="JOIN OUR WAITLIST"
+              onPress={handleJoinWaitlist}
+              variant="secondary"
+              width="100%"
+            />
+          </Box>
+        )}
 
         <Box
           alignItems="center"

@@ -6,13 +6,11 @@ import { create } from "zustand";
 import AlarmClockIcon from "@/assets/icons/AlarmClockIcon";
 import BlankCalendarIcon from "@/assets/icons/BlankCalendarIcon";
 import BlankUserIcon from "@/assets/icons/BlankUserIcon";
-import CalendarIcon from "@/assets/icons/CalendarIcon";
+import BusIcon from "@/assets/icons/BusIcon";
 import ClockIcon from "@/assets/icons/ClockIcon";
 import DollarSignIcon from "@/assets/icons/DollarSignIcon";
 import FullCalendarIcon from "@/assets/icons/FullCalendarIcon";
-import HeartIcon from "@/assets/icons/HeartIcon";
-import SendIcon from "@/assets/icons/SendIcon";
-import StarIcon from "@/assets/icons/StarIcon";
+import StarAltIcon from "@/assets/icons/StarAltIcon";
 import TicketIcon from "@/assets/icons/TicketIcon";
 import { DateUtils } from "@/utils/date.utils";
 
@@ -35,6 +33,8 @@ export type SearchFilters = z.infer<typeof SearchFiltersEnum>;
 export const FilterTypeEnum = z.enum(["pills", "date", "slider", "time", "checkbox", "toggle", "embeded-toggle"]);
 export type FilterType = z.infer<typeof FilterTypeEnum>;
 
+export const UnitPositionEnum = z.enum(["left", "right"]);
+export type UnitPosition = z.infer<typeof UnitPositionEnum>;
 export interface MinMaxFilter {
   min: number;
   max: number;
@@ -52,6 +52,7 @@ export interface FilterItem {
   iconComponent?: ComponentType<SvgProps>;
   values?: any | MinMaxFilter | string[] | Date | Boxes;
   helperText?: string;
+  unitPosition?: UnitPosition;
   unit?: string;
 }
 
@@ -76,6 +77,9 @@ export const FilterList: FilterItem[] = [
     label: "Duration",
     id: "duration",
     type: "pills",
+    helperText: "Hours",
+    unit: "h",
+    unitPosition: UnitPositionEnum.enum.right,
     values: ["1", "2", "3", "4", "5", "6", "7", "8"],
     iconComponent: AlarmClockIcon,
   },
@@ -95,6 +99,7 @@ export const FilterList: FilterItem[] = [
     label: "Price",
     id: "price",
     unit: "$",
+    unitPosition: UnitPositionEnum.enum.left,
     type: "slider",
     values: {
       min: 0,
@@ -128,7 +133,7 @@ export const FilterList: FilterItem[] = [
         id: "",
       },
     ],
-    iconComponent: StarIcon,
+    iconComponent: StarAltIcon,
   },
   {
     label: "Toggle Test",
@@ -144,7 +149,7 @@ export const FilterList: FilterItem[] = [
         id: "123",
       },
     ],
-    iconComponent: SendIcon,
+    iconComponent: BusIcon,
   },
   {
     label: "Start Time",
@@ -172,8 +177,8 @@ export const FilterList: FilterItem[] = [
   },
 ];
 
-// Filter values can be string, number, string array, or null
-export type FilterValue = string | number | null | Date | string[];
+// Filter values can be string, number, string array, boolean, or null
+export type FilterValue = string | number | boolean | null | Date | string[];
 
 // Filter state type
 export type FilterValues = Partial<Record<SearchFilters, FilterValue>>;

@@ -20,7 +20,9 @@ export default function SplashScreenController({ children }: PropsWithChildren) 
 
   useEffect(() => {
     const initAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (session?.access_token) {
         restore(session.access_token);
       } else {

@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
 import { ScanFace } from "lucide-react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { StyleSheet, View } from "react-native";
 
@@ -9,8 +9,10 @@ import Box from "@/components/Box";
 import Button from "@/components/buttons/Button";
 import Input from "@/components/input/Input";
 import Text from "@/components/text/Text";
+import { STORAGE_KEYS } from "@/constants/storage";
 import { AuthModels, AuthQueries } from "@/data/auth";
 import { useAuthStore } from "@/modules/auth/stores/authStore";
+import { getStorageItemAsync } from "@/utils/secureStore";
 import { showToast } from "@/utils/toast";
 
 const SignIn = () => {
@@ -22,6 +24,7 @@ const SignIn = () => {
     control,
     handleSubmit,
     formState: { errors, isValid },
+    setValue,
   } = useForm<AuthModels.SignInInput>({
     resolver: zodResolver(AuthModels.signInInputSchema),
     mode: "onChange",
@@ -30,6 +33,17 @@ const SignIn = () => {
       password: "",
     },
   });
+
+  useEffect(() => {
+    const loadLastEmail = async () => {
+      const email = await getStorageItemAsync(STORAGE_KEYS.LAST_SIGNED_IN_EMAIL);
+      if (email) {
+        setValue("email", email, { shouldValidate: true });
+      }
+    };
+
+    loadLastEmail();
+  }, [setValue]);
 
   const onSubmit = (data: AuthModels.SignInInput) => {
     signIn.mutate(data, {

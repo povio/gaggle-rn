@@ -81,7 +81,6 @@ const ProfileSetup = () => {
   };
 
   const onSubmit = (data: UsersModels.ProfileSetupInput) => {
-    console.log("data", data);
     updateProfile.mutate(data, {
       onSuccess: async (response) => {
         await setProfileSetup(response.userId);

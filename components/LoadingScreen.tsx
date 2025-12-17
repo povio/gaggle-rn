@@ -1,11 +1,6 @@
 import { useEffect } from "react";
-import { View, StyleSheet, Dimensions } from "react-native";
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
-  Easing,
-} from "react-native-reanimated";
+import { Dimensions, StyleSheet, View } from "react-native";
+import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { SvgXml } from "react-native-svg";
 
 const { width } = Dimensions.get("window");
@@ -51,7 +46,11 @@ export default function LoadingScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.content}>
-        <SvgXml xml={logoSvg} width={244} height={59} />
+        <SvgXml
+          xml={logoSvg}
+          width={244}
+          height={59}
+        />
 
         <View style={styles.progressContainer}>
           <View style={styles.progressBackground}>

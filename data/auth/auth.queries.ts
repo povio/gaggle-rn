@@ -1,6 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { supabase } from "@/utils/supabase";
-import { AuthModels } from "./auth.models";
+
+import type { AuthModels } from "./auth.models";
 
 export namespace AuthQueries {
   export const useSignIn = () => {

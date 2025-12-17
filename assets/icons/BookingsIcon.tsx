@@ -1,7 +1,13 @@
-import Svg, { Path, SvgProps } from "react-native-svg";
+import Svg, { Path, type SvgProps } from "react-native-svg";
 
 const BookingsIcon = (props: SvgProps) => (
-  <Svg width={23} height={25} viewBox="0 0 23 25" fill="none" {...props}>
+  <Svg
+    width={23}
+    height={25}
+    viewBox="0 0 23 25"
+    fill="none"
+    {...props}
+  >
     <Path
       d="M17.2227 0H4.95323C2.21764 0 0 2.22051 0 4.95965V20.0403C0 22.7795 2.21764 25 4.95323 25H17.2227C19.9583 25 22.1759 22.7795 22.1759 20.0403V4.95965C22.1759 2.22051 19.9583 0 17.2227 0Z"
       fill={props.fill || "#E5E3EC"}

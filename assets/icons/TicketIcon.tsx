@@ -2,8 +2,6 @@ import Svg, { ClipPath, Defs, G, Path, Rect, type SvgProps } from "react-native-
 
 const TicketIcon = (props: SvgProps) => (
   <Svg
-    width={15}
-    height={14}
     viewBox="0 0 15 14"
     fill="none"
     {...props}

@@ -1,11 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import { STORAGE_KEYS } from "@/constants/storage";
 
-export type OnboardingStep =
-  | "welcome"
-  | "create-password"
-  | "profile-setup"
-  | "sign-in";
+export type OnboardingStep = "welcome" | "create-password" | "profile-setup" | "sign-in";
 
 export const useOnboarding = () => {
   const setEmailVerified = async (email: string) => {

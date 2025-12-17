@@ -22,7 +22,16 @@ export interface IconButtonProps extends PressableProps {
   iconSize?: number;
 }
 
-const IconButton = ({ variant = "primary", size = "m", icon, disabled, loading, iconColor, iconSize, ...rest }: IconButtonProps) => {
+const IconButton = ({
+  variant = "primary",
+  size = "m",
+  icon,
+  disabled,
+  loading,
+  iconColor,
+  iconSize,
+  ...rest
+}: IconButtonProps) => {
   const theme = useTheme<Theme>();
   const [pressed, setPressed] = useState(false);
 
@@ -120,9 +129,7 @@ const IconButton = ({ variant = "primary", size = "m", icon, disabled, loading, 
         </Box>
       )}
       {icon && !loading && (
-        <Box
-          {...(iconSize !== undefined && { width: iconSize, height: iconSize })}
-        >
+        <Box {...(iconSize !== undefined && { width: iconSize, height: iconSize })}>
           {cloneElement(icon, {
             color: parsableColor,
           })}

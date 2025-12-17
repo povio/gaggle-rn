@@ -17,9 +17,10 @@ type DeepNullablePartial<T> = T extends BrowserNativeObject | NestedValue
 
 type AsyncDefaultValues<TFieldValues> = (payload?: unknown) => Promise<TFieldValues>;
 
-type NullableDefaultValues<TFieldValues> = TFieldValues extends AsyncDefaultValues<TFieldValues>
-  ? DeepNullablePartial<Awaited<TFieldValues>>
-  : DeepNullablePartial<TFieldValues>;
+type NullableDefaultValues<TFieldValues> =
+  TFieldValues extends AsyncDefaultValues<TFieldValues>
+    ? DeepNullablePartial<Awaited<TFieldValues>>
+    : DeepNullablePartial<TFieldValues>;
 
 export type UseFormResolverProps<TFieldValues extends FieldValues, TTransformedValues = TFieldValues> =
   | { zodSchema: z.ZodType<TTransformedValues, TFieldValues>; resolver?: never }

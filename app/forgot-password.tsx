@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { View, StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 import Box from "@/components/Box";
 import Button from "@/components/buttons/Button";
@@ -13,12 +13,12 @@ const ForgotPassword = () => {
 
   const handleForgotPassword = () => {
     router.push("/password-reset-sent");
-  }
+  };
 
   const isValidEmail = (emailValue: string) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(emailValue);
-  }
+  };
 
   return (
     <Box
@@ -29,7 +29,7 @@ const ForgotPassword = () => {
     >
       <View style={styles.topCircle} />
 
-     <Box
+      <Box
         flex={1}
         justifyContent="flex-start"
         alignItems="center"
@@ -37,13 +37,13 @@ const ForgotPassword = () => {
         style={styles.contentContainer}
       >
         <Text
-            variant="variant-6-prominent"
-            textAlign="center"
-          >
-            Enter your email
-          </Text>
+          variant="variant-6-prominent"
+          textAlign="center"
+        >
+          Enter your email
+        </Text>
 
-<Input
+        <Input
           label=""
           placeholder="Enter email"
           value={email}
@@ -56,9 +56,8 @@ const ForgotPassword = () => {
           onPress={() => {}}
           width="fit"
           variant="secondary"
-          disabled={true} 
+          disabled={true}
         />
-
       </Box>
       <View style={styles.bottomCircle} />
     </Box>
