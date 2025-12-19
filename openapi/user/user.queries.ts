@@ -122,8 +122,8 @@ export const useGetMySettings = <TData>(options?: AppQueryOptions<typeof UserApi
  * Mutation `useUpdateMySettings`
  * @param { UserModels.UpdateUserSettingsRequestDTO } mutation.data Body parameter
  * @param { AppMutationOptions & MutationEffectsOptions } options Mutation options
- * @returns { UseMutationResult<void> } 
- * @statusCodes [204, 401]
+ * @returns { UseMutationResult<UserModels.GetUserSettingsResponseDTO> } 
+ * @statusCodes [200, 401]
  */
 export const useUpdateMySettings = (options?: AppMutationOptions<typeof UserApi.updateMySettings, { data: UserModels.UpdateUserSettingsRequestDTO,  }> & MutationEffectsOptions) => {
   
@@ -136,7 +136,9 @@ export const useUpdateMySettings = (options?: AppMutationOptions<typeof UserApi.
     ,
     ...options, 
     onSuccess: async (resData, variables, context) => {
-      await runMutationEffects(resData, options);
+      
+      const updateKeys = [keys.getMySettings(), ];
+      await runMutationEffects(resData, options, updateKeys);
       options?.onSuccess?.(resData, variables, context);
     },
   });

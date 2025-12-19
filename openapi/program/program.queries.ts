@@ -15,6 +15,8 @@ export const keys = {
     searchInfinite: (limit?: number, filter?: ProgramModels.SearchProgramsFilterDto, cursor?: string, ) => [...keys.all, "/api/programs/search", "infinite", limit, filter, cursor] as const,
     getDetails: (programId: string, ) => [...keys.all, "/api/programs/:programId", programId] as const,
     findByUrl: (programUrl?: string, ) => [...keys.all, "/api/import/programs/find", programUrl] as const,
+    paginate: (limit?: number, order?: string, filter?: ProgramModels.ProgramPaginationFilterDto, page?: number, cursor?: string, ) => [...keys.all, "/api/import/programs", limit, order, filter, page, cursor] as const,
+    paginateInfinite: (limit?: number, order?: string, filter?: ProgramModels.ProgramPaginationFilterDto, cursor?: string, ) => [...keys.all, "/api/import/programs", "infinite", limit, order, filter, cursor] as const,
     getById: (programId: string, ) => [...keys.all, "/api/import/programs/:programId", programId] as const,
 };
 
@@ -119,6 +121,91 @@ export const useFindByUrl = <TData>({ programUrl }: { programUrl: string,  }, op
 };
 
 
+
+
+
+
+ /** 
+ * Query `usePaginate`
+ * @param { number } object.limit Query parameter. Items per response. Minimum: `1`. Maximum: `20`. Default: `20`
+ * @param { string } object.order Query parameter. Order by fields (comma separated with +/- prefix): name, createdAt, updatedAt. Example: `name`
+ * @param { ProgramModels.ProgramPaginationFilterDto } object.filter Query parameter
+ * @param { number } object.page Query parameter. 1-indexed page number to begin from
+ * @param { string } object.cursor Query parameter. ID of item to start after
+ * @param { AppQueryOptions } options Query options
+ * @returns { UseQueryResult<ProgramModels.ProgramPaginateResponse> } 
+ * @statusCodes [200, 401]
+ */
+export const usePaginate = <TData>({ limit, order, filter, page, cursor }: { limit: number, order?: string, filter?: ProgramModels.ProgramPaginationFilterDto, page?: number, cursor?: string,  }, options?: AppQueryOptions<typeof ProgramApi.paginate, TData>) => {
+  
+  
+  return useQuery({
+    queryKey: keys.paginate(limit, order, filter, page, cursor),
+    queryFn: () =>  
+    
+    ProgramApi.paginate(limit, order, filter, page, cursor)
+    ,
+    ...options,
+  });
+};
+
+
+
+/** 
+ * Infinite query `usePaginateInfinite
+ * @param { number } object.limit Query parameter. Items per response. Minimum: `1`. Maximum: `20`. Default: `20`
+ * @param { string } object.order Query parameter. Order by fields (comma separated with +/- prefix): name, createdAt, updatedAt. Example: `name`
+ * @param { ProgramModels.ProgramPaginationFilterDto } object.filter Query parameter
+ * @param { number } object.page Query parameter. 1-indexed page number to begin from
+ * @param { string } object.cursor Query parameter. ID of item to start after
+ * @param { AppInfiniteQueryOptions } options Infinite query options
+ * @returns { UseInfiniteQueryResult<ProgramModels.ProgramPaginateResponse> } 
+ * @statusCodes [200, 401]
+ */
+export const usePaginateInfinite = <TData>({ limit, order, filter, cursor }: { limit: number, order?: string, filter?: ProgramModels.ProgramPaginationFilterDto, cursor?: string,  }, options?: AppInfiniteQueryOptions<typeof ProgramApi.paginate, TData>) => {
+  
+
+  return useInfiniteQuery({
+    queryKey: keys.paginateInfinite(limit, order, filter, cursor),
+    queryFn: ({ pageParam }) =>  
+    
+    ProgramApi.paginate(limit, order, filter, pageParam, cursor)
+    ,
+    initialPageParam: 1,
+    getNextPageParam: ({ page, totalItems, limit: limitParam }) => {
+      const pageParam = page ?? 1;
+      return pageParam * limitParam < totalItems ? pageParam + 1 : null;
+    },
+    ...options,
+  });
+};
+
+
+
+
+ /** 
+ * Mutation `useCreate`
+ * @param { ProgramModels.ImportUpdateProgramRequestDTO } mutation.data Body parameter
+ * @param { AppMutationOptions & MutationEffectsOptions } options Mutation options
+ * @returns { UseMutationResult<ProgramModels.ImportGetProgramByIdResponseDTO> } 
+ * @statusCodes [201, 401]
+ */
+export const useCreate = (options?: AppMutationOptions<typeof ProgramApi.create, { data: ProgramModels.ImportUpdateProgramRequestDTO,  }> & MutationEffectsOptions) => {
+  
+  const { runMutationEffects } = useMutationEffects({ currentModule: moduleName });
+
+  return useMutation({
+    mutationFn: ( { data } ) => 
+      
+            ProgramApi.create(data)
+    ,
+    ...options, 
+    onSuccess: async (resData, variables, context) => {
+      await runMutationEffects(resData, options);
+      options?.onSuccess?.(resData, variables, context);
+    },
+  });
+};
 
 
 

@@ -55,7 +55,7 @@ export const useRegister = (options?: AppMutationOptions<typeof PushNotification
  * @param { number } object.page Query parameter. 1-indexed page number to begin from
  * @param { string } object.cursor Query parameter. ID of item to start after
  * @param { AppQueryOptions } options Query options
- * @returns { UseQueryResult<PushNotificationsModels.PaginateResponse> } 
+ * @returns { UseQueryResult<PushNotificationsModels.PushNotificationsPaginateResponse> } 
  * @statusCodes [200, 401]
  */
 export const usePaginate = <TData>({ limit, order, filter, page, cursor }: { limit: number, order?: string, filter?: PushNotificationsModels.PushNotificationTokenFiltersDto, page?: number, cursor?: string,  }, options?: AppQueryOptions<typeof PushNotificationsApi.paginate, TData>) => {
@@ -82,7 +82,7 @@ export const usePaginate = <TData>({ limit, order, filter, page, cursor }: { lim
  * @param { number } object.page Query parameter. 1-indexed page number to begin from
  * @param { string } object.cursor Query parameter. ID of item to start after
  * @param { AppInfiniteQueryOptions } options Infinite query options
- * @returns { UseInfiniteQueryResult<PushNotificationsModels.PaginateResponse> } 
+ * @returns { UseInfiniteQueryResult<PushNotificationsModels.PushNotificationsPaginateResponse> } 
  * @statusCodes [200, 401]
  */
 export const usePaginateInfinite = <TData>({ limit, order, filter, cursor }: { limit: number, order?: string, filter?: PushNotificationsModels.PushNotificationTokenFiltersDto, cursor?: string,  }, options?: AppInfiniteQueryOptions<typeof PushNotificationsApi.paginate, TData>) => {

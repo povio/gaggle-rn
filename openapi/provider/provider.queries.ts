@@ -17,6 +17,8 @@ export const keys = {
     listFollowedIds: () => [...keys.all, "/api/providers/followed/ids", ] as const,
     listAvailable: () => [...keys.all, "/api/programs/providers", ] as const,
     findByWebsiteUrl: (websiteUrl?: string, ) => [...keys.all, "/api/import/providers/find", websiteUrl] as const,
+    paginate: (limit?: number, order?: string, filter?: ProviderModels.ProviderPaginationFilterDto, page?: number, cursor?: string, ) => [...keys.all, "/api/import/providers", limit, order, filter, page, cursor] as const,
+    paginateInfinite: (limit?: number, order?: string, filter?: ProviderModels.ProviderPaginationFilterDto, cursor?: string, ) => [...keys.all, "/api/import/providers", "infinite", limit, order, filter, cursor] as const,
     getById: (providerId: string, ) => [...keys.all, "/api/import/providers/:providerId", providerId] as const,
 };
 
@@ -223,6 +225,91 @@ export const useFindByWebsiteUrl = <TData>({ websiteUrl }: { websiteUrl: string,
 };
 
 
+
+
+
+
+ /** 
+ * Query `usePaginate`
+ * @param { number } object.limit Query parameter. Items per response. Minimum: `1`. Maximum: `20`. Default: `20`
+ * @param { string } object.order Query parameter. Order by fields (comma separated with +/- prefix): name, createdAt, updatedAt. Example: `name`
+ * @param { ProviderModels.ProviderPaginationFilterDto } object.filter Query parameter
+ * @param { number } object.page Query parameter. 1-indexed page number to begin from
+ * @param { string } object.cursor Query parameter. ID of item to start after
+ * @param { AppQueryOptions } options Query options
+ * @returns { UseQueryResult<ProviderModels.ProviderPaginateResponse> } 
+ * @statusCodes [200, 401]
+ */
+export const usePaginate = <TData>({ limit, order, filter, page, cursor }: { limit: number, order?: string, filter?: ProviderModels.ProviderPaginationFilterDto, page?: number, cursor?: string,  }, options?: AppQueryOptions<typeof ProviderApi.paginate, TData>) => {
+  
+  
+  return useQuery({
+    queryKey: keys.paginate(limit, order, filter, page, cursor),
+    queryFn: () =>  
+    
+    ProviderApi.paginate(limit, order, filter, page, cursor)
+    ,
+    ...options,
+  });
+};
+
+
+
+/** 
+ * Infinite query `usePaginateInfinite
+ * @param { number } object.limit Query parameter. Items per response. Minimum: `1`. Maximum: `20`. Default: `20`
+ * @param { string } object.order Query parameter. Order by fields (comma separated with +/- prefix): name, createdAt, updatedAt. Example: `name`
+ * @param { ProviderModels.ProviderPaginationFilterDto } object.filter Query parameter
+ * @param { number } object.page Query parameter. 1-indexed page number to begin from
+ * @param { string } object.cursor Query parameter. ID of item to start after
+ * @param { AppInfiniteQueryOptions } options Infinite query options
+ * @returns { UseInfiniteQueryResult<ProviderModels.ProviderPaginateResponse> } 
+ * @statusCodes [200, 401]
+ */
+export const usePaginateInfinite = <TData>({ limit, order, filter, cursor }: { limit: number, order?: string, filter?: ProviderModels.ProviderPaginationFilterDto, cursor?: string,  }, options?: AppInfiniteQueryOptions<typeof ProviderApi.paginate, TData>) => {
+  
+
+  return useInfiniteQuery({
+    queryKey: keys.paginateInfinite(limit, order, filter, cursor),
+    queryFn: ({ pageParam }) =>  
+    
+    ProviderApi.paginate(limit, order, filter, pageParam, cursor)
+    ,
+    initialPageParam: 1,
+    getNextPageParam: ({ page, totalItems, limit: limitParam }) => {
+      const pageParam = page ?? 1;
+      return pageParam * limitParam < totalItems ? pageParam + 1 : null;
+    },
+    ...options,
+  });
+};
+
+
+
+
+ /** 
+ * Mutation `useCreate`
+ * @param { ProviderModels.ImportUpdateProviderRequestDTO } mutation.data Body parameter
+ * @param { AppMutationOptions & MutationEffectsOptions } options Mutation options
+ * @returns { UseMutationResult<ProviderModels.ImportGetProviderByIdResponseDTO> } 
+ * @statusCodes [201, 401]
+ */
+export const useCreate = (options?: AppMutationOptions<typeof ProviderApi.create, { data: ProviderModels.ImportUpdateProviderRequestDTO,  }> & MutationEffectsOptions) => {
+  
+  const { runMutationEffects } = useMutationEffects({ currentModule: moduleName });
+
+  return useMutation({
+    mutationFn: ( { data } ) => 
+      
+            ProviderApi.create(data)
+    ,
+    ...options, 
+    onSuccess: async (resData, variables, context) => {
+      await runMutationEffects(resData, options);
+      options?.onSuccess?.(resData, variables, context);
+    },
+  });
+};
 
 
 

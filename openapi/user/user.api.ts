@@ -1,5 +1,4 @@
 import { AppRestClient } from "../configured-rest-client";
-import { z } from "zod";
 import { ZodExtended } from "../zod.extended";
 import { UserModels } from "./user.models";
 
@@ -40,7 +39,7 @@ export const getMySettings = () => {
 
 export const updateMySettings = (data: UserModels.UpdateUserSettingsRequestDTO, ) => { 
     return AppRestClient.patch( 
-        { resSchema: z.void() }, 
+        { resSchema: UserModels.GetUserSettingsResponseDTOSchema }, 
         `/api/users/me/settings`,
         ZodExtended.parse(UserModels.UpdateUserSettingsRequestDTOSchema, data)
 , 

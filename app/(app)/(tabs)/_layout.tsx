@@ -2,10 +2,10 @@ import { useTheme } from "@shopify/restyle";
 import { Tabs } from "expo-router";
 import React from "react";
 
-import BookingsIcon from "@/assets/icons/BookingsIcon";
+// import BookingsIcon from "@/assets/icons/BookingsIcon";
+// import MessageIcon from "@/assets/icons/MessageIcon";
 import HeartIcon from "@/assets/icons/HeartIcon";
 import HomeIcon from "@/assets/icons/HomeIcon";
-import MessageIcon from "@/assets/icons/MessageIcon";
 import UserIcon from "@/assets/icons/UserIcon";
 import type { Theme } from "@/utils/theme/restyleTheme";
 

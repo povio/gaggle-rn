@@ -51,10 +51,10 @@ export type SessionInputDTO = z.infer<typeof SessionInputDTOSchema>;
  * @property { boolean } isTopRated  
  * @property { string } policiesUrl  
  * @property { string } policiesText  
- * @property { string[] } tagIds  
+ * @property { string[] } tagNames  
  * @property { SessionInputDTO[] } sessions  
  */
-export const ImportUpdateProgramRequestDTOSchema = z.object({ providerId: z.string(), locationId: z.string(), name: z.string(), description: z.string(), ourTake: z.string(), parentsLike: z.string(), keepInMind: z.string(), category: z.string(), subcategory: z.string(), programUrl: z.string(), bookingUrl: z.string(), iconImageUrl: z.string(), additionalImages: z.array(z.string()), priceAmount: z.number(), grades: z.array(z.string()), isTopRated: z.boolean(), policiesUrl: z.string(), policiesText: z.string(), tagIds: z.array(z.string()), sessions: z.array(SessionInputDTOSchema) });
+export const ImportUpdateProgramRequestDTOSchema = z.object({ providerId: z.string(), locationId: z.string(), name: z.string(), description: z.string(), ourTake: z.string(), parentsLike: z.string(), keepInMind: z.string(), category: z.string(), subcategory: z.string(), programUrl: z.string(), bookingUrl: z.string(), iconImageUrl: z.string(), additionalImages: z.array(z.string()), priceAmount: z.number(), grades: z.array(z.string()), isTopRated: z.boolean(), policiesUrl: z.string(), policiesText: z.string(), tagNames: z.array(z.string()), sessions: z.array(SessionInputDTOSchema) });
 export type ImportUpdateProgramRequestDTO = z.infer<typeof ImportUpdateProgramRequestDTOSchema>;
 
 
@@ -139,6 +139,16 @@ export type GetProgramDetailsResponseDTO = z.infer<typeof GetProgramDetailsRespo
 
 
 /** 
+ * ProgramPaginationFilterDtoSchema 
+ * @type { object }
+ * @property { string } providerId Provider ID filter 
+ * @property { string } search Free search by name 
+ */
+export const ProgramPaginationFilterDtoSchema = z.object({ providerId: z.uuid().nullable(), search: z.string().nullable() }).partial();
+export type ProgramPaginationFilterDto = z.infer<typeof ProgramPaginationFilterDtoSchema>;
+
+
+/** 
  * ImportFindProgramByUrlResponseDTOSchema 
  * @type { object }
  * @property { string } id  
@@ -197,6 +207,28 @@ export type SearchProgramsFilterDto = z.infer<typeof SearchProgramsFilterDtoSche
  */
 export const SearchResponseSchema = CommonModels.PaginationDtoSchema.merge(z.object({ items: z.array(SearchProgramsResponseDTOSchema).nullable() }).partial());
 export type SearchResponse = z.infer<typeof SearchResponseSchema>;
+
+
+/** 
+ * ProgramPaginateOrderParamEnumSchema 
+ * @type { enum }
+ */
+export const ProgramPaginateOrderParamEnumSchema = z.enum(["name", "createdAt", "updatedAt"]);
+export type ProgramPaginateOrderParamEnum = z.infer<typeof ProgramPaginateOrderParamEnumSchema>;
+export const ProgramPaginateOrderParamEnum = ProgramPaginateOrderParamEnumSchema.enum;
+
+/** 
+ * ProgramPaginateResponseSchema 
+ * @type { object }
+ * @property { number } page 1-indexed page number to begin from 
+ * @property { string } cursor ID of item to start after 
+ * @property { string } nextCursor Cursor for next set of items 
+ * @property { number } limit Items per response 
+ * @property { number } totalItems Total available items 
+ * @property { ImportGetProgramByIdResponseDTO[] } items  
+ */
+export const ProgramPaginateResponseSchema = CommonModels.PaginationDtoSchema.merge(z.object({ items: z.array(ImportGetProgramByIdResponseDTOSchema).nullable() }).partial());
+export type ProgramPaginateResponse = z.infer<typeof ProgramPaginateResponseSchema>;
 
 
 }

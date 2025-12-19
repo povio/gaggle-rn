@@ -15,14 +15,18 @@ import Select from "@/components/input/Select";
 import Text from "@/components/text/Text";
 import { useForm } from "@/hooks/useForm";
 import { useOnboarding } from "@/hooks/useOnboarding";
+import { useUserStore } from "@/modules/user/userStore";
+import { UserApi } from "@/openapi/user/user.api";
 import { UserModels } from "@/openapi/user/user.models";
 import { UserQueries } from "@/openapi/user/user.queries";
+import { RestUtils } from "@/utils/rest/rest.utils";
 import { showToast } from "@/utils/toast";
 
 const ProfileSetup = () => {
   const router = useRouter();
   const updateSettingsMutation = UserQueries.useUpdateMySettings();
   const { setProfileSetup } = useOnboarding();
+  const { setSettings } = useUserStore();
   const [stateValue, setStateValue] = useState("");
 
   const {
@@ -55,13 +59,8 @@ const ProfileSetup = () => {
       // ],
     },
   });
-  console.log("errors", errors);
-  const children = watch("children") || [];
-  const zip = watch("zip") || [];
 
-  useEffect(() => {
-    console.log("values", getValues());
-  }, [zip]);
+  const children = watch("children") || [];
 
   const handleAddChild = () => {
     setValue("children", [
@@ -99,18 +98,25 @@ const ProfileSetup = () => {
       {
         onSuccess: async () => {
           await setProfileSetup("completed");
+
+          try {
+            const settingsData = await UserApi.getMySettings();
+            setSettings(settingsData);
+          } catch (error) {
+            console.error("Failed to fetch settings after update:", error);
+          }
+
           showToast({
             variant: "success",
             message: "Profile setup completed!",
           });
-          // Let index.tsx handle navigation based on token
+          router.replace("/(app)/(tabs)");
         },
         onError: (error) => {
-          console.log("error", error);
-          const errorMessage = error instanceof Error ? error.message : "Failed to update profile";
+          const errorMessage = RestUtils.extractServerErrorMessage(error);
           showToast({
             variant: "error",
-            message: errorMessage,
+            message: errorMessage || "Failed to create profile",
           });
         },
       },

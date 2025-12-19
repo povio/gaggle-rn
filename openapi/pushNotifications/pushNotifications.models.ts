@@ -48,15 +48,15 @@ export type PushNotificationTokenCreateRequest = z.infer<typeof PushNotification
 
 
 /** 
- * PaginateOrderParamEnumSchema 
+ * PushNotificationsPaginateOrderParamEnumSchema 
  * @type { enum }
  */
-export const PaginateOrderParamEnumSchema = z.enum(["id", "provider", "expiresAt", "createdAt"]);
-export type PaginateOrderParamEnum = z.infer<typeof PaginateOrderParamEnumSchema>;
-export const PaginateOrderParamEnum = PaginateOrderParamEnumSchema.enum;
+export const PushNotificationsPaginateOrderParamEnumSchema = z.enum(["id", "provider", "expiresAt", "createdAt"]);
+export type PushNotificationsPaginateOrderParamEnum = z.infer<typeof PushNotificationsPaginateOrderParamEnumSchema>;
+export const PushNotificationsPaginateOrderParamEnum = PushNotificationsPaginateOrderParamEnumSchema.enum;
 
 /** 
- * PaginateResponseSchema 
+ * PushNotificationsPaginateResponseSchema 
  * @type { object }
  * @property { number } page 1-indexed page number to begin from 
  * @property { string } cursor ID of item to start after 
@@ -65,8 +65,8 @@ export const PaginateOrderParamEnum = PaginateOrderParamEnumSchema.enum;
  * @property { number } totalItems Total available items 
  * @property { PushNotificationTokenResponse[] } items  
  */
-export const PaginateResponseSchema = CommonModels.PaginationDtoSchema.merge(z.object({ items: z.array(PushNotificationTokenResponseSchema).nullable() }).partial());
-export type PaginateResponse = z.infer<typeof PaginateResponseSchema>;
+export const PushNotificationsPaginateResponseSchema = CommonModels.PaginationDtoSchema.merge(z.object({ items: z.array(PushNotificationTokenResponseSchema).nullable() }).partial());
+export type PushNotificationsPaginateResponse = z.infer<typeof PushNotificationsPaginateResponseSchema>;
 
 
 }

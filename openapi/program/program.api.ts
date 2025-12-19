@@ -44,6 +44,37 @@ export const findByUrl = (programUrl: string, ) => {
     )
 };
 
+export const paginate = (limit: number, order?: string, filter?: ProgramModels.ProgramPaginationFilterDto, page?: number, cursor?: string, ) => { 
+    return AppRestClient.get( 
+        { resSchema: ProgramModels.ProgramPaginateResponseSchema }, 
+        `/api/import/programs`,
+        {
+    params: {
+        order: ZodExtended.parse(ZodExtended.sortExp(ProgramModels.ProgramPaginateOrderParamEnumSchema).optional(), order, { type: "query", name: "order" })
+, 
+        filter: ZodExtended.parse(ProgramModels.ProgramPaginationFilterDtoSchema.optional(), filter, { type: "query", name: "filter" })
+, 
+        limit: ZodExtended.parse(z.number().gte(1).lte(20).default(20), limit, { type: "query", name: "limit" })
+, 
+        page: ZodExtended.parse(z.number().nullish(), page, { type: "query", name: "page" })
+, 
+        cursor: ZodExtended.parse(z.string().nullish(), cursor, { type: "query", name: "cursor" })
+, 
+    },
+}
+    )
+};
+
+export const create = (data: ProgramModels.ImportUpdateProgramRequestDTO, ) => { 
+    return AppRestClient.post( 
+        { resSchema: ProgramModels.ImportGetProgramByIdResponseDTOSchema }, 
+        `/api/import/programs`,
+        ZodExtended.parse(ProgramModels.ImportUpdateProgramRequestDTOSchema, data)
+, 
+        
+    )
+};
+
 export const getById = (programId: string, ) => { 
     return AppRestClient.get( 
         { resSchema: ProgramModels.ImportGetProgramByIdResponseDTOSchema }, 

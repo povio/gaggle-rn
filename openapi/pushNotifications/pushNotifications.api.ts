@@ -17,11 +17,11 @@ export const register = (data: PushNotificationsModels.PushNotificationTokenCrea
 
 export const paginate = (limit: number, order?: string, filter?: PushNotificationsModels.PushNotificationTokenFiltersDto, page?: number, cursor?: string, ) => { 
     return AppRestClient.get( 
-        { resSchema: PushNotificationsModels.PaginateResponseSchema }, 
+        { resSchema: PushNotificationsModels.PushNotificationsPaginateResponseSchema }, 
         `/api/user/push-tokens`,
         {
     params: {
-        order: ZodExtended.parse(ZodExtended.sortExp(PushNotificationsModels.PaginateOrderParamEnumSchema).optional(), order, { type: "query", name: "order" })
+        order: ZodExtended.parse(ZodExtended.sortExp(PushNotificationsModels.PushNotificationsPaginateOrderParamEnumSchema).optional(), order, { type: "query", name: "order" })
 , 
         filter: ZodExtended.parse(PushNotificationsModels.PushNotificationTokenFiltersDtoSchema.optional(), filter, { type: "query", name: "filter" })
 , 

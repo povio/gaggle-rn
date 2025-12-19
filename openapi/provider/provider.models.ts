@@ -95,6 +95,15 @@ export type ImportGetProviderByIdResponseDTO = z.infer<typeof ImportGetProviderB
 
 
 /** 
+ * ProviderPaginationFilterDtoSchema 
+ * @type { object }
+ * @property { string } search Free search by name or website 
+ */
+export const ProviderPaginationFilterDtoSchema = z.object({ search: z.string().nullable() }).partial();
+export type ProviderPaginationFilterDto = z.infer<typeof ProviderPaginationFilterDtoSchema>;
+
+
+/** 
  * ImportFindProviderByWebsiteUrlResponseDTOSchema 
  * @type { object }
  * @property { string } id  
@@ -142,6 +151,28 @@ export type ListProviderProgramsResponseDTO = z.infer<typeof ListProviderProgram
  */
 export const ListProgramsResponseSchema = CommonModels.PaginationDtoSchema.merge(z.object({ items: z.array(ListProviderProgramsResponseDTOSchema).nullable() }).partial());
 export type ListProgramsResponse = z.infer<typeof ListProgramsResponseSchema>;
+
+
+/** 
+ * ProviderPaginateOrderParamEnumSchema 
+ * @type { enum }
+ */
+export const ProviderPaginateOrderParamEnumSchema = z.enum(["name", "createdAt", "updatedAt"]);
+export type ProviderPaginateOrderParamEnum = z.infer<typeof ProviderPaginateOrderParamEnumSchema>;
+export const ProviderPaginateOrderParamEnum = ProviderPaginateOrderParamEnumSchema.enum;
+
+/** 
+ * ProviderPaginateResponseSchema 
+ * @type { object }
+ * @property { number } page 1-indexed page number to begin from 
+ * @property { string } cursor ID of item to start after 
+ * @property { string } nextCursor Cursor for next set of items 
+ * @property { number } limit Items per response 
+ * @property { number } totalItems Total available items 
+ * @property { ImportGetProviderByIdResponseDTO[] } items  
+ */
+export const ProviderPaginateResponseSchema = CommonModels.PaginationDtoSchema.merge(z.object({ items: z.array(ImportGetProviderByIdResponseDTOSchema).nullable() }).partial());
+export type ProviderPaginateResponse = z.infer<typeof ProviderPaginateResponseSchema>;
 
 
 }

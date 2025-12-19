@@ -15,10 +15,10 @@ export const enum QueryModule {
    ReviewReport = "ReviewReportQueries",
    UserBlock = "UserBlockQueries",
    BlockedUser = "BlockedUserQueries",
+   Location = "LocationQueries",
    Feedback = "FeedbackQueries",
    Contact = "ContactQueries",
    Home = "HomeQueries",
    Favorite = "FavoriteQueries",
    Scheduling = "SchedulingQueries",
-   Location = "LocationQueries",
 }

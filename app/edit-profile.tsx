@@ -14,75 +14,67 @@ import Input from "@/components/input/Input";
 import Select from "@/components/input/Select";
 import Text from "@/components/text/Text";
 import { useForm } from "@/hooks/useForm";
+import { useUserStore } from "@/modules/user/userStore";
 import { UserModels } from "@/openapi/user/user.models";
 import { UserQueries } from "@/openapi/user/user.queries";
+import { RestUtils } from "@/utils/rest/rest.utils";
 import { showToast } from "@/utils/toast";
 
 const EditProfile = () => {
   const router = useRouter();
   const [stateValue, setStateValue] = useState("");
   const updateSettingsMutation = UserQueries.useUpdateMySettings();
-  const { data: userSettings, isLoading } = UserQueries.useGetMySettings();
+  const { settings: userSettings } = useUserStore();
 
   const {
     control,
     handleSubmit,
     setValue,
     watch,
-    getValues,
     formState: { isValid, errors },
   } = useForm<UserModels.UpdateUserSettingsRequestDTO>({
     zodSchema: UserModels.UpdateUserSettingsRequestDTOSchema,
     mode: "all",
     defaultValues: {
-      nickname: "",
-      address1: undefined,
-      address2: undefined,
-      city: undefined,
-      state: UserModels.StateEnum.AK,
+      nickname: userSettings?.nickname || "",
+      address1: userSettings?.address1 || "",
+      address2: userSettings?.address2 || "",
+      city: userSettings?.city || "",
+      state: (userSettings?.state as UserModels.StateEnum) || UserModels.StateEnum.AK,
       zip: undefined,
       notificationEnabled: true,
-      children: null,
-      // children: [
-      //   {
-      //     nickname: "",
-      //     birthdate: "",
-      //     gender: null,
-      //     grade: null,
-      //     schoolName: "",
-      //   },
-      // ],
+      children: userSettings?.children || null,
     },
   });
-  console.log("errors", errors);
+  console.log("userSettings", userSettings);
   const children = watch("children") || [];
 
-  useEffect(() => {
-    if (userSettings) {
-      setValue("nickname", userSettings.nickname || "");
-      setValue("address1", userSettings.address1 || "");
-      setValue("address2", userSettings.address2 || "");
-      setValue("city", userSettings.city || "");
-      setValue("state", userSettings.state as UserModels.StateEnum);
-      setValue("zip", userSettings.zip || "");
-      setValue("notificationEnabled", userSettings.notificationEnabled);
-      setValue("children", userSettings.children || []);
+  // useEffect(() => {
+  //   if (userSettings) {
+  //     setValue("nickname", );
+  //     setValue("address1", );
+  //     setValue("address2", );
+  //     setValue("city", );
+  //     setValue("state", );
+  //     setValue("zip", userSettings.zip || "");
+  //     setValue("notificationEnabled", userSettings.notificationEnabled);
+  //     setValue("children",  || []);
 
-      if (userSettings.state) {
-        setStateValue(userSettings.state);
-      }
-    }
-  }, [userSettings, setValue]);
+  //     if (userSettings.state) {
+  //       setStateValue(userSettings.state);
+  //     }
+  //   }
+  // }, [userSettings, setValue]);
 
   const handleAddChild = () => {
     setValue("children", [
       ...children,
       {
         nickname: "",
-        birthdate: "",
+        birthdate: undefined,
         gender: null,
         grade: null,
-        schoolName: "",
+        schoolName: undefined,
       },
     ]);
   };
@@ -117,11 +109,10 @@ const EditProfile = () => {
           router.push("/profile");
         },
         onError: (error) => {
-          console.log("error", error);
-          const errorMessage = error instanceof Error ? error.message : "Failed to update profile";
+          const errorMessage = RestUtils.extractServerErrorMessage(error);
           showToast({
             variant: "error",
-            message: errorMessage,
+            message: errorMessage || "Failed to update profile",
           });
         },
       },
@@ -210,7 +201,7 @@ const EditProfile = () => {
                 <Input
                   label=""
                   placeholder="Nick Name"
-                  value={value}
+                  value={value || ""}
                   variant="default"
                   onChangeText={onChange}
                   error={error?.message}
@@ -241,7 +232,7 @@ const EditProfile = () => {
                 <Input
                   label=""
                   placeholder="Street Address"
-                  value={value}
+                  value={value || ""}
                   variant="default"
                   onChangeText={onChange}
                 />
@@ -254,7 +245,7 @@ const EditProfile = () => {
                 <Input
                   label=""
                   placeholder="Apartment, suite, etc. (optional)"
-                  value={value}
+                  value={value || ""}
                   variant="default"
                   onChangeText={onChange}
                 />
@@ -267,7 +258,7 @@ const EditProfile = () => {
                 <Input
                   label=""
                   placeholder="City"
-                  value={value}
+                  value={value || ""}
                   variant="default"
                   onChangeText={onChange}
                 />
@@ -290,7 +281,7 @@ const EditProfile = () => {
                 <Input
                   label=""
                   placeholder="Zip Code"
-                  value={value}
+                  value={value || ""}
                   variant="default"
                   onChangeText={onChange}
                 />
@@ -320,14 +311,12 @@ const EditProfile = () => {
               >
                 <Text variant="variant-11">Child {index + 1}</Text>
 
-                {index > 0 && (
-                  <IconButton
-                    size="m"
-                    icon={<CloseIcon />}
-                    onPress={() => handleRemoveChild(index)}
-                    variant="transparent"
-                  />
-                )}
+                <IconButton
+                  size="m"
+                  icon={<CloseIcon />}
+                  onPress={() => handleRemoveChild(index)}
+                  variant="transparent"
+                />
               </Box>
               <Text
                 color="text-disabled"
@@ -348,6 +337,7 @@ const EditProfile = () => {
                   placeholder="Birthdate"
                   value={child.birthdate || ""}
                   variant="default"
+                  disabled
                   onChangeText={(value) => updateChild(index, "birthdate", value)}
                 />
 
