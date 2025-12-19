@@ -33,7 +33,7 @@ const Welcome = () => {
   }, [router]);
 
   const handleSignUpWithCode = () => {
-    router.push("/enter-email");
+    router.push("/enter-email?mode=onboarding");
   };
 
   const handleSignIn = () => {
@@ -41,7 +41,7 @@ const Welcome = () => {
   };
 
   const handleJoinWaitlist = () => {
-    router.push("/enter-email");
+    router.push("/enter-email?mode=waitlist");
   };
 
   const continueAsGuest = () => {};

@@ -13,12 +13,12 @@ import { IndexTopMenu } from "@/components/shared/IndexTopMenu";
 import { ProviderCards } from "@/components/shared/ProviderCards";
 import { SearchFilterDrawer } from "@/components/shared/SearchFilterDrawer";
 import Text from "@/components/text/Text";
-import { UsersQueries } from "@/data/users";
 import { SearchFiltersEnum } from "@/modules/search/stores/filterStore";
+import { useUserStore } from "@/modules/user/userStore";
 
 export default function Home() {
   const router = useRouter();
-  const { data: currentUser } = UsersQueries.useGetCurrentUser();
+  const { settings } = useUserStore();
   const [value, setValue] = useState<string>("");
   const [drawerVisible, setDrawerVisible] = useState(false);
 
@@ -75,7 +75,7 @@ export default function Home() {
               color="interactive-primary-idle"
               textAlign="center"
             >
-              Hi there, {currentUser?.user_name || "there"}!
+              Hi there, {settings?.nickname || "unknown"}!
             </Text>
             <Box
               position="absolute"

@@ -12,8 +12,8 @@ import { ActivityCard } from "@/components/shared/ActivityCard";
 import { EmptyState } from "@/components/shared/EmptyState";
 import type { Card } from "@/components/shared/FavoritesList";
 import { SearchPills } from "@/components/shared/SearchPills";
+import { UsersQueries } from "@/data/__users";
 import { cards } from "@/data/mock/activities";
-import { UsersQueries } from "@/data/users";
 import { useDebounce } from "@/hooks/useDebounce";
 import { FilterId, useSearchStore } from "@/modules/search/stores/searchStore";
 

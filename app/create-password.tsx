@@ -1,66 +1,107 @@
 import { useRouter } from "expo-router";
 import { ScanFace } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
+import { Controller } from "react-hook-form";
 import { StyleSheet, View } from "react-native";
 
 import Box from "@/components/Box";
 import Button from "@/components/buttons/Button";
 import Input from "@/components/input/Input";
+import { GoBack } from "@/components/navigation/GoBack";
 import Text from "@/components/text/Text";
-import { UsersQueries } from "@/data/users";
+import { useForm } from "@/hooks/useForm";
 import { useOnboarding } from "@/hooks/useOnboarding";
+import { useAuthStore } from "@/modules/auth/stores/authStore";
+import { UserAuthModels } from "@/openapi/userAuth/userAuth.models";
+import { UserAuthQueries } from "@/openapi/userAuth/userAuth.queries";
+import { RestUtils } from "@/utils/rest/rest.utils";
 import { showToast } from "@/utils/toast";
 
 const CreatePassword = () => {
   const router = useRouter();
-  const [password, setPassword] = useState("");
   const [email, setEmail] = useState<string>("");
-  const [error, setError] = useState<string>("");
-  const createUser = UsersQueries.useCreateUser();
-  const { getWaitlistEmail, setUserCreated } = useOnboarding();
+  const [invitationCode, setInvitationCode] = useState<string>("");
+  const registerMutation = UserAuthQueries.useRegister();
+  const { login } = useAuthStore();
+  const { getWaitlistEmail, getInvitationCode, setUserCreated, clearInvitationCode, clearPassword } = useOnboarding();
+
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    formState: { errors, isValid },
+  } = useForm<UserAuthModels.UserAuthPasswordRegisterRequest>({
+    zodSchema: UserAuthModels.UserAuthPasswordRegisterRequestSchema,
+    mode: "onChange",
+    defaultValues: {
+      email: "",
+      invitationCode: "",
+      name: "test",
+      password: "",
+    },
+  });
 
   useEffect(() => {
-    const loadEmail = async () => {
+    const loadData = async () => {
       const savedEmail = await getWaitlistEmail();
-      if (savedEmail) {
-        setEmail(savedEmail);
+      const savedCode = await getInvitationCode();
+
+      if (!savedEmail || !savedCode) {
+        showToast({
+          variant: "error",
+          message: "Missing email or invitation code. Please start again.",
+        });
+        router.replace("/welcome");
+        return;
       }
+
+      setEmail(savedEmail);
+      setInvitationCode(savedCode);
+      setValue("email", savedEmail);
+      setValue("invitationCode", savedCode);
     };
-    loadEmail();
-  }, []);
+    loadData();
+  }, [setValue]);
 
-  const handleNext = () => {
-    router.push("/profile-setup");
-  };
-
-  const handleCreateUser = async () => {
-    if (!email) {
-      setError("Email not found. Please start again.");
+  const handleCreateUser = async (data: UserAuthModels.UserAuthPasswordRegisterRequest) => {
+    if (!email || !invitationCode) {
       showToast({
         variant: "error",
-        message: "Email not found",
+        message: "Missing email or invitation code. Please start again.",
       });
+      router.replace("/welcome");
       return;
     }
 
-    createUser.mutate(
-      { email, password },
+    registerMutation.mutate(
       {
-        onSuccess: async () => {
+        data: {
+          email: email,
+          invitationCode: invitationCode.toUpperCase(),
+          name: "test",
+          password: data.password,
+        },
+      },
+      {
+        onSuccess: async (response) => {
+          login(response.accessToken);
           await setUserCreated(email);
+
+          // Clear onboarding storage data - no longer needed
+          await clearInvitationCode();
+          await clearPassword();
 
           showToast({
             variant: "success",
             message: "Account created successfully!",
           });
-          handleNext();
+          router.push("/profile-setup");
         },
         onError: (error) => {
-          const errorMessage = error instanceof Error ? error.message : "Failed to create account";
-          setError(errorMessage);
+          const errorMessage = RestUtils.extractServerErrorMessage(error);
           showToast({
             variant: "error",
-            message: errorMessage,
+            message: errorMessage || "Failed to create account",
           });
         },
       },
@@ -71,8 +112,6 @@ const CreatePassword = () => {
     // Handle Face ID setup
   };
 
-  const isValidPassword = password.length >= 8;
-
   return (
     <Box
       flex={1}
@@ -81,7 +120,7 @@ const CreatePassword = () => {
       paddingHorizontal="6"
     >
       <View style={styles.topCircle} />
-
+      <GoBack />
       <Box
         flex={1}
         justifyContent="flex-start"
@@ -94,41 +133,34 @@ const CreatePassword = () => {
             variant="variant-2-prominent"
             textAlign="center"
           >
-            Create Password
+            Create Your Password
           </Text>
         </Box>
 
-        {error && (
-          <Text
-            variant="variant-1"
-            textAlign="center"
-            color="informational-error"
-            marginBottom="4"
-          >
-            {error}
-          </Text>
-        )}
-
-        <Input
-          label=""
-          placeholder="Enter password"
-          value={password}
-          variant="default"
-          onChangeText={(text) => {
-            setPassword(text);
-            setError("");
-          }}
-          secureTextEntry
+        <Controller
+          control={control}
+          name="password"
+          render={({ field: { onChange, value } }) => (
+            <Input
+              label=""
+              placeholder="Create password"
+              value={value}
+              variant="default"
+              onChangeText={onChange}
+              error={errors.password?.message}
+              secureTextEntry
+            />
+          )}
         />
 
         <Button
           label="NEXT"
-          onPress={handleCreateUser}
+          onPress={handleSubmit(handleCreateUser)}
           width="fit"
           textVariant="variant-2-prominent"
           variant="secondary"
-          disabled={!isValidPassword}
-          loading={createUser.isPending}
+          disabled={!isValid}
+          loading={registerMutation.isPending}
         />
 
         <Button
@@ -166,7 +198,7 @@ const CreatePassword = () => {
 
 const styles = StyleSheet.create({
   topCircle: {
-    position: "absolute",
+    position: "fixed",
     top: -150,
     right: -150,
     width: 300,
@@ -175,7 +207,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F5C344",
   },
   bottomCircle: {
-    position: "absolute",
+    position: "fixed",
     bottom: -150,
     left: -150,
     width: 300,

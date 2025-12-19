@@ -2,9 +2,9 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { supabase } from "@/utils/supabase";
 
-import { WaitlistModels } from "./waitlist.models";
+import { MockWaitlistModels } from "./waitlist.models";
 
-export namespace WaitlistQueries {
+export namespace MockWaitlistQueries {
   export const useGetAllWaitlistEntries = () => {
     return useQuery({
       queryKey: ["waitlist", "all"],
@@ -45,7 +45,7 @@ export namespace WaitlistQueries {
         if (error) throw error;
         if (!data) return null;
 
-        return WaitlistModels.waitlistEntrySchema.parse({
+        return MockWaitlistModels.waitlistEntrySchema.parse({
           id: data.id,
           email: data.email,
           code: data.code,
@@ -76,7 +76,7 @@ export namespace WaitlistQueries {
         if (error) throw error;
         if (!result) throw new Error("Failed to create waitlist entry");
 
-        return WaitlistModels.waitlistEntrySchema.parse({
+        return MockWaitlistModels.waitlistEntrySchema.parse({
           id: result.id,
           email: result.email,
           code: result.code,
@@ -103,7 +103,7 @@ export namespace WaitlistQueries {
         if (error) throw error;
         if (!data) throw new Error("Invalid invitation code");
 
-        return WaitlistModels.waitlistEntrySchema.parse({
+        return MockWaitlistModels.waitlistEntrySchema.parse({
           id: data.id,
           email: data.email,
           code: data.code,
@@ -129,7 +129,7 @@ export namespace WaitlistQueries {
         if (error) throw error;
         if (!data) throw new Error("Failed to mark code as used");
 
-        return WaitlistModels.waitlistEntrySchema.parse({
+        return MockWaitlistModels.waitlistEntrySchema.parse({
           id: data.id,
           email: data.email,
           code: data.code,

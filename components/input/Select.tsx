@@ -1,6 +1,6 @@
 import { useTheme } from "@shopify/restyle";
 import React, { useCallback, useEffect, useState } from "react";
-import { FlatList } from "react-native";
+import { FlatList, type ViewStyle } from "react-native";
 
 import ArrowDropDownIcon from "@/assets/icons/ArrowDownIcon";
 import CloseIcon from "@/assets/icons/CloseIcon";
@@ -35,6 +35,7 @@ export interface SelectProps {
   onPrimaryActionPress?: () => void;
   onSecondaryActionPress?: () => void;
   filterable?: boolean;
+  style?: ViewStyle;
 }
 
 const Select = ({
@@ -51,6 +52,7 @@ const Select = ({
   onPrimaryActionPress,
   onSecondaryActionPress,
   filterable,
+  style,
 }: SelectProps) => {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const theme = useTheme<Theme>();
@@ -184,12 +186,15 @@ const Select = ({
       <Pressable
         onPress={handleOpenDrawer}
         pointerEvents="box-only"
+        style={style}
       >
         <Input
           label={label}
           placeholder="Select an option"
           value={parsedSelectedValue}
           onChangeText={() => null}
+          borderRadius="5xl"
+          height={50}
           rightElement={<ArrowDropDownIcon color={parsedInputColor} />}
         />
       </Pressable>

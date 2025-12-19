@@ -1,4 +1,4 @@
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Controller } from "react-hook-form";
 import { StyleSheet, View } from "react-native";
@@ -7,38 +7,39 @@ import Box from "@/components/Box";
 import Button from "@/components/buttons/Button";
 import Image from "@/components/Image";
 import Input from "@/components/input/Input";
+import { GoBack } from "@/components/navigation/GoBack";
 import Text from "@/components/text/Text";
-import { WaitlistModels, WaitlistQueries } from "@/data/waitlist";
 import { useForm } from "@/hooks/useForm";
 import { useOnboarding } from "@/hooks/useOnboarding";
+import { WaitlistModels } from "@/openapi/waitlist/waitlist.models";
+import { WaitlistQueries } from "@/openapi/waitlist/waitlist.queries";
 import { showToast } from "@/utils/toast";
 
 const EnterEmail = () => {
   const router = useRouter();
-  const createWaitlistEntry = WaitlistQueries.useCreateWaitlistEntry();
-  const { data: waitlistMap } = WaitlistQueries.useGetAllWaitlistEntries();
-  const { setEmailVerified } = useOnboarding();
+  const { mode } = useLocalSearchParams<{ mode: "waitlist" | "onboarding" }>();
   const [isChecking, setIsChecking] = useState(false);
+
+  const waitlistMutation = WaitlistQueries.useJoin();
+  const { setWaitlistEmail } = useOnboarding();
+
+  const isWaitlistMode = mode === "waitlist";
 
   const {
     control,
     handleSubmit,
     formState: { errors, isValid },
-  } = useForm<WaitlistModels.EmailForm>({
-    zodSchema: WaitlistModels.emailFormSchema,
+  } = useForm<WaitlistModels.WaitlistJoinRequest>({
+    zodSchema: WaitlistModels.WaitlistJoinRequestSchema,
     mode: "onChange",
   });
 
-  const submitEmailRequest = async (data: WaitlistModels.EmailForm) => {
-    if (!waitlistMap) return;
-
+  const submitEmailRequest = async (data: WaitlistModels.WaitlistJoinRequest) => {
     setIsChecking(true);
 
-    const emailInWaitlist = data.email in waitlistMap;
-    const isUsed = waitlistMap[data.email];
-
-    if (!emailInWaitlist) {
-      createWaitlistEntry.mutate(
+    if (isWaitlistMode) {
+      // Waitlist flow: POST to API
+      await waitlistMutation.mutate(
         {
           data: {
             email: data.email,
@@ -53,30 +54,21 @@ const EnterEmail = () => {
             });
             router.replace("/waitlist-input");
           },
-          onError: () => {
+          onError: (error) => {
             setIsChecking(false);
             showToast({
               variant: "error",
-              message: "Failed to join waitlist. Please try again.",
+              message: error.message || "Failed to join waitlist. Please try again.",
             });
           },
         },
       );
-      return;
-    }
-
-    if (isUsed) {
+    } else {
+      // Onboarding flow: Save email to storage and go to invitation code
+      await setWaitlistEmail(data.email);
       setIsChecking(false);
-      showToast({
-        variant: "error",
-        message: "This email is already registered.",
-      });
-      return;
+      router.push("/invitation-code");
     }
-
-    await setEmailVerified(data.email);
-    setIsChecking(false);
-    router.push("/invitation-code");
   };
 
   return (
@@ -87,6 +79,8 @@ const EnterEmail = () => {
       paddingHorizontal="6"
     >
       <View style={styles.topCircle} />
+
+      <GoBack />
 
       <Box
         flex={1}
@@ -105,7 +99,7 @@ const EnterEmail = () => {
           variant="variant-6-prominent"
           textAlign="center"
         >
-          Enter your{"\n"}e-mail address
+          {isWaitlistMode ? "Join our waitlist" : "Enter your e-mail address"}
         </Text>
 
         <Box
@@ -136,7 +130,7 @@ const EnterEmail = () => {
           textVariant="variant-2-prominent"
           variant="secondary"
           disabled={!isValid}
-          loading={isChecking || createWaitlistEntry.isPending}
+          loading={isChecking || (isWaitlistMode && waitlistMutation.isPending)}
         />
       </Box>
 
@@ -147,7 +141,7 @@ const EnterEmail = () => {
 
 const styles = StyleSheet.create({
   topCircle: {
-    position: "absolute",
+    position: "fixed",
     top: -150,
     right: -150,
     width: 300,
@@ -156,7 +150,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F5C344",
   },
   bottomCircle: {
-    position: "absolute",
+    position: "fixed",
     bottom: -150,
     right: -150,
     width: 300,

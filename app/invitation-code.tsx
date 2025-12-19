@@ -6,21 +6,20 @@ import Box from "@/components/Box";
 import Button from "@/components/buttons/Button";
 import TextButton from "@/components/buttons/TextButton";
 import Image from "@/components/Image";
+import { GoBack } from "@/components/navigation/GoBack";
 import Text from "@/components/text/Text";
-import { WaitlistQueries } from "@/data/waitlist";
 import { useOnboarding } from "@/hooks/useOnboarding";
-import { showToast } from "@/utils/toast";
+
+const REGEX_CODE = /^[0-9a-z]$/i;
 
 const InvitationCode = () => {
   const router = useRouter();
-  const [code, setCode] = useState(["", "", "", ""]);
+  const [code, setCode] = useState<string[]>(["", "", "", ""]);
   const [isCodeValid, setIsCodeValid] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [error, setError] = useState<string>("");
   const inputRefs = useRef<(RNTextInput | null)[]>([]);
-  const verifyCode = WaitlistQueries.useVerifyInvitationCode();
-  const markCodeAsUsed = WaitlistQueries.useMarkCodeAsUsed();
-  const { getWaitlistEmail, setEmailVerified } = useOnboarding();
+  const { getWaitlistEmail, setInvitationCode } = useOnboarding();
 
   useEffect(() => {
     const loadEmail = async () => {
@@ -33,7 +32,7 @@ const InvitationCode = () => {
   }, []);
 
   useEffect(() => {
-    setIsCodeValid(code.every((v) => /^\d+$/.test(v)));
+    setIsCodeValid(code.every((v) => REGEX_CODE.test(v)));
   }, [code]);
 
   const handleCodeChange = (index: number, value: string) => {
@@ -52,7 +51,7 @@ const InvitationCode = () => {
   };
 
   const handleKeyPress = (index: number, key: string) => {
-    if (!/^\d$/.test(key) && key !== "Backspace") return;
+    if (!REGEX_CODE.test(key) && key !== "Backspace") return;
 
     if (key === "Backspace" && !code[index] && index > 0) {
       inputRefs.current[index - 1]?.focus();
@@ -65,42 +64,12 @@ const InvitationCode = () => {
       return;
     }
 
-    const enteredCode = code.join("");
+    const enteredCode = code.join("").toUpperCase();
 
-    verifyCode.mutate(
-      { email, code: enteredCode },
-      {
-        onSuccess: async () => {
-          markCodeAsUsed.mutate(
-            { email },
-            {
-              onSuccess: async () => {
-                await setEmailVerified(email);
-                showToast({
-                  variant: "success",
-                  message: "Code verified successfully!",
-                });
-                router.push("/create-password");
-              },
-              onError: () => {
-                setError("Failed to verify code. Please try again.");
-                showToast({
-                  variant: "error",
-                  message: "Verification failed",
-                });
-              },
-            },
-          );
-        },
-        onError: () => {
-          setError("Invalid invitation code. Please try again.");
-          showToast({
-            variant: "error",
-            message: "Invalid invitation code",
-          });
-        },
-      },
-    );
+    // Store invitation code for use in create-password step
+    await setInvitationCode(enteredCode);
+
+    router.push("/create-password");
   };
 
   return (
@@ -111,6 +80,8 @@ const InvitationCode = () => {
       justifyContent="space-between"
     >
       <View style={styles.bottomCircle} />
+
+      <GoBack url="/welcome" />
 
       <Box
         flex={1}
@@ -171,7 +142,7 @@ const InvitationCode = () => {
               style={styles.codeInput}
               value={digit}
               onChangeText={(value) => {
-                if (/^\d$/.test(value)) handleCodeChange(index, value);
+                if (REGEX_CODE.test(value)) handleCodeChange(index, value);
               }}
               onKeyPress={({ nativeEvent }) => handleKeyPress(index, nativeEvent.key)}
               keyboardType="number-pad"
@@ -209,7 +180,6 @@ const InvitationCode = () => {
             textVariant="variant-2-prominent"
             width="m"
             disabled={!isCodeValid}
-            loading={verifyCode.isPending || markCodeAsUsed.isPending}
             variant="secondary"
           />
         </Box>
@@ -256,6 +226,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     textAlign: "center",
     color: "#1F2937",
+    textTransform: "uppercase",
   },
   link: {
     textDecorationLine: "underline",

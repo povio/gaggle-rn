@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
 import { ArrowLeftIcon } from "lucide-react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Controller } from "react-hook-form";
 import { ScrollView, StyleSheet, View } from "react-native";
 
@@ -10,65 +10,89 @@ import Button from "@/components/buttons/Button";
 import IconButton from "@/components/buttons/IconButton";
 import PillButton from "@/components/buttons/PillButton";
 import TextButton from "@/components/buttons/TextButton";
-import Image from "@/components/Image";
 import Input from "@/components/input/Input";
+import Select from "@/components/input/Select";
 import Text from "@/components/text/Text";
-import { UsersModels } from "@/data/users/users.models";
-import { UsersQueries } from "@/data/users/users.queries";
 import { useForm } from "@/hooks/useForm";
-import { useOnboarding } from "@/hooks/useOnboarding";
+import { UserModels } from "@/openapi/user/user.models";
+import { UserQueries } from "@/openapi/user/user.queries";
 import { showToast } from "@/utils/toast";
 
-const ProfileSetup = () => {
+const EditProfile = () => {
   const router = useRouter();
-  const updateProfile = UsersQueries.useUpdateProfile();
-  const { setProfileSetup } = useOnboarding();
+  const [stateValue, setStateValue] = useState("");
+  const updateSettingsMutation = UserQueries.useUpdateMySettings();
+  const { data: userSettings, isLoading } = UserQueries.useGetMySettings();
 
   const {
     control,
     handleSubmit,
     setValue,
     watch,
-    formState: { isValid },
-  } = useForm<UsersModels.ProfileSetupInput>({
-    zodSchema: UsersModels.profileSetupSchema,
+    getValues,
+    formState: { isValid, errors },
+  } = useForm<UserModels.UpdateUserSettingsRequestDTO>({
+    zodSchema: UserModels.UpdateUserSettingsRequestDTOSchema,
+    mode: "all",
     defaultValues: {
-      userName: "",
-      streetAddress: "",
-      apartment: "",
-      city: "",
-      state: "",
-      zipCode: "",
-      children: [
-        {
-          firstName: "",
-          lastName: "",
-          birthdate: "",
-          gender: "",
-          age: "",
-          schoolName: "",
-        },
-      ],
+      nickname: "",
+      address1: undefined,
+      address2: undefined,
+      city: undefined,
+      state: UserModels.StateEnum.AK,
+      zip: undefined,
+      notificationEnabled: true,
+      children: null,
+      // children: [
+      //   {
+      //     nickname: "",
+      //     birthdate: "",
+      //     gender: null,
+      //     grade: null,
+      //     schoolName: "",
+      //   },
+      // ],
     },
   });
-
+  console.log("errors", errors);
   const children = watch("children") || [];
+
+  useEffect(() => {
+    if (userSettings) {
+      setValue("nickname", userSettings.nickname || "");
+      setValue("address1", userSettings.address1 || "");
+      setValue("address2", userSettings.address2 || "");
+      setValue("city", userSettings.city || "");
+      setValue("state", userSettings.state as UserModels.StateEnum);
+      setValue("zip", userSettings.zip || "");
+      setValue("notificationEnabled", userSettings.notificationEnabled);
+      setValue("children", userSettings.children || []);
+
+      if (userSettings.state) {
+        setStateValue(userSettings.state);
+      }
+    }
+  }, [userSettings, setValue]);
 
   const handleAddChild = () => {
     setValue("children", [
       ...children,
       {
-        firstName: "",
-        lastName: "",
+        nickname: "",
         birthdate: "",
-        gender: "",
-        age: "",
+        gender: null,
+        grade: null,
         schoolName: "",
       },
     ]);
   };
 
-  const updateChild = (index: number, field: keyof UsersModels.Child, value: string) => {
+  const handleSelectState = (value: string) => {
+    setStateValue(value);
+    setValue("state", value as UserModels.StateEnum);
+  };
+
+  const updateChild = (index: number, field: keyof UserModels.ChildDTO, value: string) => {
     const updatedChildren = [...children];
     updatedChildren[index] = { ...updatedChildren[index], [field]: value };
     setValue("children", updatedChildren);
@@ -81,46 +105,43 @@ const ProfileSetup = () => {
     );
   };
 
-  const onSubmit = (data: UsersModels.ProfileSetupInput) => {
-    updateProfile.mutate(data, {
-      onSuccess: async (response) => {
-        await setProfileSetup(response.userId);
-        showToast({
-          variant: "success",
-          message: "Profile setup completed!",
-        });
-        router.replace("/sign-in");
+  const onSubmit = (data: UserModels.UpdateUserSettingsRequestDTO) => {
+    updateSettingsMutation.mutate(
+      { data },
+      {
+        onSuccess: async () => {
+          showToast({
+            variant: "success",
+            message: "Profile updated successfully!",
+          });
+          router.push("/profile");
+        },
+        onError: (error) => {
+          console.log("error", error);
+          const errorMessage = error instanceof Error ? error.message : "Failed to update profile";
+          showToast({
+            variant: "error",
+            message: errorMessage,
+          });
+        },
       },
-      onError: (error) => {
-        const errorMessage = error instanceof Error ? error.message : "Failed to update profile";
-        showToast({
-          variant: "error",
-          message: errorMessage,
-        });
-      },
-    });
+    );
   };
 
-  const genderOptions = ["Male", "Female", "Other"];
-  const ageOptions = [
-    "Age 2",
-    "Age 3",
-    "Pre-K",
-    "Kindergarten",
-    "1st Grade",
-    "2nd Grade",
-    "3rd Grade",
-    "4th",
-    "5th",
-    "6th",
-    "7th",
-    "8th",
-    "9th",
-    "10th",
-    "11th",
-    "12th",
-    "Other",
-  ];
+  const genderOptions = Object.values(UserModels.GenderEnum).map((value) => ({
+    id: value,
+    label: value.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
+  }));
+
+  const ageOptions = Object.values(UserModels.GradeEnum).map((value) => ({
+    id: value,
+    label: value.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
+  }));
+
+  const stateOptions = Object.values(UserModels.StateEnum).map((value) => ({
+    value: value,
+    label: value.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
+  }));
 
   const handleBack = () => {
     router.push("/profile");
@@ -184,7 +205,7 @@ const ProfileSetup = () => {
           <Box gap="2">
             <Controller
               control={control}
-              name="userName"
+              name="nickname"
               render={({ field: { onChange, value }, fieldState: { error } }) => (
                 <Input
                   label=""
@@ -215,7 +236,7 @@ const ProfileSetup = () => {
           <Box gap="2">
             <Controller
               control={control}
-              name="streetAddress"
+              name="address1"
               render={({ field: { onChange, value } }) => (
                 <Input
                   label=""
@@ -228,7 +249,7 @@ const ProfileSetup = () => {
             />
             <Controller
               control={control}
-              name="apartment"
+              name="address2"
               render={({ field: { onChange, value } }) => (
                 <Input
                   label=""
@@ -252,22 +273,19 @@ const ProfileSetup = () => {
                 />
               )}
             />
-            <Controller
-              control={control}
-              name="state"
-              render={({ field: { onChange, value } }) => (
-                <Input
-                  label=""
-                  placeholder="State"
-                  value={value}
-                  variant="default"
-                  onChangeText={onChange}
-                />
-              )}
+            <Select
+              variant={"outlined"}
+              type={"single"}
+              label=""
+              placeholder={"State"}
+              selectedValue={stateValue}
+              items={stateOptions}
+              onSelect={handleSelectState}
+              style={styles.select}
             />
             <Controller
               control={control}
-              name="zipCode"
+              name="zip"
               render={({ field: { onChange, value } }) => (
                 <Input
                   label=""
@@ -320,17 +338,10 @@ const ProfileSetup = () => {
               <Box gap="2">
                 <Input
                   label=""
-                  placeholder="First Name"
-                  value={child.firstName || ""}
+                  placeholder="Nickname"
+                  value={child.nickname || ""}
                   variant="default"
-                  onChangeText={(value) => updateChild(index, "firstName", value)}
-                />
-                <Input
-                  label=""
-                  placeholder="Last Name"
-                  value={child.lastName || ""}
-                  variant="default"
-                  onChangeText={(value) => updateChild(index, "lastName", value)}
+                  onChangeText={(value) => updateChild(index, "nickname", value)}
                 />
                 <Input
                   label=""
@@ -354,11 +365,11 @@ const ProfileSetup = () => {
                   >
                     {genderOptions.map((gender) => (
                       <PillButton
-                        key={gender}
-                        label={gender}
+                        key={gender.id}
+                        label={gender.label}
                         variant="filled"
-                        onPress={() => updateChild(index, "gender", gender)}
-                        checked={child.gender === gender}
+                        onPress={() => updateChild(index, "gender", gender.id)}
+                        checked={child.gender === gender.id}
                       />
                     ))}
                   </Box>
@@ -369,20 +380,20 @@ const ProfileSetup = () => {
                     variant="variant-11"
                     marginBottom="3"
                   >
-                    Select Age
+                    Select Grade
                   </Text>
                   <Box
                     flexDirection="row"
                     gap="2"
                     flexWrap="wrap"
                   >
-                    {ageOptions.map((age) => (
+                    {ageOptions.map((grade) => (
                       <PillButton
-                        key={age}
-                        label={age}
+                        key={grade.id}
+                        label={grade.label}
                         variant="outlined"
-                        onPress={() => updateChild(index, "age", age)}
-                        checked={child.age === age}
+                        onPress={() => updateChild(index, "grade", grade.id)}
+                        checked={child.grade === grade.id}
                       />
                     ))}
                   </Box>
@@ -427,7 +438,7 @@ const ProfileSetup = () => {
             width="m"
             textVariant="variant-2-prominent"
             variant="secondary"
-            disabled={updateProfile.isPending || !isValid}
+            disabled={updateSettingsMutation.isPending}
           />
         </Box>
       </Box>
@@ -443,6 +454,9 @@ const styles = StyleSheet.create({
   illustration: {
     width: 50,
     height: 50,
+  },
+  select: {
+    marginBottom: 8,
   },
   textBtn: {
     textDecorationLine: "underline",
@@ -467,4 +481,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProfileSetup;
+export default EditProfile;

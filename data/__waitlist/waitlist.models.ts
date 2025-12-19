@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export namespace WaitlistModels {
+export namespace MockWaitlistModels {
   export const waitlistEntrySchema = z.object({
     id: z.string().uuid(),
     email: z.string().email(),

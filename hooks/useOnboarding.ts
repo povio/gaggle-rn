@@ -37,6 +37,36 @@ export const useOnboarding = () => {
     return await AsyncStorage.getItem(STORAGE_KEYS.WAITLIST_EMAIL);
   };
 
+  const setWaitlistEmail = async (email: string) => {
+    await AsyncStorage.setItem(STORAGE_KEYS.WAITLIST_EMAIL, email);
+  };
+
+  const setInvitationCode = async (code: string) => {
+    await AsyncStorage.setItem(STORAGE_KEYS.INVITATION_CODE, code);
+    // Set EMAIL_VERIFIED only after code is entered
+    await AsyncStorage.setItem(STORAGE_KEYS.EMAIL_VERIFIED, "true");
+  };
+
+  const getInvitationCode = async (): Promise<string | null> => {
+    return await AsyncStorage.getItem(STORAGE_KEYS.INVITATION_CODE);
+  };
+
+  const clearInvitationCode = async () => {
+    await AsyncStorage.removeItem(STORAGE_KEYS.INVITATION_CODE);
+  };
+
+  const setPassword = async (password: string) => {
+    await AsyncStorage.setItem(STORAGE_KEYS.PASSWORD, password);
+  };
+
+  const getPassword = async (): Promise<string | null> => {
+    return await AsyncStorage.getItem(STORAGE_KEYS.PASSWORD);
+  };
+
+  const clearPassword = async () => {
+    await AsyncStorage.removeItem(STORAGE_KEYS.PASSWORD);
+  };
+
   const getUserCreated = async (): Promise<string | null> => {
     return await AsyncStorage.getItem(STORAGE_KEYS.USER_CREATED);
   };
@@ -64,6 +94,8 @@ export const useOnboarding = () => {
 
   const clearAllOnboarding = async () => {
     await clearEmailVerified();
+    await clearInvitationCode();
+    await clearPassword();
     await clearUserCreated();
     await clearProfileSetup();
   };
@@ -76,6 +108,13 @@ export const useOnboarding = () => {
     setProfileSetup,
     clearProfileSetup,
     getWaitlistEmail,
+    setWaitlistEmail,
+    setInvitationCode,
+    getInvitationCode,
+    clearInvitationCode,
+    setPassword,
+    getPassword,
+    clearPassword,
     getUserCreated,
     getOnboardingStep,
     clearAllOnboarding,

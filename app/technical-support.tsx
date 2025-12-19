@@ -87,13 +87,6 @@ const TechnicalSupport = () => {
         alignItems={"center"}
         paddingTop={"6"}
       >
-        {/* <Input
-          label=""
-          onChangeText={() => {}}
-          placeholder={"Subject"}
-          padding={"2"}
-          borderRadius="2xl"
-        /> */}
         <Box
           flexDirection="row"
           width="100%"

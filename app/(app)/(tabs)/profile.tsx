@@ -13,10 +13,12 @@ import { ActivityCard } from "@/components/shared/ActivityCard";
 import type { Card } from "@/components/shared/FavoritesList";
 import Text from "@/components/text/Text";
 import { cards } from "@/data/mock/activities";
+import { useUserStore } from "@/modules/user/userStore";
 
 const ProfilePage = () => {
   const router = useRouter();
   const [data, setData] = useState<Card[] | null>(null);
+  const { user } = useUserStore();
 
   useEffect(() => {
     setData(cards.filter((_, index) => index < 4));
@@ -121,7 +123,7 @@ const ProfilePage = () => {
               variant="variant-5-prominent"
               textAlign="center"
             >
-              Tsukimoto Yakashi
+              {user?.name}
             </Text>
             <Box
               flexDirection="row"

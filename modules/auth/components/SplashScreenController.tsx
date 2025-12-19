@@ -2,8 +2,9 @@ import { useFonts } from "expo-font";
 import { SplashScreen } from "expo-router";
 import { type PropsWithChildren, useEffect, useState } from "react";
 
+import { STORAGE_KEYS } from "@/constants/storage";
 import { useAuthStore } from "@/modules/auth/stores/authStore";
-import { supabase } from "@/utils/supabase";
+import { getStorageItemAsync } from "@/utils/secureStore";
 
 void SplashScreen.preventAutoHideAsync();
 
@@ -20,11 +21,9 @@ export default function SplashScreenController({ children }: PropsWithChildren) 
 
   useEffect(() => {
     const initAuth = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      if (session?.access_token) {
-        restore(session.access_token);
+      const token = await getStorageItemAsync(STORAGE_KEYS.AUTH_TOKEN);
+      if (token) {
+        restore(token);
       } else {
         restore(null);
       }

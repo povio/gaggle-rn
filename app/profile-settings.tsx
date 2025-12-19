@@ -13,14 +13,18 @@ import IconButton from "@/components/buttons/IconButton";
 import Toggle from "@/components/buttons/Toggle";
 import Text from "@/components/text/Text";
 import { STORAGE_KEYS } from "@/constants/storage";
-import { UsersQueries } from "@/data/users/users.queries";
+import { useOnboarding } from "@/hooks/useOnboarding";
 import { useAuthStore } from "@/modules/auth/stores/authStore";
+import { useUserStore } from "@/modules/user/userStore";
+import { UserQueries } from "@/openapi/user/user.queries";
 import { setStorageItemAsync } from "@/utils/secureStore";
 
 const ProfileSettings = () => {
   const router = useRouter();
   const { logout } = useAuthStore();
-  const { data: currentUser } = UsersQueries.useGetCurrentUser();
+  const { clearUser } = useUserStore();
+  const { clearAllOnboarding } = useOnboarding();
+  const { data: currentUser } = UserQueries.useGet();
 
   const handleLogout = async () => {
     // Store email before logging out
@@ -28,8 +32,17 @@ const ProfileSettings = () => {
       await setStorageItemAsync(STORAGE_KEYS.LAST_SIGNED_IN_EMAIL, currentUser.email);
     }
 
+    // Clear all onboarding data
+    await clearAllOnboarding();
+
+    // Clear user store
+    clearUser();
+
+    // Logout (clears auth token)
     logout();
-    router.replace("/welcome");
+
+    // Navigate to index which will redirect to sign-in
+    router.replace("/");
   };
 
   const handleBack = () => {

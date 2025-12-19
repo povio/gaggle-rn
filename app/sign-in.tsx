@@ -1,8 +1,7 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
 import { ScanFace } from "lucide-react-native";
 import React, { useEffect } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import { StyleSheet, View } from "react-native";
 
 import Box from "@/components/Box";
@@ -10,23 +9,29 @@ import Button from "@/components/buttons/Button";
 import Input from "@/components/input/Input";
 import Text from "@/components/text/Text";
 import { STORAGE_KEYS } from "@/constants/storage";
-import { AuthModels, AuthQueries } from "@/data/auth";
+import { useForm } from "@/hooks/useForm";
 import { useAuthStore } from "@/modules/auth/stores/authStore";
+import { useUserStore } from "@/modules/user/userStore";
+import { UserApi } from "@/openapi/user/user.api";
+import { UserAuthModels } from "@/openapi/userAuth/userAuth.models";
+import { UserAuthQueries } from "@/openapi/userAuth/userAuth.queries";
+import { RestUtils } from "@/utils/rest/rest.utils";
 import { getStorageItemAsync } from "@/utils/secureStore";
 import { showToast } from "@/utils/toast";
 
 const SignIn = () => {
   const router = useRouter();
   const { login } = useAuthStore();
-  const signIn = AuthQueries.useSignIn();
+  const { setUser, setSettings } = useUserStore();
+  const loginMutation = UserAuthQueries.useLogin();
 
   const {
     control,
     handleSubmit,
     formState: { errors, isValid },
     setValue,
-  } = useForm<AuthModels.SignInInput>({
-    resolver: zodResolver(AuthModels.signInInputSchema),
+  } = useForm<UserAuthModels.UserAuthPasswordLoginRequest>({
+    zodSchema: UserAuthModels.UserAuthPasswordLoginRequestSchema,
     mode: "onChange",
     defaultValues: {
       email: "",
@@ -45,24 +50,32 @@ const SignIn = () => {
     loadLastEmail();
   }, [setValue]);
 
-  const onSubmit = (data: AuthModels.SignInInput) => {
-    signIn.mutate(data, {
-      onSuccess: (response) => {
-        login(response.session.accessToken);
-        showToast({
-          variant: "success",
-          message: `Welcome back, ${response.user.userName || response.user.email}!`,
-        });
-        router.replace("/(app)/(tabs)");
+  const onSubmit = (data: UserAuthModels.UserAuthPasswordLoginRequest) => {
+    loginMutation.mutate(
+      { data },
+      {
+        onSuccess: async (response) => {
+          login(response.accessToken);
+
+          try {
+            const [userData, settingsData] = await Promise.all([UserApi.get(), UserApi.getMySettings()]);
+            setUser(userData);
+            setSettings(settingsData);
+          } catch (error) {
+            console.error("Failed to fetch user data:", error);
+          }
+
+          router.replace("/(app)/(tabs)");
+        },
+        onError: (error) => {
+          const errorMessage = RestUtils.extractServerErrorMessage(error);
+          showToast({
+            variant: "error",
+            message: errorMessage || "Failed to sign in",
+          });
+        },
       },
-      onError: (error) => {
-        const errorMessage = error instanceof Error ? error.message : "Failed to sign in";
-        showToast({
-          variant: "error",
-          message: errorMessage,
-        });
-      },
-    });
+    );
   };
 
   const handleEnableFaceID = () => {
@@ -146,7 +159,7 @@ const SignIn = () => {
           width="fit"
           variant="secondary"
           textVariant="variant-2-prominent"
-          disabled={!isValid || signIn.isPending}
+          disabled={!isValid || loginMutation.isPending}
         />
 
         <Button

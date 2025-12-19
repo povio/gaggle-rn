@@ -22,10 +22,7 @@ const RootLayout = () => {
           <Stack.Screen name="waitlist-input" />
           <Stack.Screen name="enter-email" />
           <Stack.Screen name="code-resent" />
-          <Stack.Screen
-            name="invitation-code"
-            options={{ title: "Invitation Code", headerShown: true, headerBackVisible: true }}
-          />
+          <Stack.Screen name="invitation-code" />
           <Stack.Screen name="create-password" />
           <Stack.Screen name="profile-setup" />
           <Stack.Screen name="sign-in" />
