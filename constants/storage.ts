@@ -4,6 +4,7 @@
  */
 export const STORAGE_KEYS = {
   AUTH_TOKEN: "auth_token",
+  REFRESH_TOKEN: "refresh_token",
   EMAIL_VERIFIED: "email_verified",
   WAITLIST_EMAIL: "waitlist_email",
   INVITATION_CODE: "invitation_code",

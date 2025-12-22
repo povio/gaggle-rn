@@ -28,6 +28,7 @@ export const useAuthStore = create<AuthState & AuthActions>((set) => ({
   logout: () => {
     set({ token: null, isLoading: false });
     void removeStorageItemAsync(STORAGE_KEYS.AUTH_TOKEN);
+    void removeStorageItemAsync(STORAGE_KEYS.REFRESH_TOKEN);
   },
   restore: (token: string | null) => {
     set({ token, isLoading: false });

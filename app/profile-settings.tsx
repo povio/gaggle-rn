@@ -22,9 +22,10 @@ import { setStorageItemAsync } from "@/utils/secureStore";
 const ProfileSettings = () => {
   const router = useRouter();
   const { logout } = useAuthStore();
-  const { clearUser } = useUserStore();
+  const { clearUser, settings, setSettings } = useUserStore();
   const { clearAllOnboarding } = useOnboarding();
   const { data: currentUser } = UserQueries.useGet();
+  const updateSettingsMutation = UserQueries.useUpdateMySettings();
 
   const handleLogout = async () => {
     // Store email before logging out
@@ -47,6 +48,24 @@ const ProfileSettings = () => {
 
   const handleBack = () => {
     router.push("/profile");
+  };
+
+  const handleNotificationToggle = (enabled: boolean) => {
+    if (!settings) return;
+
+    updateSettingsMutation.mutate(
+      {
+        data: {
+          ...settings,
+          notificationEnabled: enabled,
+        },
+      },
+      {
+        onSuccess: (response) => {
+          setSettings(response);
+        },
+      },
+    );
   };
 
   return (
@@ -111,8 +130,8 @@ const ProfileSettings = () => {
           </Text>
           <Toggle
             id="notifications"
-            onChange={() => {}}
-            checked={true}
+            onChange={handleNotificationToggle}
+            checked={settings?.notificationEnabled ?? false}
           />
         </Box>
       </Box>

@@ -30,6 +30,7 @@ export namespace RestUtils {
    */
   export const doesServerErrorMessageContain = (e: AxiosError, text: string): boolean => {
     const message = extractServerErrorMessage(e);
+
     if (message == null) {
       return false;
     }
@@ -38,6 +39,7 @@ export namespace RestUtils {
   };
 
   export const extractServerErrorMessage = (e: unknown): string | null => {
+    console.log("error", e);
     if (e instanceof z.ZodError) {
       return e.message;
     }

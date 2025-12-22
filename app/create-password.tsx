@@ -85,6 +85,11 @@ const CreatePassword = () => {
       {
         onSuccess: async (response) => {
           login(response.accessToken);
+
+          if (response.refreshToken) {
+            await setStorageItemAsync(STORAGE_KEYS.REFRESH_TOKEN, response.refreshToken);
+          }
+
           await setUserCreated(email);
 
           // Clear onboarding storage data - no longer needed

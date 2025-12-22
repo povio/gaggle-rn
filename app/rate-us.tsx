@@ -1,5 +1,6 @@
 import { useRouter } from "expo-router";
 import { ArrowLeftIcon } from "lucide-react-native";
+import { Controller } from "react-hook-form";
 import { StyleSheet } from "react-native";
 
 import Box from "@/components/Box";
@@ -8,12 +9,52 @@ import IconButton from "@/components/buttons/IconButton";
 import Input from "@/components/input/Input";
 import { ReviewStars } from "@/components/shared/ReviewStars";
 import Text from "@/components/text/Text";
+import { useForm } from "@/hooks/useForm";
+import { FeedbackModels } from "@/openapi/feedback/feedback.models";
+import { FeedbackQueries } from "@/openapi/feedback/feedback.queries";
+import { RestUtils } from "@/utils/rest/rest.utils";
+import { showToast } from "@/utils/toast";
 
 const RateUs = () => {
   const router = useRouter();
+  const submitFeedbackMutation = FeedbackQueries.useSubmitApp();
+
+  const {
+    control,
+    handleSubmit,
+    formState: { isValid },
+  } = useForm<FeedbackModels.SubmitAppFeedbackRequestDTO>({
+    zodSchema: FeedbackModels.SubmitAppFeedbackRequestDTOSchema,
+    mode: "onChange",
+    defaultValues: {
+      content: "",
+    },
+  });
 
   const handleBack = () => {
     router.push("/profile-settings");
+  };
+
+  const onSubmit = (data: FeedbackModels.SubmitAppFeedbackRequestDTO) => {
+    submitFeedbackMutation.mutate(
+      { data },
+      {
+        onSuccess: () => {
+          showToast({
+            variant: "success",
+            message: "Thank you for your feedback!",
+          });
+          router.push("/rate-us-finish");
+        },
+        onError: (error) => {
+          const errorMessage = RestUtils.extractServerErrorMessage(error);
+          showToast({
+            variant: "error",
+            message: errorMessage || "Failed to submit feedback",
+          });
+        },
+      },
+    );
   };
 
   return (
@@ -84,21 +125,30 @@ const RateUs = () => {
           alignItems={"center"}
           width={"100%"}
         >
-          <Input
-            type="textArea"
-            placeholder="Leave your feedback"
-            label=""
-            onChangeText={() => {}}
-            padding={"2"}
-            borderRadius={"2xl"}
-            backgroundColor={"elevation-background"}
+          <Controller
+            control={control}
+            name="content"
+            render={({ field: { onChange, value }, fieldState: { error } }) => (
+              <Input
+                type="textArea"
+                placeholder="Leave your feedback"
+                label=""
+                value={value}
+                onChangeText={onChange}
+                padding={"2"}
+                borderRadius={"2xl"}
+                backgroundColor={"elevation-background"}
+                error={error?.message}
+              />
+            )}
           />
           <Button
             label="SUBMIT"
-            onPress={() => router.push("/rate-us-finish")}
+            onPress={handleSubmit(onSubmit)}
             variant="primary"
             style={styles.button}
             textVariant="variant-2-prominent"
+            disabled={!isValid || submitFeedbackMutation.isPending}
           />
         </Box>
         <Button

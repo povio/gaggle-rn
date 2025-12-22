@@ -16,7 +16,7 @@ import { UserApi } from "@/openapi/user/user.api";
 import { UserAuthModels } from "@/openapi/userAuth/userAuth.models";
 import { UserAuthQueries } from "@/openapi/userAuth/userAuth.queries";
 import { RestUtils } from "@/utils/rest/rest.utils";
-import { getStorageItemAsync } from "@/utils/secureStore";
+import { getStorageItemAsync, setStorageItemAsync } from "@/utils/secureStore";
 import { showToast } from "@/utils/toast";
 
 const SignIn = () => {
@@ -56,6 +56,10 @@ const SignIn = () => {
       {
         onSuccess: async (response) => {
           login(response.accessToken);
+
+          if (response.refreshToken) {
+            await setStorageItemAsync(STORAGE_KEYS.REFRESH_TOKEN, response.refreshToken);
+          }
 
           try {
             const [userData, settingsData] = await Promise.all([UserApi.get(), UserApi.getMySettings()]);
