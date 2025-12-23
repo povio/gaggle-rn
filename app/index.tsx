@@ -1,6 +1,8 @@
 import { Redirect, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
+import { Text } from "react-native";
 
+import Box from "@/components/Box";
 import LoadingScreen from "@/components/LoadingScreen";
 import { useOnboarding } from "@/hooks/useOnboarding";
 import { useAuthStore } from "@/modules/auth/stores/authStore";
@@ -51,7 +53,8 @@ export default function Index() {
     };
 
     void checkOnboardingAndNavigate();
-  }, [router, token, isLoading, getOnboardingStep, hasNavigated]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router, token, isLoading, hasNavigated]);
 
   if (isLoading) {
     return null;

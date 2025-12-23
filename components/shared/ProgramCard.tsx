@@ -14,31 +14,18 @@ import type { Theme } from "@/utils/theme/restyleTheme";
 
 import IconButton from "../buttons/IconButton";
 import PillButton from "../buttons/PillButton";
-import type { Card } from "./FavoritesList";
 
-export enum ActivityCardVariant {
-  ACTIVITY = "activity",
-  SESSION = "session",
-}
-interface ActivityCardProps {
-  data: ProgramModels.SearchProgramsResponseDTO | ProgramModels.SessionInputDTO;
+interface ProgramCardProps {
+  data: ProgramModels.SearchProgramsResponseDTO;
   callback?: (id: string | number) => void;
   isFavored: boolean;
-  variant?: ActivityCardVariant;
 }
 
-export const ActivityCard = ({
-  data,
-  callback,
-  isFavored,
-  variant = ActivityCardVariant.ACTIVITY,
-}: ActivityCardProps) => {
-  const theme = useTheme<Theme>();
+export const ProgramCard = ({ data, callback, isFavored }: ProgramCardProps) => {
   const router = useRouter();
-  const isSession = variant === ActivityCardVariant.SESSION;
 
   const handleCardPress = () => {
-    router.push(`/program-details?id=${data.id}`);
+    router.push(`/program-details?id=${data.programId}`);
   };
 
   return (
@@ -51,7 +38,7 @@ export const ActivityCard = ({
         gap="4"
         justifyContent="center"
         alignItems="center"
-        style={variant === ActivityCardVariant.ACTIVITY ? styles.containerActivity : styles.containerSession}
+        style={styles.containerActivity}
         borderRadius="l"
         width="100%"
         paddingHorizontal="3"
@@ -67,7 +54,7 @@ export const ActivityCard = ({
             gap="2"
           >
             <Image
-              source={data.iconImageUrl ?? MockIcons[Math.floor(Math.random() * 10)]}
+              source={data.iconImageUrl ? data.iconImageUrl : MockIcons[Math.floor(Math.random() * 10)]}
               style={styles.activityIcon}
               contentFit="contain"
             />
@@ -87,59 +74,22 @@ export const ActivityCard = ({
                 flexDirection="row"
                 gap="2"
               >
-                {isSession && data.startDate && data.endDate && (
-                  <Text variant="variant-4">{`${DateUtils.formatIsoDate(data.startDate, "MMM d")} - ${DateUtils.formatIsoDate(data.endDate, "MMM d")}`}</Text>
-                )}
-                {!isSession && <Text variant="variant-4">{data.provider}</Text>}
-                {data.location && (
+                <Text variant="variant-4">Provider Name</Text>
+                {data.locationName && (
                   <Text
                     variant="variant-4"
                     color="text-disabled"
-                  >{`| ${data.location}`}</Text>
+                    numberOfLines={1}
+                    maxWidth={170}
+                    ellipsizeMode="tail"
+                  >{`| ${data.locationName}`}</Text>
                 )}
               </Box>
-              {isSession && data.startDate && data.endDate && (
-                <Box
-                  flexDirection="row"
-                  gap="1"
-                >
-                  <Text
-                    variant="variant-4"
-                    color="text-disabled"
-                  >
-                    Start:{" "}
-                    <Text
-                      color="button-text-color"
-                      variant="variant-4"
-                    >
-                      {DateUtils.formatIsoDate(data.startDate, "HH:mm a")}
-                    </Text>
-                  </Text>
-                  <Text
-                    variant="variant-4"
-                    color="text-disabled"
-                  >
-                    |
-                  </Text>
-                  <Text
-                    variant="variant-4"
-                    color="text-disabled"
-                  >
-                    End:{" "}
-                    <Text
-                      color="button-text-color"
-                      variant="variant-4"
-                    >
-                      {DateUtils.formatIsoDate(data.endDate, "HH:mm a")}
-                    </Text>
-                  </Text>
-                </Box>
-              )}
             </Box>
           </Box>
           <IconButton
             variant="transparent"
-            onPress={() => callback?.(data.id)}
+            onPress={() => callback?.(data.programId)}
             style={styles.heartIcon}
             iconColor={isFavored ? "interactive-active" : "interactive-icon-inactive"}
             icon={
@@ -156,12 +106,14 @@ export const ActivityCard = ({
           width="100%"
           justifyContent="space-between"
         >
-          {data?.tags?.length > 0 && (
+          {data?.grades?.length > 0 && (
             <Box
               flexDirection="row"
               gap="2"
+              flexWrap={"wrap"}
+              maxWidth={"80%"}
             >
-              {data.tags.map((tag) => {
+              {data.grades.map((tag) => {
                 return (
                   <PillButton
                     label={tag}
@@ -171,13 +123,13 @@ export const ActivityCard = ({
               })}
             </Box>
           )}
-          {data.price && (
+          {data.priceAmount > 0 ? (
             <PillButton
-              label={data.price}
+              label={`${data.priceCurrency}${data.priceAmount}`}
               onPress={() => {}}
               variant="active"
             />
-          )}
+          ) : null}
         </Box>
       </Box>
     </Pressable>

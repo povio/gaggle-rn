@@ -1,6 +1,7 @@
 import { ScrollView, StyleSheet } from "react-native";
 
 import { FilterId, useSearchStore } from "@/modules/search/stores/searchStore";
+import type { ProgramModels } from "@/openapi/program/program.models";
 
 import Box from "../Box";
 import PillButton from "../buttons/PillButton";
@@ -35,7 +36,7 @@ export const Filters = [
 ];
 
 interface SearchPillsProps {
-  results: Card[] | null;
+  results: ProgramModels.SearchResponse["items"];
 }
 
 export const SearchPills = ({ results }: SearchPillsProps) => {

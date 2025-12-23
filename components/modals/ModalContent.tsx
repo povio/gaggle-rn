@@ -174,13 +174,13 @@ export const InputModalContent = ({
 export const ImageOkayModalContent = ({
   title,
   text,
-  imageUrl,
+  icon,
   primaryButtonText,
   onPrimaryButtonPress,
 }: {
   title: string;
   text: string;
-  imageUrl: string;
+  icon: React.ReactNode;
   primaryButtonText: string;
   onPrimaryButtonPress: () => void;
 }) => {
@@ -191,27 +191,24 @@ export const ImageOkayModalContent = ({
       paddingRight="8"
       gap="4"
     >
+      <Box
+        width={48}
+        height={48}
+        justifyContent={"center"}
+        alignItems={"center"}
+        borderRadius={"full"}
+        alignSelf={"center"}
+        marginBottom={"8"}
+      >
+        {icon}
+      </Box>
       <Text
         variant="variant-6-prominent"
         textAlign="center"
       >
         {title}
       </Text>
-      <Box maxHeight={240}>
-        <Image
-          borderRadius="sm"
-          width="100%"
-          height="100%"
-          source={imageUrl}
-          contentFit="fill"
-        />
-      </Box>
-      <Text
-        variant="variant-7"
-        textAlign="center"
-      >
-        {text}
-      </Text>
+      <Text textAlign="center">{text}</Text>
       <Box alignItems="center">
         <Button
           variant="secondary"

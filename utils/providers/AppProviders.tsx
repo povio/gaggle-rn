@@ -2,6 +2,8 @@ import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import type { FC, PropsWithChildren } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
+import { Confirmation } from "@/config/confirmation.context";
+
 import GestureHandlerProvider from "./GestureHandlerProvider";
 import RestyleThemeProvider from "./RestyleThemeProvider";
 import TanstackQueryProvider from "./TanstackQueryProvider";
@@ -34,6 +36,7 @@ const providers = [
   TanstackQueryProvider,
   GestureHandlerProvider,
   BottomSheetModalProvider,
+  // Confirmation.Provider,
 ] as const;
 
 const AppContextProviders = combineProviders(...providers);

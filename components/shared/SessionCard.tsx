@@ -1,4 +1,3 @@
-import { useTheme } from "@shopify/restyle";
 import { useRouter } from "expo-router";
 import { StyleSheet } from "react-native";
 
@@ -8,34 +7,66 @@ import Image from "@/components/Image";
 import Pressable from "@/components/Pressable";
 import Text from "@/components/text/Text";
 import { MockIcons } from "@/data/mock/activities";
+import { FavoriteQueries } from "@/openapi/favorite/favorite.queries";
 import type { ProgramModels } from "@/openapi/program/program.models";
 import { DateUtils } from "@/utils/date.utils";
-import type { Theme } from "@/utils/theme/restyleTheme";
+import { RestUtils } from "@/utils/rest/rest.utils";
+import { showToast } from "@/utils/toast";
 
 import IconButton from "../buttons/IconButton";
 import PillButton from "../buttons/PillButton";
-import type { Card } from "./FavoritesList";
 
-export enum ActivityCardVariant {
-  ACTIVITY = "activity",
-  SESSION = "session",
-}
-interface ActivityCardProps {
-  data: ProgramModels.SearchProgramsResponseDTO | ProgramModels.SessionInputDTO;
+interface SessionCardProps {
+  data: ProgramModels.SessionInputDTO;
   callback?: (id: string | number) => void;
   isFavored: boolean;
-  variant?: ActivityCardVariant;
+  programId: string;
 }
 
-export const ActivityCard = ({
-  data,
-  callback,
-  isFavored,
-  variant = ActivityCardVariant.ACTIVITY,
-}: ActivityCardProps) => {
-  const theme = useTheme<Theme>();
+export const SessionCard = ({ data, callback, isFavored, programId }: SessionCardProps) => {
   const router = useRouter();
-  const isSession = variant === ActivityCardVariant.SESSION;
+
+  const unfavoriteMutation = FavoriteQueries.useUnProgram();
+  const favoriteMutation = FavoriteQueries.useProgram();
+
+  const handleFavoriteSession = (sessionId: string | undefined | null) => {
+    if (!sessionId) return;
+
+    const data = {
+      programId,
+      sessionId,
+    };
+
+    if (isFavored) {
+      unfavoriteMutation.mutate(
+        { data },
+        {
+          onSuccess: async () => {},
+          onError: (error) => {
+            const errorMessage = RestUtils.extractServerErrorMessage(error);
+            showToast({
+              variant: "error",
+              message: errorMessage || "Failed to unfollow",
+            });
+          },
+        },
+      );
+    } else {
+      favoriteMutation.mutate(
+        { data },
+        {
+          onSuccess: async () => {},
+          onError: (error) => {
+            const errorMessage = RestUtils.extractServerErrorMessage(error);
+            showToast({
+              variant: "error",
+              message: errorMessage || "Failed to save favorite",
+            });
+          },
+        },
+      );
+    }
+  };
 
   const handleCardPress = () => {
     router.push(`/program-details?id=${data.id}`);
@@ -51,7 +82,7 @@ export const ActivityCard = ({
         gap="4"
         justifyContent="center"
         alignItems="center"
-        style={variant === ActivityCardVariant.ACTIVITY ? styles.containerActivity : styles.containerSession}
+        style={styles.containerSession}
         borderRadius="l"
         width="100%"
         paddingHorizontal="3"
@@ -67,7 +98,7 @@ export const ActivityCard = ({
             gap="2"
           >
             <Image
-              source={data.iconImageUrl ?? MockIcons[Math.floor(Math.random() * 10)]}
+              source={MockIcons[Math.floor(Math.random() * 10)]}
               style={styles.activityIcon}
               contentFit="contain"
             />
@@ -81,24 +112,26 @@ export const ActivityCard = ({
                 ellipsizeMode="tail"
                 maxWidth={250}
               >
-                {data.title}
+                {data.name}
               </Text>
               <Box
                 flexDirection="row"
                 gap="2"
               >
-                {isSession && data.startDate && data.endDate && (
+                {data?.startDate && data?.endDate && (
                   <Text variant="variant-4">{`${DateUtils.formatIsoDate(data.startDate, "MMM d")} - ${DateUtils.formatIsoDate(data.endDate, "MMM d")}`}</Text>
                 )}
-                {!isSession && <Text variant="variant-4">{data.provider}</Text>}
                 {data.location && (
                   <Text
                     variant="variant-4"
                     color="text-disabled"
+                    numberOfLines={1}
+                    maxWidth={170}
+                    ellipsizeMode="tail"
                   >{`| ${data.location}`}</Text>
                 )}
               </Box>
-              {isSession && data.startDate && data.endDate && (
+              {data.startDate && data.endDate && (
                 <Box
                   flexDirection="row"
                   gap="1"
@@ -139,7 +172,7 @@ export const ActivityCard = ({
           </Box>
           <IconButton
             variant="transparent"
-            onPress={() => callback?.(data.id)}
+            onPress={() => handleFavoriteSession(data.id)}
             style={styles.heartIcon}
             iconColor={isFavored ? "interactive-active" : "interactive-icon-inactive"}
             icon={
@@ -171,9 +204,9 @@ export const ActivityCard = ({
               })}
             </Box>
           )}
-          {data.price && (
+          {data.priceAmount && (
             <PillButton
-              label={data.price}
+              label={`${data.priceCurrency}${data.priceAmount}`}
               onPress={() => {}}
               variant="active"
             />

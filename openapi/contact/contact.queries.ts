@@ -16,10 +16,11 @@ export const moduleName = QueryModule.Contact;
 
  /** 
  * Mutation `useUs`
+ * @summary Send a contact message to support
  * @param { ContactModels.ContactUsRequestDTO } mutation.data Body parameter
  * @param { AppMutationOptions & MutationEffectsOptions } options Mutation options
- * @returns { UseMutationResult<void> } 
- * @statusCodes [204, 401]
+ * @returns { UseMutationResult<CommonModels.StatusResponseDto> } 
+ * @statusCodes [201, 401]
  */
 export const useUs = (options?: AppMutationOptions<typeof ContactApi.us, { data: ContactModels.ContactUsRequestDTO,  }> & MutationEffectsOptions) => {
   

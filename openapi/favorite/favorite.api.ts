@@ -21,23 +21,23 @@ export const listUser = (limit: number, page?: number, cursor?: string, ) => {
     )
 };
 
-export const program = (data: FavoriteModels.FavoriteProgramRequestDTO, ) => { 
-    return AppRestClient.post( 
-        { resSchema: z.void() }, 
+export const program = (data: FavoriteModels.FavoriteProgramRequestDTO, ) => {
+    return AppRestClient.post(
+        { resSchema: z.any() },
         `/api/favorites`,
         ZodExtended.parse(FavoriteModels.FavoriteProgramRequestDTOSchema, data)
-, 
-        
+,
+
     )
 };
 
-export const unProgram = (data: FavoriteModels.UnfavoriteProgramRequestDTO, ) => { 
-    return AppRestClient.delete( 
-        { resSchema: z.void() }, 
+export const unProgram = (data: FavoriteModels.UnfavoriteProgramRequestDTO, ) => {
+    return AppRestClient.delete(
+        { resSchema: z.any() },
         `/api/favorites`,
         ZodExtended.parse(FavoriteModels.UnfavoriteProgramRequestDTOSchema, data)
-, 
-        
+,
+
     )
 };
 

@@ -35,6 +35,7 @@ export interface InputProps extends BoxProps<Theme> {
   onSubmitEditing?: () => void;
   borderRadius?: keyof Theme["borderRadii"];
   borderColor?: ThemeColor;
+  backgroundColor?: ThemeColor;
 }
 
 const Input = ({
@@ -58,6 +59,7 @@ const Input = ({
   onSubmitEditing,
   borderRadius,
   borderColor: customBorderColor,
+  backgroundColor: customBackgroundColor,
   ...rest
 }: InputProps) => {
   const theme = useTheme<Theme>();
@@ -89,7 +91,7 @@ const Input = ({
     [theme, variant, disabled, error],
   );
 
-  const backgroundColor = getBackgroundColor(active);
+  const backgroundColor = customBackgroundColor ?? getBackgroundColor(active);
   const borderColor = customBorderColor ?? getBorderColor(active);
   const labelColor = getLabelColor(active);
   const inputColor = getInputColor(active);

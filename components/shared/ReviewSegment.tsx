@@ -1,14 +1,19 @@
 import { useRouter } from "expo-router";
 import { StyleSheet } from "react-native";
 
-import StarIcon from "@/assets/icons/StarIcon";
 import Box from "@/components/Box";
 import Button from "@/components/buttons/Button";
 import Text from "@/components/text/Text";
 
 import { ReviewStars } from "./ReviewStars";
 
-export default function ReviewSegment() {
+interface ReviewSegmentProps {
+  rating: number;
+  count: number;
+  id: string;
+}
+
+export default function ReviewSegment({ rating, count, id }: ReviewSegmentProps) {
   const router = useRouter();
 
   return (
@@ -23,10 +28,12 @@ export default function ReviewSegment() {
         color="#FFD035"
         width={24}
         height={24}
+        rating={rating}
+        count={count}
       />
       <Button
         variant="text"
-        onPress={() => {}}
+        onPress={() => router.push(`/review/list/${id}`)}
         label="Check reviews"
         width="s"
         style={styles.reviewBtn}
@@ -34,7 +41,7 @@ export default function ReviewSegment() {
       <Button
         variant="outlined"
         textVariant="variant-2-prominent"
-        onPress={() => router.push("/review")}
+        onPress={() => router.push(`/review/${id}`)}
         label="LEAVE A REVIEW"
         width="fit"
       />

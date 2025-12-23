@@ -145,9 +145,10 @@ const InvitationCode = () => {
                 if (REGEX_CODE.test(value)) handleCodeChange(index, value);
               }}
               onKeyPress={({ nativeEvent }) => handleKeyPress(index, nativeEvent.key)}
-              keyboardType="number-pad"
+              keyboardType="default"
               maxLength={1}
               selectTextOnFocus
+              autoCapitalize="characters"
             />
           ))}
         </Box>

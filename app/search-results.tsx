@@ -8,40 +8,25 @@ import SearchIcon from "@/assets/icons/SearchIcon";
 import Box from "@/components/Box";
 import IconButton from "@/components/buttons/IconButton";
 import Input from "@/components/input/Input";
-import { ActivityCard } from "@/components/shared/ActivityCard";
 import { EmptyState } from "@/components/shared/EmptyState";
-import type { Card } from "@/components/shared/FavoritesList";
+import { ProgramCard } from "@/components/shared/ProgramCard";
 import { SearchPills } from "@/components/shared/SearchPills";
-import { UsersQueries } from "@/data/__users";
-import { cards } from "@/data/mock/activities";
 import { useDebounce } from "@/hooks/useDebounce";
 import { FilterId, useSearchStore } from "@/modules/search/stores/searchStore";
-
-const searchActivities = (searchQuery: string, data: Card[]): Card[] => {
-  if (!searchQuery.trim()) {
-    return data;
-  }
-
-  const query = searchQuery.toLowerCase();
-
-  return data.filter((item) => {
-    const providerMatch = item.provider.toLowerCase().includes(query);
-    const labelMatch = item.label.toLowerCase().includes(query);
-    const locationMatch = item.location?.toLowerCase().includes(query);
-
-    return providerMatch || labelMatch || locationMatch;
-  });
-};
+import { FavoriteQueries } from "@/openapi/favorite/favorite.queries";
+import { ProgramQueries } from "@/openapi/program/program.queries";
+import { RestUtils } from "@/utils/rest/rest.utils";
+import { showToast } from "@/utils/toast";
 
 export default function SearchResults() {
   const router = useRouter();
   const { query } = useLocalSearchParams<{ query?: string }>();
-  const { data: currentUser } = UsersQueries.useGetCurrentUser();
   const [value, setValue] = useState<string>("");
-  const [activitiesData, setActivitiesData] = useState<Card[] | null>(null);
   const { filter } = useSearchStore();
 
   const debouncedSearchQuery = useDebounce(value, 300);
+  const unfavoriteMutation = FavoriteQueries.useUnProgram();
+  const favoriteMutation = FavoriteQueries.useProgram();
 
   useEffect(() => {
     if (query) {
@@ -49,14 +34,20 @@ export default function SearchResults() {
     }
   }, [query]);
 
-  useEffect(() => {
-    setActivitiesData(cards);
-  }, []);
+  const { data: favoritesData, isLoading: isFavoritesDataLoading } = FavoriteQueries.useListUserIds();
 
-  useEffect(() => {
-    const filteredData = searchActivities(debouncedSearchQuery, cards);
-    setActivitiesData(filteredData);
-  }, [debouncedSearchQuery]);
+  const favIds = favoritesData?.items.map((item) => item.programId);
+
+  const { data: searchResults, isLoading } = ProgramQueries.useSearch(
+    {
+      limit: 20,
+      filter: debouncedSearchQuery ? { q: debouncedSearchQuery } : undefined,
+    },
+    {
+      enabled: true,
+      placeholderData: (previousData) => previousData,
+    },
+  );
 
   const onChange = (value: string) => {
     setValue(value);
@@ -66,8 +57,42 @@ export default function SearchResults() {
     router.push("/(app)/(tabs)");
   };
 
-  const handleActivitySwitch = (activity: string) => {
-    console.log(activity);
+  const handleFavoriteSession = (programId: string) => {
+    const data = {
+      programId,
+    };
+
+    const isFav = favIds?.find((item) => item === programId);
+
+    if (isFav !== undefined) {
+      unfavoriteMutation.mutate(
+        { data },
+        {
+          onSuccess: async () => {},
+          onError: (error) => {
+            const errorMessage = RestUtils.extractServerErrorMessage(error);
+            showToast({
+              variant: "error",
+              message: errorMessage || "Failed to save to favorites",
+            });
+          },
+        },
+      );
+    } else {
+      favoriteMutation.mutate(
+        { data },
+        {
+          onSuccess: async () => {},
+          onError: (error) => {
+            const errorMessage = RestUtils.extractServerErrorMessage(error);
+            showToast({
+              variant: "error",
+              message: errorMessage || "Failed to save favorite",
+            });
+          },
+        },
+      );
+    }
   };
 
   return (
@@ -138,12 +163,12 @@ export default function SearchResults() {
               </Box>
             </Box>
           </Box>
-          <SearchPills results={activitiesData} />
+          <SearchPills results={searchResults?.items} />
         </Box>
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        {!activitiesData || activitiesData.length === 0 || filter !== FilterId.ALL ? (
+        {!searchResults?.items || searchResults.items.length === 0 || filter !== FilterId.ALL ? (
           <EmptyState callback={handleBack} />
         ) : (
           <Box
@@ -152,11 +177,12 @@ export default function SearchResults() {
             paddingHorizontal="5"
             paddingVertical="4"
           >
-            {activitiesData.map((item) => (
-              <ActivityCard
-                key={item.id}
+            {searchResults.items.map((item) => (
+              <ProgramCard
+                key={item.programId}
                 data={item}
-                isFavored={false}
+                callback={handleFavoriteSession}
+                isFavored={favIds?.includes(item.programId) ? true : false}
               />
             ))}
           </Box>

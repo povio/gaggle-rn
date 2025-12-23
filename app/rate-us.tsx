@@ -1,5 +1,6 @@
 import { useRouter } from "expo-router";
 import { ArrowLeftIcon } from "lucide-react-native";
+import { useState } from "react";
 import { Controller } from "react-hook-form";
 import { StyleSheet } from "react-native";
 
@@ -7,9 +8,10 @@ import Box from "@/components/Box";
 import Button from "@/components/buttons/Button";
 import IconButton from "@/components/buttons/IconButton";
 import Input from "@/components/input/Input";
-import { ReviewStars } from "@/components/shared/ReviewStars";
+import { LoginNudgeModal } from "@/components/modals/LoginNudgeModal";
 import Text from "@/components/text/Text";
 import { useForm } from "@/hooks/useForm";
+import { useUserStore } from "@/modules/user/userStore";
 import { FeedbackModels } from "@/openapi/feedback/feedback.models";
 import { FeedbackQueries } from "@/openapi/feedback/feedback.queries";
 import { RestUtils } from "@/utils/rest/rest.utils";
@@ -18,6 +20,8 @@ import { showToast } from "@/utils/toast";
 const RateUs = () => {
   const router = useRouter();
   const submitFeedbackMutation = FeedbackQueries.useSubmitApp();
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const { user } = useUserStore();
 
   const {
     control,
@@ -36,6 +40,11 @@ const RateUs = () => {
   };
 
   const onSubmit = (data: FeedbackModels.SubmitAppFeedbackRequestDTO) => {
+    if (!user) {
+      setIsModalOpen(true);
+      return;
+    }
+
     submitFeedbackMutation.mutate(
       { data },
       {
@@ -158,6 +167,11 @@ const RateUs = () => {
           textVariant="variant-11"
         />
       </Box>
+
+      <LoginNudgeModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </Box>
   );
 };

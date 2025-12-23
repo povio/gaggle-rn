@@ -9,6 +9,11 @@ import { RestInterceptor } from "./rest-interceptor";
 const applyAuthInterceptor = (client: AxiosInstance): number => {
   return client.interceptors.request.use(
     async (config: InternalAxiosRequestConfig) => {
+      // Skip auth interceptor for refresh token endpoint to prevent infinite loop
+      if (config.url?.includes("/api/user/auth/refresh")) {
+        return config;
+      }
+
       let token = await getStorageItemAsync(STORAGE_KEYS.AUTH_TOKEN);
 
       if (token && isTokenExpiringSoon(token)) {

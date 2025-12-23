@@ -24,9 +24,10 @@ export type TimeslotDTO = z.infer<typeof TimeslotDTOSchema>;
  * @property { string } endDate  
  * @property { TimeslotDTO[] } timeslots  
  * @property { number } priceAmount  
+ * @property { string } priceCurrency  
  * @property { string[] } grades  
  */
-export const SessionInputDTOSchema = z.object({ id: z.string().nullable(), name: z.string().nullable(), description: z.string().nullable(), location: z.string().nullable(), startDate: z.string().nullable(), endDate: z.string().nullable(), timeslots: z.array(TimeslotDTOSchema).nullable(), priceAmount: z.number().nullable(), grades: z.array(z.string()).nullable() }).partial();
+export const SessionInputDTOSchema = z.object({ id: z.string().nullable(), name: z.string().nullable(), description: z.string().nullable(), location: z.string().nullable(), startDate: z.string().nullable(), endDate: z.string().nullable(), timeslots: z.array(TimeslotDTOSchema).nullable(), priceAmount: z.number().nullable(), priceCurrency: z.string().nullable(), grades: z.array(z.string()).nullable() }).partial();
 export type SessionInputDTO = z.infer<typeof SessionInputDTOSchema>;
 
 
@@ -47,6 +48,7 @@ export type SessionInputDTO = z.infer<typeof SessionInputDTOSchema>;
  * @property { string } iconImageUrl  
  * @property { string[] } additionalImages  
  * @property { number } priceAmount  
+ * @property { string } priceCurrency  
  * @property { string[] } grades  
  * @property { boolean } isTopRated  
  * @property { string } policiesUrl  
@@ -54,7 +56,7 @@ export type SessionInputDTO = z.infer<typeof SessionInputDTOSchema>;
  * @property { string[] } tagNames  
  * @property { SessionInputDTO[] } sessions  
  */
-export const ImportUpdateProgramRequestDTOSchema = z.object({ providerId: z.string(), locationId: z.string(), name: z.string(), description: z.string(), ourTake: z.string(), parentsLike: z.string(), keepInMind: z.string(), category: z.string(), subcategory: z.string(), programUrl: z.string(), bookingUrl: z.string(), iconImageUrl: z.string(), additionalImages: z.array(z.string()), priceAmount: z.number(), grades: z.array(z.string()), isTopRated: z.boolean(), policiesUrl: z.string(), policiesText: z.string(), tagNames: z.array(z.string()), sessions: z.array(SessionInputDTOSchema) });
+export const ImportUpdateProgramRequestDTOSchema = z.object({ providerId: z.string(), locationId: z.string(), name: z.string(), description: z.string(), ourTake: z.string(), parentsLike: z.string(), keepInMind: z.string(), category: z.string(), subcategory: z.string(), programUrl: z.string(), bookingUrl: z.string(), iconImageUrl: z.string(), additionalImages: z.array(z.string()), priceAmount: z.number(), priceCurrency: z.string(), grades: z.array(z.string()), isTopRated: z.boolean(), policiesUrl: z.string(), policiesText: z.string(), tagNames: z.array(z.string()), sessions: z.array(SessionInputDTOSchema) });
 export type ImportUpdateProgramRequestDTO = z.infer<typeof ImportUpdateProgramRequestDTOSchema>;
 
 
@@ -76,6 +78,7 @@ export type ImportUpdateProgramRequestDTO = z.infer<typeof ImportUpdateProgramRe
  * @property { string } iconImageUrl  
  * @property { string[] } additionalImages  
  * @property { number } priceAmount  
+ * @property { string } priceCurrency  
  * @property { string[] } grades  
  * @property { boolean } isTopRated  
  * @property { string } policiesUrl  
@@ -83,7 +86,7 @@ export type ImportUpdateProgramRequestDTO = z.infer<typeof ImportUpdateProgramRe
  * @property { string[] } tagIds  
  * @property { SessionInputDTO[] } sessions  
  */
-export const ImportGetProgramByIdResponseDTOSchema = z.object({ id: z.string(), providerId: z.string(), locationId: z.string(), name: z.string(), description: z.string(), ourTake: z.string(), parentsLike: z.string(), keepInMind: z.string(), category: z.string(), subcategory: z.string(), programUrl: z.string(), bookingUrl: z.string(), iconImageUrl: z.string(), additionalImages: z.array(z.string()), priceAmount: z.number(), grades: z.array(z.string()), isTopRated: z.boolean(), policiesUrl: z.string(), policiesText: z.string(), tagIds: z.array(z.string()), sessions: z.array(SessionInputDTOSchema) });
+export const ImportGetProgramByIdResponseDTOSchema = z.object({ id: z.string(), providerId: z.string(), locationId: z.string(), name: z.string(), description: z.string(), ourTake: z.string(), parentsLike: z.string(), keepInMind: z.string(), category: z.string(), subcategory: z.string(), programUrl: z.string(), bookingUrl: z.string(), iconImageUrl: z.string(), additionalImages: z.array(z.string()), priceAmount: z.number(), priceCurrency: z.string(), grades: z.array(z.string()), isTopRated: z.boolean(), policiesUrl: z.string(), policiesText: z.string(), tagIds: z.array(z.string()), sessions: z.array(SessionInputDTOSchema) });
 export type ImportGetProgramByIdResponseDTO = z.infer<typeof ImportGetProgramByIdResponseDTOSchema>;
 
 

@@ -35,7 +35,9 @@ export default function SplashScreenController({ children }: PropsWithChildren) 
 
   useEffect(() => {
     if ((fontsLoaded || fontError) && !isAuthLoading) {
-      SplashScreen.hide();
+      SplashScreen.hideAsync().catch((error) => {
+        console.error("Failed to hide splash screen:", error);
+      });
     }
   }, [fontsLoaded, fontError, isAuthLoading]);
 

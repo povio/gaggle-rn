@@ -19,7 +19,7 @@
     "test": "EXPO_OS=ios jest",
     "themegen": "npx tsx utils/theme/themegen/themegen.ts",
     "postinstall": "patch-package",
-    "openapi:gen": "openapi-codegen generate --prettier false",
+    "openapi:gen": "openapi-codegen generate --prettier false && node scripts/fix-openapi-imports.js",
     "openapi:check": "openapi-codegen check"
   },
   "dependencies": {

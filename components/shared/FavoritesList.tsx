@@ -1,23 +1,12 @@
-import { useEffect, useState } from "react";
-import { ScrollView, StyleSheet } from "react-native";
+import { useMemo } from "react";
+import { ActivityIndicator, ScrollView, StyleSheet } from "react-native";
 
 import { cards } from "@/data/mock/activities";
+import { FavoriteQueries } from "@/openapi/favorite/favorite.queries";
 
+import Box from "../Box";
 import LoadingScreen from "../LoadingScreen";
-import { ActivityCard } from "./ActivityCard";
-
-// const iconMap: Record<string, any> = {
-//   "basketball.svg": require("@/assets/illustrations/basketball.svg"),
-//   "dance.svg": require("@/assets/illustrations/dance.svg"),
-//   "culinary.svg": require("@/assets/illustrations/culinary.svg"),
-//   "equstrian.svg": require("@/assets/illustrations/equestrian.svg"),
-//   "camp.svg": require("@/assets/illustrations/camp.svg"),
-//   "gymnastics.svg": require("@/assets/illustrations/gymnastics.svg"),
-//   "knowledge.svg": require("@/assets/illustrations/knowledge_1.svg"),
-//   "lacrosee.svg": require("@/assets/illustrations/lacrosse.svg"),
-//   "martial_arts.svg": require("@/assets/illustrations/martial_arts.svg"),
-//   "swimming.svg": require("@/assets/illustrations/swimming.svg"),
-// };
+import { ProgramCard } from "./ProgramCard";
 
 export interface Card {
   provider: string;
@@ -32,17 +21,52 @@ export interface Card {
 }
 
 export const FavoritesList = () => {
-  const [data, setData] = useState<Card[] | null>(null);
+  const {
+    data: favoritesData,
+    isLoading,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    refetch,
+  } = FavoriteQueries.useListUserInfinite({ limit: 20 });
 
-  const handleRemoveFavorites = (id: number) => {
-    setData((state) => [...state.filter((item) => item.id !== id)]);
+  const { mutate: unfavorite } = FavoriteQueries.useUnProgram({
+    onSuccess: () => {
+      void refetch();
+    },
+  });
+
+  const allItems = useMemo(() => {
+    return favoritesData?.pages.flatMap((page) => page.items) ?? [];
+  }, [favoritesData]);
+
+  // Use mock data if server returns no items
+  const displayData = allItems.length > 0 ? allItems : cards;
+
+  const handleUnfavorite = (id: number | string) => {
+    // Find the item to get programId and sessionId
+    const item = allItems.find((favorite) => favorite.programId === id);
+    if (item) {
+      unfavorite({
+        data: {
+          programId: item.programId,
+          sessionId: item.sessionId,
+        },
+      });
+    }
   };
 
-  useEffect(() => {
-    setData(cards);
-  }, []);
+  const handleScroll = (event: any) => {
+    const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
+    const paddingToBottom = 20;
+    const isCloseToBottom = layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom;
 
-  if (!data) {
+    if (isCloseToBottom && hasNextPage && !isFetchingNextPage) {
+      void fetchNextPage();
+    }
+  };
+
+  if (isLoading) {
     return <LoadingScreen />;
   }
 
@@ -50,17 +74,24 @@ export const FavoritesList = () => {
     <ScrollView
       showsVerticalScrollIndicator={false}
       contentContainerStyle={styles.scrollContent}
+      onScroll={handleScroll}
+      scrollEventThrottle={400}
     >
-      {data?.map((item) => {
+      {displayData?.map((item) => {
         return (
-          <ActivityCard
+          <ProgramCard
             data={item}
-            key={item.id}
-            callback={handleRemoveFavorites}
+            key={item.programId || item.id}
+            callback={handleUnfavorite}
             isFavored
           />
         );
       })}
+      {isFetchingNextPage && (
+        <Box paddingVertical="4">
+          <ActivityIndicator size="large" />
+        </Box>
+      )}
     </ScrollView>
   );
 };

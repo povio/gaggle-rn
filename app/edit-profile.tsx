@@ -10,13 +10,17 @@ import Button from "@/components/buttons/Button";
 import IconButton from "@/components/buttons/IconButton";
 import PillButton from "@/components/buttons/PillButton";
 import TextButton from "@/components/buttons/TextButton";
+import Calendar from "@/components/input/Calendar";
 import Input from "@/components/input/Input";
 import Select from "@/components/input/Select";
+import Drawer from "@/components/modals/Drawer";
+import Modal from "@/components/modals/Modal";
 import Text from "@/components/text/Text";
 import { useForm } from "@/hooks/useForm";
 import { useUserStore } from "@/modules/user/userStore";
 import { UserModels } from "@/openapi/user/user.models";
 import { UserQueries } from "@/openapi/user/user.queries";
+import { DateUtils } from "@/utils/date.utils";
 import { RestUtils } from "@/utils/rest/rest.utils";
 import { showToast } from "@/utils/toast";
 
@@ -25,6 +29,7 @@ const EditProfile = () => {
   const [stateValue, setStateValue] = useState("");
   const updateSettingsMutation = UserQueries.useUpdateMySettings();
   const { settings: userSettings } = useUserStore();
+  const [isCalendarOpen, setIsCalendarOpen] = useState<null | number>(null);
 
   const {
     control,
@@ -46,7 +51,7 @@ const EditProfile = () => {
       children: userSettings?.children || null,
     },
   });
-  console.log("userSettings", userSettings);
+
   const children = watch("children") || [];
 
   // useEffect(() => {
@@ -77,6 +82,13 @@ const EditProfile = () => {
         schoolName: undefined,
       },
     ]);
+  };
+
+  const handleDateInsertion = (date: Date) => {
+    if (isCalendarOpen !== null) {
+      updateChild(isCalendarOpen, "birthdate", date.toISOString());
+      setIsCalendarOpen(null);
+    }
   };
 
   const handleSelectState = (value: string) => {
@@ -200,7 +212,7 @@ const EditProfile = () => {
               render={({ field: { onChange, value }, fieldState: { error } }) => (
                 <Input
                   label=""
-                  placeholder="Nick Name"
+                  placeholder="Nickname"
                   value={value || ""}
                   variant="default"
                   onChangeText={onChange}
@@ -335,9 +347,9 @@ const EditProfile = () => {
                 <Input
                   label=""
                   placeholder="Birthdate"
-                  value={child.birthdate || ""}
+                  value={child.birthdate ? DateUtils.formatIsoDate(child.birthdate) : ""}
                   variant="default"
-                  disabled
+                  onPress={() => setIsCalendarOpen(index)}
                   onChangeText={(value) => updateChild(index, "birthdate", value)}
                 />
 
@@ -432,6 +444,26 @@ const EditProfile = () => {
           />
         </Box>
       </Box>
+
+      <Drawer
+        visible={isCalendarOpen !== null}
+        onClose={() => setIsCalendarOpen(null)}
+      >
+        <Box
+          flexDirection={"row"}
+          justifyContent={"center"}
+          width={"100%"}
+          alignItems={"center"}
+          gap="2"
+        >
+          <Calendar
+            date={new Date()}
+            setDate={handleDateInsertion}
+            label=""
+            showControls={false}
+          />
+        </Box>
+      </Drawer>
     </ScrollView>
   );
 };

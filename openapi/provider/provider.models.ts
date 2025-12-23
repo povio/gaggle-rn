@@ -49,9 +49,10 @@ export type ProviderLocationDTO = z.infer<typeof ProviderLocationDTOSchema>;
  * @property { boolean } isFeatured  
  * @property { number } avgRating  
  * @property { number } reviewCount  
+ * @property { number } followCount  
  * @property { ProviderLocationDTO[] } locations  
  */
-export const GetProviderDetailsResponseDTOSchema = z.object({ id: z.string(), name: z.string(), email: z.string(), phone: z.string(), websiteUrl: z.string(), logoUrl: z.string(), ourTake: z.string(), parentsLike: z.string(), keepInMind: z.string(), isTopRated: z.boolean(), isFeatured: z.boolean(), avgRating: z.number(), reviewCount: z.number(), locations: z.array(ProviderLocationDTOSchema) });
+export const GetProviderDetailsResponseDTOSchema = z.object({ id: z.string(), name: z.string(), email: z.string(), phone: z.string(), websiteUrl: z.string(), logoUrl: z.string(), ourTake: z.string(), parentsLike: z.string(), keepInMind: z.string(), isTopRated: z.boolean(), isFeatured: z.boolean(), avgRating: z.number(), reviewCount: z.number(), followCount: z.number(), locations: z.array(ProviderLocationDTOSchema) });
 export type GetProviderDetailsResponseDTO = z.infer<typeof GetProviderDetailsResponseDTOSchema>;
 
 

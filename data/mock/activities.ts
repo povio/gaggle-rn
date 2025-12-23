@@ -1,5 +1,18 @@
 import type { Card } from "@/components/shared/FavoritesList";
 
+export const MockIcons = [
+  require("@/assets/illustrations/basketball.svg"),
+  require("@/assets/illustrations/dance.svg"),
+  require("@/assets/illustrations/culinary.svg"),
+  require("@/assets/illustrations/equestrian.svg"),
+  require("@/assets/illustrations/camp.svg"),
+  require("@/assets/illustrations/gymnastics.svg"),
+  require("@/assets/illustrations/knowledge_1.svg"),
+  require("@/assets/illustrations/lacrosse.svg"),
+  require("@/assets/illustrations/martial_arts.svg"),
+  require("@/assets/illustrations/swimming.svg"),
+];
+
 export const cards: Card[] = [
   {
     id: 1,

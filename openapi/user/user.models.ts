@@ -67,7 +67,7 @@ export type UpdateUserSettingsRequestDTO = z.infer<typeof UpdateUserSettingsRequ
  * @property { string } zip  
  * @property { ChildDTO[] } children  
  */
-export const GetUserSettingsResponseDTOSchema = z.object({ nickname: z.string(), notificationEnabled: z.boolean(), address1: z.string(), address2: z.string(), city: z.string(), state: z.string(), zip: z.string(), children: z.array(ChildDTOSchema) });
+export const GetUserSettingsResponseDTOSchema = z.object({ nickname: z.string(), notificationEnabled: z.boolean().nullish(), address1: z.string().nullish(), address2: z.string().nullish(), city: z.string().nullish(), state: z.string().nullish(), zip: z.string().nullish(), children: z.array(ChildDTOSchema) });
 export type GetUserSettingsResponseDTO = z.infer<typeof GetUserSettingsResponseDTOSchema>;
 
 

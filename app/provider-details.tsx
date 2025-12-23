@@ -1,5 +1,4 @@
-import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { ScrollView, StyleSheet, View } from "react-native";
 
 import ArrowLeftIcon from "@/assets/icons/ArrowLeftIcon";
@@ -8,49 +7,119 @@ import Button from "@/components/buttons/Button";
 import IconButton from "@/components/buttons/IconButton";
 import PillButton from "@/components/buttons/PillButton";
 import Image from "@/components/Image";
-import LoadingScreen from "@/components/LoadingScreen";
-import { ActivityCard } from "@/components/shared/ActivityCard";
 import { ActivityPreviews } from "@/components/shared/ActivityPreview";
-import type { Card } from "@/components/shared/FavoritesList";
+import { ProgramCard } from "@/components/shared/ProgramCard";
 import Text from "@/components/text/Text";
-import { cards } from "@/data/mock/activities";
+import { FavoriteQueries } from "@/openapi/favorite/favorite.queries";
+import { ProviderQueries } from "@/openapi/provider/provider.queries";
+import { RestUtils } from "@/utils/rest/rest.utils";
+import { showToast } from "@/utils/toast";
 
-interface ProviderDetailsProps {
-  id: string;
-}
-
-export default function ProviderDetails({ id }: ProviderDetailsProps) {
+export default function ProviderDetails() {
   const router = useRouter();
-  const [fav, setFav] = useState<boolean>(false);
-  const [follow, setFollow] = useState<boolean>(false);
-  const [followCount, setFllowCount] = useState<number>(99);
-  const [data, setData] = useState<Card[] | null>(null);
+  const { id } = useLocalSearchParams<{ id?: string }>();
+  const providerId = id || "";
 
-  useEffect(() => {
-    setData(cards.filter((_, index) => index < 4));
-  }, []);
+  const { data: providerData } = ProviderQueries.useGetDetails(
+    {
+      providerId,
+    },
+    { enabled: !!providerId },
+  );
 
-  if (!data) {
-    return <LoadingScreen />;
-  }
+  const { data: favoriteSessionList } = FavoriteQueries.useListUserIds();
+  const { data: providerFollowing } = ProviderQueries.useListFollowedIds();
+
+  const favIds = favoriteSessionList?.items.map((item) => item.programId);
+  const isFollowing = providerFollowing?.items.includes(providerId);
+
+  const { data: providerPrograms } = ProviderQueries.useListPrograms(
+    {
+      providerId,
+      limit: 20,
+      page: 1,
+    },
+    { enabled: !!providerId },
+  );
+
+  const followMutation = ProviderQueries.useFollow();
+  const unFollowMutation = ProviderQueries.useUnfollow();
+  const unfavoriteMutation = FavoriteQueries.useUnProgram();
+  const favoriteMutation = FavoriteQueries.useProgram();
 
   const handleBack = () => {
     router.push("/(app)/(tabs)");
   };
 
-  const handleFavorite = () => {
-    setFav(!fav);
+  const handleFavoriteSession = (programId: string) => {
+    const data = {
+      programId,
+    };
+
+    const isFav = favIds?.find((item) => item === programId);
+
+    if (isFav !== undefined) {
+      unfavoriteMutation.mutate(
+        { data },
+        {
+          onSuccess: async () => {
+            showToast({
+              variant: "success",
+              message: "Service unfavorited",
+            });
+          },
+          onError: (error) => {
+            const errorMessage = RestUtils.extractServerErrorMessage(error);
+            showToast({
+              variant: "error",
+              message: errorMessage || "Failed to unfollow",
+            });
+          },
+        },
+      );
+    } else {
+      favoriteMutation.mutate(
+        { data },
+        {
+          onSuccess: async () => {
+            showToast({
+              variant: "success",
+              message: "Service favorited",
+            });
+          },
+          onError: (error) => {
+            const errorMessage = RestUtils.extractServerErrorMessage(error);
+            showToast({
+              variant: "error",
+              message: errorMessage || "Failed to save favorite",
+            });
+          },
+        },
+      );
+    }
   };
 
   const handleFallowProvider = () => {
-    setFllowCount((state) => {
-      if (follow) {
-        return state - 1;
-      }
+    const mutation = isFollowing ? unFollowMutation : followMutation;
 
-      return state + 1;
-    });
-    setFollow(!follow);
+    mutation.mutate(
+      { providerId },
+      {
+        onSuccess: async () => {
+          showToast({
+            variant: "success",
+            message: isFollowing ? "Provider unfollowed" : "Provider followed.",
+          });
+        },
+        onError: (error) => {
+          const errorMessage = RestUtils.extractServerErrorMessage(error);
+          showToast({
+            variant: "error",
+            message: errorMessage || "Failed to follow provider",
+          });
+        },
+      },
+    );
   };
 
   return (
@@ -121,7 +190,7 @@ export default function ProviderDetails({ id }: ProviderDetailsProps) {
               variant="variant-5-prominent"
               textAlign="center"
             >
-              Title Goes Here!
+              {providerData?.name}
             </Text>
             <Box
               flexDirection="row"
@@ -165,7 +234,7 @@ export default function ProviderDetails({ id }: ProviderDetailsProps) {
                   variant="variant-14"
                   textAlign="center"
                 >
-                  34
+                  {providerData?.locations.length}
                 </Text>
                 <Text textAlign="center">Places</Text>
               </Box>
@@ -179,31 +248,17 @@ export default function ProviderDetails({ id }: ProviderDetailsProps) {
                   variant="variant-14"
                   textAlign="center"
                 >
-                  5
-                </Text>
-                <Text textAlign="center">Follwing</Text>
-              </Box>
-              <Box
-                flexDirection="column"
-                justifyContent="center"
-                alignItems="center"
-                gap="2"
-              >
-                <Text
-                  variant="variant-14"
-                  textAlign="center"
-                >
-                  {followCount}
+                  {providerData?.followCount}
                 </Text>
                 <Text textAlign="center">Followed</Text>
               </Box>
             </Box>
             <Button
-              label={follow ? "Unfollow" : "Follow"}
+              label={isFollowing ? "Unfollow" : "Follow"}
               onPress={handleFallowProvider}
               width="l"
               textVariant="variant-2-prominent"
-              variant={follow ? "outlined" : "secondary"}
+              variant={isFollowing ? "outlined" : "secondary"}
             />
           </Box>
         </View>
@@ -214,7 +269,7 @@ export default function ProviderDetails({ id }: ProviderDetailsProps) {
           gap="2"
         >
           <Box
-            flex={1}
+            flexDirection={"column"}
             gap="2"
           >
             <Text
@@ -227,13 +282,24 @@ export default function ProviderDetails({ id }: ProviderDetailsProps) {
               variant="variant-7"
               textAlign="left"
             >
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut vitae tempor ex. Suspendisse consequat sapien
-              at laoreet blandit. Proin vel elit feugiat, tempus augue eget, vehicula metus. Proin vel nisl bibendum,
-              laoreet ligula et, feugiat mauris. Integer volutpat volutpat est aliquam ultrices. Nulla molestie
-              vulputate ullamcorper. {"\n\n"} Fusce non dolor venenatis mi venenatis eleifend. Etiam aliquam ornare
-              felis, ac eleifend enim blandit sit amet. Phasellus auctor porttitor erat vel tempor. Praesent ultricies
-              mi a placerat interdum. Donec nisl orci, finibus quis rhoncus dignissim, luctus ac nibh. Pellentesque quis
-              consectetur ligula, a vestibulum sapien.
+              {providerData?.ourTake}
+            </Text>
+          </Box>
+          <Box
+            flexDirection={"column"}
+            gap="2"
+          >
+            <Text
+              variant="variant-6-prominent"
+              textAlign="left"
+            >
+              Parents also like
+            </Text>
+            <Text
+              variant="variant-7"
+              textAlign="left"
+            >
+              {providerData?.parentsLike}
             </Text>
           </Box>
           <Box>
@@ -245,21 +311,32 @@ export default function ProviderDetails({ id }: ProviderDetailsProps) {
             </Text>
             <ActivityPreviews />
           </Box>
-          <Box>
+          <Box
+            flexDirection={"column"}
+            gap={"2"}
+          >
             <Text
               variant="variant-6-prominent"
               textAlign="left"
             >
               Locations
             </Text>
-            <Text
-              variant="variant-7"
-              textAlign="left"
-              color="interactive-tertiary-on"
+            <Box
+              flexDirection={"row"}
+              gap={"1"}
+              justifyContent={"flex-start"}
+              alignItems={"center"}
             >
-              Rockville; Potomac; Gaithersburg; Rockville; Potomac; Gaithersburg; Rockville; Potomac; Gaithersburg;
-              Rockville; Potomac; Gaithersburg;
-            </Text>
+              {providerData?.locations?.map((location) => (
+                <Text
+                  variant="variant-7"
+                  textAlign="left"
+                  color="interactive-tertiary-on"
+                >
+                  {location.name}
+                </Text>
+              ))}
+            </Box>
           </Box>
           <Box
             flexDirection={"column"}
@@ -273,14 +350,21 @@ export default function ProviderDetails({ id }: ProviderDetailsProps) {
             >
               Services
             </Text>
-            {data &&
-              data?.map((card) => (
-                <ActivityCard
-                  isFavored={false}
-                  data={card}
-                  key={card.id}
-                />
-              ))}
+            {providerPrograms && providerPrograms?.items?.length > 0 ? (
+              providerPrograms?.items?.map((card) => {
+                const isFav = favIds?.find((id) => id === card.programId);
+                return (
+                  <ProgramCard
+                    isFavored={isFav !== undefined}
+                    data={card}
+                    key={card.programId}
+                    callback={handleFavoriteSession}
+                  />
+                );
+              })
+            ) : (
+              <Text textAlign="left">This provider has no services</Text>
+            )}
           </Box>
         </Box>
       </ScrollView>

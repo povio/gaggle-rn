@@ -9,12 +9,14 @@ import Button from "@/components/buttons/Button";
 import Input from "@/components/input/Input";
 import { GoBack } from "@/components/navigation/GoBack";
 import Text from "@/components/text/Text";
+import { STORAGE_KEYS } from "@/constants/storage";
 import { useForm } from "@/hooks/useForm";
 import { useOnboarding } from "@/hooks/useOnboarding";
 import { useAuthStore } from "@/modules/auth/stores/authStore";
 import { UserAuthModels } from "@/openapi/userAuth/userAuth.models";
 import { UserAuthQueries } from "@/openapi/userAuth/userAuth.queries";
 import { RestUtils } from "@/utils/rest/rest.utils";
+import { setStorageItemAsync } from "@/utils/secureStore";
 import { showToast } from "@/utils/toast";
 
 const CreatePassword = () => {
@@ -167,20 +169,6 @@ const CreatePassword = () => {
           disabled={!isValid}
           loading={registerMutation.isPending}
         />
-
-        <Button
-          label="ENABLE FACE ID"
-          onPress={handleEnableFaceID}
-          width="fit"
-          variant="tertiary"
-          textVariant="variant-2-prominent"
-          leftElement={
-            <ScanFace
-              size={20}
-              color="#1C1C1C"
-            />
-          }
-        />
       </Box>
 
       <Box
@@ -203,7 +191,7 @@ const CreatePassword = () => {
 
 const styles = StyleSheet.create({
   topCircle: {
-    position: "fixed",
+    position: "absolute",
     top: -150,
     right: -150,
     width: 300,
@@ -212,7 +200,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F5C344",
   },
   bottomCircle: {
-    position: "fixed",
+    position: "absolute",
     bottom: -150,
     left: -150,
     width: 300,

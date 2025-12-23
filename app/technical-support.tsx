@@ -11,28 +11,48 @@ import Image from "@/components/Image";
 import Input from "@/components/input/Input";
 import Text from "@/components/text/Text";
 import { useForm } from "@/hooks/useForm";
+import { ContactQueries } from "@/openapi/contact/contact.queries";
 
-export const MockTempSchema = z.object({
-  subject: z.string(),
-  text: z.string(),
+export const TechnicalSupportSchema = z.object({
+  title: z.string().min(1, "Subject is required"),
+  message: z.string().min(1, "Message is required"),
 });
 
-export type MockTemp = z.infer<typeof MockTempSchema>;
+export type TechnicalSupportForm = z.infer<typeof TechnicalSupportSchema>;
 
 const TechnicalSupport = () => {
   const router = useRouter();
+
+  const { mutate: sendMessage, isPending } = ContactQueries.useUs({
+    onSuccess: () => {
+      console.log("Message sent successfully, redirecting...");
+      router.push("/technical-support-finish");
+    },
+    onError: (error) => {
+      console.error("Failed to send message:", error);
+    },
+  });
 
   const {
     control,
     handleSubmit,
     formState: { errors, isValid },
-  } = useForm<MockTemp>({
-    zodSchema: MockTempSchema,
+  } = useForm<TechnicalSupportForm>({
+    zodSchema: TechnicalSupportSchema,
     mode: "onChange",
+    defaultValues: {
+      title: "",
+      message: "",
+    },
   });
 
   const handleBack = () => {
     router.push("/profile-settings");
+  };
+
+  const onSubmit = (data: TechnicalSupportForm) => {
+    console.log("Form submitted:", data);
+    sendMessage({ data });
   };
 
   return (
@@ -93,15 +113,15 @@ const TechnicalSupport = () => {
         >
           <Controller
             control={control}
-            name="subject"
+            name="title"
             render={({ field: { onChange, value } }) => (
               <Input
                 label=""
-                placeholder={"Subject"}
+                placeholder="Subject"
                 value={value}
                 variant="default"
                 onChangeText={onChange}
-                error={errors.subject?.message}
+                error={errors.title?.message}
                 alignSelf="stretch"
               />
             )}
@@ -114,16 +134,16 @@ const TechnicalSupport = () => {
         >
           <Controller
             control={control}
-            name="subject"
+            name="message"
             render={({ field: { onChange, value } }) => (
               <Input
                 label=""
-                placeholder={"Wtrite your message"}
+                placeholder="Write your message"
                 value={value}
                 variant="default"
                 type="textArea"
                 onChangeText={onChange}
-                error={errors.subject?.message}
+                error={errors.message?.message}
                 alignSelf="stretch"
                 borderRadius="l"
               />
@@ -132,9 +152,13 @@ const TechnicalSupport = () => {
         </Box>
         <Button
           label="SEND A MESSAGE"
-          onPress={() => router.push("/technical-support-finish")}
+          onPress={() => {
+            console.log("Button pressed, isValid:", isValid, "isPending:", isPending);
+            handleSubmit(onSubmit)();
+          }}
           variant="secondary"
           textVariant="variant-2-prominent"
+          disabled={!isValid || isPending}
         />
       </Box>
     </Box>

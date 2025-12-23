@@ -48,10 +48,6 @@ const EnterEmail = () => {
         {
           onSuccess: () => {
             setIsChecking(false);
-            showToast({
-              variant: "success",
-              message: "Successfully added to waitlist!",
-            });
             router.replace("/waitlist-input");
           },
           onError: (error) => {
@@ -75,7 +71,6 @@ const EnterEmail = () => {
     <Box
       flex={1}
       backgroundColor="elevation-background"
-      justifyContent="space-between"
       paddingHorizontal="6"
     >
       <View style={styles.topCircle} />
@@ -141,7 +136,7 @@ const EnterEmail = () => {
 
 const styles = StyleSheet.create({
   topCircle: {
-    position: "fixed",
+    position: "absolute",
     top: -150,
     right: -150,
     width: 300,
@@ -150,7 +145,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F5C344",
   },
   bottomCircle: {
-    position: "fixed",
+    position: "absolute",
     bottom: -150,
     right: -150,
     width: 300,

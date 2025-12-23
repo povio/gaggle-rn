@@ -1,12 +1,13 @@
 import { InfoIcon } from "lucide-react-native";
-import { useEffect, useState } from "react";
-import { StyleSheet } from "react-native";
+import { useState } from "react";
+import { Linking, StyleSheet } from "react-native";
 
 import CheckCircleIcon from "@/assets/icons/CheckCircleIcon";
 import CopyIcon from "@/assets/icons/CopyIcon";
 import LetterIcon from "@/assets/icons/LetterIcon";
 import PhoneIcon from "@/assets/icons/PhoneIcon";
-import { cards } from "@/data/mock/activities";
+import { FavoriteQueries } from "@/openapi/favorite/favorite.queries";
+import type { ProgramModels } from "@/openapi/program/program.models";
 
 import Box from "../Box";
 import Accordion from "../buttons/Accordion";
@@ -14,19 +15,27 @@ import Button from "../buttons/Button";
 import IconButton from "../buttons/IconButton";
 import Modal from "../modals/Modal";
 import { IconTextModalContent } from "../modals/ModalContent";
-import { ActivityCard, ActivityCardVariant } from "./ActivityCard";
-import type { Card } from "./FavoritesList";
+import { SessionCard } from "./SessionCard";
 
-export const BookingDrawer = () => {
-  const [drawerVisible, setDrawerVisible] = useState(true);
-  const [data, setData] = useState<Card[] | null>(null);
+interface BookingDrawerProps {
+  programData: ProgramModels.GetProgramDetailsResponseDTO;
+}
+
+export const BookingDrawer = ({ programData }: BookingDrawerProps) => {
   const [modalBooking, setModalBooking] = useState(false);
   const [modalBookingClosed, setModalBookingClosed] = useState(false);
   const [copied, setCopied] = useState(false);
+  const sessionData = programData.sessions;
 
-  useEffect(() => {
-    setData(cards.filter((_, index) => index < 3));
-  }, []);
+  const { data: favoriteSessionList } = FavoriteQueries.useListUserIds();
+  const favList =
+    favoriteSessionList?.items
+      .filter((item) => item.programId === programData.id && item.sessionId)
+      .map((item) => item.sessionId) ?? [];
+
+  const handleBookingUrl = () => {
+    Linking.openURL(programData?.bookingUrl);
+  };
 
   return (
     <Box alignItems="center">
@@ -43,7 +52,7 @@ export const BookingDrawer = () => {
       >
         <Accordion
           trigger="Choose a session"
-          helperText="3"
+          helperText={(sessionData.length || 0).toString()}
         >
           <Box
             alignItems="center"
@@ -52,15 +61,14 @@ export const BookingDrawer = () => {
             width={"100%"}
             gap="2"
           >
-            {data &&
-              data?.map((card) => (
-                <ActivityCard
-                  isFavored={false}
-                  data={card}
-                  variant={ActivityCardVariant.SESSION}
-                  key={card.id}
-                />
-              ))}
+            {sessionData.map((card) => (
+              <SessionCard
+                isFavored={favList.includes(card.id)}
+                data={card}
+                programId={programData.id}
+                key={card.id}
+              />
+            ))}
           </Box>
         </Accordion>
         <Box
@@ -74,9 +82,7 @@ export const BookingDrawer = () => {
             variant="tertiary"
             label="BOOK"
             textVariant="variant-2-prominent"
-            onPress={() => {
-              setDrawerVisible(true);
-            }}
+            onPress={handleBookingUrl}
             style={styles.bookBtn}
           />
           <IconButton
@@ -102,7 +108,7 @@ export const BookingDrawer = () => {
         onClose={() => setModalBooking(false)}
       >
         <IconTextModalContent
-          title="Lorem Ipsum Text"
+          title={programData?.providerName || ""}
           text="(301) 280-1660"
           icon={<PhoneIcon />}
           primaryButtonText="COPY PHONE"

@@ -20,5 +20,4 @@ export const enum QueryModule {
    Contact = "ContactQueries",
    Home = "HomeQueries",
    Favorite = "FavoriteQueries",
-   Scheduling = "SchedulingQueries",
 }

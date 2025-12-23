@@ -11,14 +11,18 @@ import Image from "@/components/Image";
 import LoadingScreen from "@/components/LoadingScreen";
 import { ActivityCard } from "@/components/shared/ActivityCard";
 import type { Card } from "@/components/shared/FavoritesList";
+import { SmallProviderCard } from "@/components/shared/SmallProviderCard";
 import Text from "@/components/text/Text";
 import { cards } from "@/data/mock/activities";
 import { useUserStore } from "@/modules/user/userStore";
+import { UserQueries } from "@/openapi/user/user.queries";
 
 const ProfilePage = () => {
   const router = useRouter();
   const [data, setData] = useState<Card[] | null>(null);
-  const { user } = useUserStore();
+  const { user, settings } = useUserStore();
+
+  const { data: userData } = UserQueries.useGetMyProfile();
 
   useEffect(() => {
     setData(cards.filter((_, index) => index < 4));
@@ -92,7 +96,7 @@ const ProfilePage = () => {
                 overflow="hidden"
               >
                 <Image
-                  source={require("@/assets/illustrations/basketball.svg")}
+                  source={userData?.profileImageUrl || require("@/assets/illustrations/basketball.svg")}
                   style={styles.providerImage}
                   contentFit="contain"
                 />
@@ -123,7 +127,7 @@ const ProfilePage = () => {
               variant="variant-5-prominent"
               textAlign="center"
             >
-              {user?.name}
+              {settings?.nickname}
             </Text>
             <Box
               flexDirection="row"
@@ -142,23 +146,9 @@ const ProfilePage = () => {
                   variant="variant-14"
                   textAlign="center"
                 >
-                  5
+                  {userData?.followedProviders?.length || "0"}
                 </Text>
-                <Text textAlign="center">Follwing</Text>
-              </Box>
-              <Box
-                flexDirection="column"
-                justifyContent="center"
-                alignItems="center"
-                gap="2"
-              >
-                <Text
-                  variant="variant-14"
-                  textAlign="center"
-                >
-                  43
-                </Text>
-                <Text textAlign="center">Followed</Text>
+                <Text textAlign="center">Following</Text>
               </Box>
             </Box>
           </Box>
@@ -179,16 +169,23 @@ const ProfilePage = () => {
               variant="variant-6-prominent"
               textAlign="left"
             >
-              Your Favorites
+              Following
             </Text>
-            {data &&
-              data?.map((card) => (
-                <ActivityCard
-                  isFavored={false}
+            {userData?.followedProviders ? (
+              userData?.followedProviders?.map((card) => (
+                <SmallProviderCard
                   data={card}
                   key={card.id}
                 />
-              ))}
+              ))
+            ) : (
+              <Text
+                textAlign="left"
+                color={"text-disabled"}
+              >
+                Currently you do not have any providers you follow.
+              </Text>
+            )}
           </Box>
         </Box>
       </ScrollView>

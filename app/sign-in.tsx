@@ -165,20 +165,6 @@ const SignIn = () => {
           textVariant="variant-2-prominent"
           disabled={!isValid || loginMutation.isPending}
         />
-
-        <Button
-          label="ENABLE FACE ID"
-          onPress={handleEnableFaceID}
-          width="fit"
-          textVariant="variant-2-prominent"
-          variant="tertiary"
-          leftElement={
-            <ScanFace
-              size={20}
-              color="#1C1C1C"
-            />
-          }
-        />
       </Box>
       <View style={styles.bottomCircle} />
     </Box>
@@ -187,7 +173,7 @@ const SignIn = () => {
 
 const styles = StyleSheet.create({
   topCircle: {
-    position: "fixed",
+    position: "absolute",
     top: -150,
     right: -150,
     width: 300,
@@ -196,7 +182,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F5C344",
   },
   bottomCircle: {
-    position: "fixed",
+    position: "absolute",
     bottom: -150,
     left: -150,
     width: 300,

@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { View } from "react-native";
 
 import Box from "@/components/Box";
 import { FavoritesList } from "@/components/shared/FavoritesList";
@@ -25,7 +25,5 @@ const Favorites = () => {
     </Box>
   );
 };
-
-const styles = StyleSheet.create({});
 
 export default Favorites;

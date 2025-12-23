@@ -1,12 +1,18 @@
 import { StyleSheet } from "react-native";
 
-import StarIcon from "@/assets/icons/StarIcon";
 import Image from "@/components/Image";
 import Text from "@/components/text/Text";
+import type { ProgramReviewModels } from "@/openapi/programReview/programReview.models";
+import { DateUtils } from "@/utils/date.utils";
 
 import Box from "../Box";
+import { ReviewStars } from "./ReviewStars";
 
-export const ReviewComment = () => {
+interface ReviewCommentProps {
+  data: ProgramReviewModels.ListProgramReviewsResponseDTO;
+}
+
+export const ReviewComment = ({ data }: ReviewCommentProps) => {
   return (
     <Box
       flexDirection={"column"}
@@ -34,48 +40,22 @@ export const ReviewComment = () => {
               variant="variant-11"
               textAlign="left"
             >
-              Firstname Lastname
+              {data.userId}
             </Text>
 
-            <Box
-              flexDirection={"row"}
-              alignItems={"center"}
-              gap="1"
-              marginTop={"2"}
-            >
-              <StarIcon
-                color="#FF6B00"
-                width={15}
-                height={15}
-              />
-              <StarIcon
-                color="#FF6B00"
-                width={15}
-                height={15}
-              />
-              <StarIcon
-                color="#FF6B00"
-                width={15}
-                height={15}
-              />
-              <StarIcon
-                color="#FF6B00"
-                width={15}
-                height={15}
-              />
-              <StarIcon
-                color="#FF6B00"
-                width={15}
-                height={15}
-              />
-            </Box>
+            <ReviewStars
+              color="#FFD035"
+              width={24}
+              height={24}
+              rating={data.rating}
+            />
           </Box>
           <Text
             variant="variant-11"
             textAlign="left"
             color={"text-disabled"}
           >
-            3days ago
+            {DateUtils.formatDateWithTime(data.createdAt)}
           </Text>
         </Box>
       </Box>
@@ -91,8 +71,7 @@ export const ReviewComment = () => {
           textAlign="left"
           variant={"variant-7"}
         >
-          My seven-year-old daughter did this camp last summer. She LOVED it!!! And, I was impressed with the quality of
-          the performance at the end of the camp - from the sets to the acting, it was a pro production.
+          {data.content}
         </Text>
         <Box
           flexDirection={"row"}

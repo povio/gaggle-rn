@@ -18,7 +18,7 @@ export const moduleName = QueryModule.Feedback;
  * Mutation `useSubmitApp`
  * @param { FeedbackModels.SubmitAppFeedbackRequestDTO } mutation.data Body parameter
  * @param { AppMutationOptions & MutationEffectsOptions } options Mutation options
- * @returns { UseMutationResult<void> } 
+ * @returns { UseMutationResult<FeedbackModels.SubmitAppFeedbackResponseDTO> } 
  * @statusCodes [201, 401]
  */
 export const useSubmitApp = (options?: AppMutationOptions<typeof FeedbackApi.submitApp, { data: FeedbackModels.SubmitAppFeedbackRequestDTO,  }> & MutationEffectsOptions) => {

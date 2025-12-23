@@ -1,4 +1,4 @@
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 
@@ -12,35 +12,69 @@ import { ActivityPreviews } from "@/components/shared/ActivityPreview";
 import { BookingDrawer } from "@/components/shared/BookingDrawer";
 import ReviewSegment from "@/components/shared/ReviewSegment";
 import Text from "@/components/text/Text";
+import { FavoriteQueries } from "@/openapi/favorite/favorite.queries";
+import { ProgramQueries } from "@/openapi/program/program.queries";
+import { RestUtils } from "@/utils/rest/rest.utils";
+import { showToast } from "@/utils/toast";
 
-interface ActivityDetailsProps {
-  id: string;
-}
-
-export default function ActivityDetails({ id }: ActivityDetailsProps) {
+export default function ProgramDetails() {
   const router = useRouter();
-  const [fav, setFav] = useState<boolean>(false);
-  const [follow, setFollow] = useState<boolean>(false);
-  const [followCount, setFllowCount] = useState<number>(99);
-  const [drawerVisible, setDrawerVisible] = useState(false);
+  const { id } = useLocalSearchParams<{ id?: string }>();
+  const programId = id || "";
+
+  const unfavoriteMutation = FavoriteQueries.useUnProgram();
+  const favoriteMutation = FavoriteQueries.useProgram();
+
+  const { data: programData } = ProgramQueries.useGetDetails(
+    {
+      programId: id || "",
+    },
+    {
+      enabled: !!id,
+    },
+  );
+  console.log("programData", programData);
+  const { data: favoriteSessionList } = FavoriteQueries.useListUserIds();
+  const isFav = favoriteSessionList?.items.some((item) => item.programId === programId) ?? false;
 
   const handleBack = () => {
     router.push("/(app)/(tabs)");
   };
 
-  const handleFavorite = () => {
-    setFav(!fav);
-  };
+  const handleFavoriteSession = () => {
+    const data = {
+      programId,
+    };
 
-  const handleFallowProvider = () => {
-    setFllowCount((state) => {
-      if (follow) {
-        return state - 1;
-      }
-
-      return state + 1;
-    });
-    setFollow(!follow);
+    if (isFav) {
+      unfavoriteMutation.mutate(
+        { data },
+        {
+          onSuccess: async () => {},
+          onError: (error) => {
+            const errorMessage = RestUtils.extractServerErrorMessage(error);
+            showToast({
+              variant: "error",
+              message: errorMessage || "Failed to unfollow",
+            });
+          },
+        },
+      );
+    } else {
+      favoriteMutation.mutate(
+        { data },
+        {
+          onSuccess: async () => {},
+          onError: (error) => {
+            const errorMessage = RestUtils.extractServerErrorMessage(error);
+            showToast({
+              variant: "error",
+              message: errorMessage || "Failed to save favorite",
+            });
+          },
+        },
+      );
+    }
   };
 
   return (
@@ -94,7 +128,7 @@ export default function ActivityDetails({ id }: ActivityDetailsProps) {
                 overflow="hidden"
               >
                 <Image
-                  source={require("@/assets/illustrations/camp.svg")}
+                  source={programData?.iconImageUrl || require("@/assets/illustrations/camp.svg")}
                   style={styles.providerImage}
                   contentFit="contain"
                 />
@@ -110,8 +144,8 @@ export default function ActivityDetails({ id }: ActivityDetailsProps) {
               >
                 <IconButton
                   icon={<HeartIcon />}
-                  iconColor={!fav ? "interactive-icon-inactive" : "interactive-active"}
-                  onPress={handleFavorite}
+                  iconColor={isFav ? "interactive-active" : "interactive-icon-inactive"}
+                  onPress={handleFavoriteSession}
                   variant="transparent"
                   style={styles.headerIcon}
                 />
@@ -121,32 +155,28 @@ export default function ActivityDetails({ id }: ActivityDetailsProps) {
               variant="variant-5-prominent"
               textAlign="center"
             >
-              Mock data activity page
+              {programData?.name || "Mock data activity page"}
             </Text>
             <Box
-              flexDirection="row"
-              justifyContent="center"
-              alignItems="center"
-              gap="2"
+              paddingHorizontal={"5"}
+              width={"100%"}
             >
-              <PillButton
-                label="Test"
-                onPress={() => {}}
-                variant="primary"
-                textVariant="variant-11"
-              />
-              <PillButton
-                label="Kids 1-4"
-                onPress={() => {}}
-                variant="primary"
-                textVariant="variant-11"
-              />
-              <PillButton
-                label="Drawing"
-                onPress={() => {}}
-                variant="primary"
-                textVariant="variant-11"
-              />
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.tagsScrollContent}
+              >
+                {programData &&
+                  programData?.tags.map((tag, index) => (
+                    <PillButton
+                      key={index}
+                      label={tag.name.replace("_", " ").toUpperCase()}
+                      onPress={() => {}}
+                      variant="primary"
+                      textVariant="variant-11"
+                    />
+                  ))}
+              </ScrollView>
             </Box>
             <Box
               flexDirection={"row"}
@@ -165,7 +195,7 @@ export default function ActivityDetails({ id }: ActivityDetailsProps) {
                 variant="variant-7"
                 textAlign="center"
               >
-                Some provider name
+                {programData?.providerName || "Some provider name"}
               </Text>
             </Box>
           </Box>
@@ -177,7 +207,7 @@ export default function ActivityDetails({ id }: ActivityDetailsProps) {
           gap="2"
         >
           <Box
-            flex={1}
+            flexDirection={"column"}
             gap="2"
           >
             <Text
@@ -190,13 +220,24 @@ export default function ActivityDetails({ id }: ActivityDetailsProps) {
               variant="variant-7"
               textAlign="left"
             >
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut vitae tempor ex. Suspendisse consequat sapien
-              at laoreet blandit. Proin vel elit feugiat, tempus augue eget, vehicula metus. Proin vel nisl bibendum,
-              laoreet ligula et, feugiat mauris. Integer volutpat volutpat est aliquam ultrices. Nulla molestie
-              vulputate ullamcorper. {"\n\n"} Fusce non dolor venenatis mi venenatis eleifend. Etiam aliquam ornare
-              felis, ac eleifend enim blandit sit amet. Phasellus auctor porttitor erat vel tempor. Praesent ultricies
-              mi a placerat interdum. Donec nisl orci, finibus quis rhoncus dignissim, luctus ac nibh. Pellentesque quis
-              consectetur ligula, a vestibulum sapien.
+              {programData?.description}
+            </Text>
+          </Box>
+          <Box
+            flexDirection={"column"}
+            gap="2"
+          >
+            <Text
+              variant="variant-6-prominent"
+              textAlign="left"
+            >
+              Our take
+            </Text>
+            <Text
+              variant="variant-7"
+              textAlign="left"
+            >
+              {programData?.ourTake}
             </Text>
           </Box>
           <Box>
@@ -209,9 +250,15 @@ export default function ActivityDetails({ id }: ActivityDetailsProps) {
             <ActivityPreviews />
           </Box>
 
-          <ReviewSegment />
+          {programData && (
+            <ReviewSegment
+              rating={programData?.avgRating}
+              count={programData?.reviewCount}
+              id={programData?.id}
+            />
+          )}
         </Box>
-        <BookingDrawer />
+        {programData && <BookingDrawer programData={programData} />}
       </ScrollView>
     </Box>
   );
@@ -251,6 +298,13 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
+  },
+  tagsScrollContent: {
+    flexDirection: "row",
+    gap: 8,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 20,
   },
   iconButton: {
     minHeight: 66,

@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { Dimensions, ScrollView, StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 
 import GroupIcon from "@/assets/icons/GroupIcon";
 import NotificationIcon from "@/assets/icons/NotificationIcon";
@@ -15,12 +15,15 @@ import { SearchFilterDrawer } from "@/components/shared/SearchFilterDrawer";
 import Text from "@/components/text/Text";
 import { SearchFiltersEnum } from "@/modules/search/stores/filterStore";
 import { useUserStore } from "@/modules/user/userStore";
+import { HomeQueries } from "@/openapi/home/home.queries";
 
 export default function Home() {
   const router = useRouter();
   const { settings } = useUserStore();
   const [value, setValue] = useState<string>("");
   const [drawerVisible, setDrawerVisible] = useState(false);
+
+  const { data: featuredProvidersData } = HomeQueries.useGetInformation();
 
   const onChange = (value: string) => {
     setValue(value);
@@ -160,7 +163,7 @@ export default function Home() {
         >
           <Text variant="variant-6-prominent">Featured Providers</Text>
         </Box>
-        <ProviderCards />
+        <ProviderCards data={featuredProvidersData?.featuredProviders} />
       </ScrollView>
 
       <SearchFilterDrawer
