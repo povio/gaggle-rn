@@ -83,7 +83,6 @@ export const ActivityPreviews = () => {
               marginRight="4"
             >
               <Box
-                flex={1}
                 justifyContent="center"
                 alignItems="center"
                 width={50}

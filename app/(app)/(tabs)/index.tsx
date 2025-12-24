@@ -61,7 +61,6 @@ export default function Home() {
           gap={"4"}
         >
           <Box
-            flex={1}
             justifyContent="center"
             alignItems="center"
             marginTop="4"
