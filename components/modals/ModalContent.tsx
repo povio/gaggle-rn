@@ -1,14 +1,8 @@
 import type React from "react";
-import { cloneElement } from "react";
-
-import ArrowLeftIcon from "@/assets/icons/ArrowLeftIcon";
 
 import Box from "../Box";
 import Button from "../buttons/Button";
 import Checkbox from "../buttons/Checkbox";
-import IconButton from "../buttons/IconButton";
-import Toggle from "../buttons/Toggle";
-import ToggleButton from "../buttons/ToggleButton";
 import Image from "../Image";
 import Input from "../input/Input";
 import Text from "../text/Text";
@@ -276,78 +270,6 @@ export const IconTextModalContent = ({
           label={primaryButtonText}
           onPress={onPrimaryButtonPress}
           width="l"
-        />
-      </Box>
-    </Box>
-  );
-};
-
-export const FilterModalContent = ({
-  title,
-  primaryButtonText,
-  onPrimaryButtonPress,
-  filters,
-  selectedFilter,
-  selectedFilterIcon,
-  onBackToList,
-}: {
-  title: string;
-  filters: Element | React.ReactNode;
-  primaryButtonText: string;
-  onPrimaryButtonPress: () => void;
-  selectedFilter?: string | null;
-  selectedFilterIcon?: React.ReactElement | null;
-  onBackToList?: () => void;
-}) => {
-  return (
-    <Box
-      gap="4"
-      paddingLeft="8"
-      paddingBottom="8"
-      paddingRight="8"
-    >
-      {selectedFilter && onBackToList ? (
-        <Box
-          flexDirection="row"
-          alignItems="center"
-          gap="2"
-        >
-          <IconButton
-            icon={
-              <ArrowLeftIcon
-                width={20}
-                height={20}
-              />
-            }
-            onPress={onBackToList}
-            size="xs"
-            variant="transparent"
-            iconColor="text-primary"
-          />
-          {selectedFilterIcon && (
-            <Box
-              width={20}
-              height={20}
-            >
-              {cloneElement(selectedFilterIcon)}
-            </Box>
-          )}
-          <Text variant="variant-13-prominent">{selectedFilter}</Text>
-        </Box>
-      ) : (
-        <Text variant="variant-13-prominent">{title}</Text>
-      )}
-      {filters}
-      <Box
-        gap="4"
-        marginTop={"4"}
-      >
-        <Button
-          variant="secondary"
-          textVariant="variant-2-prominent"
-          label={primaryButtonText}
-          onPress={onPrimaryButtonPress}
-          width="fit"
         />
       </Box>
     </Box>

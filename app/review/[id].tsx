@@ -1,4 +1,4 @@
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, useNavigationState, useRouter } from "expo-router";
 import { useMemo, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 
@@ -10,7 +10,6 @@ import IconButton from "@/components/buttons/IconButton";
 import PillButton from "@/components/buttons/PillButton";
 import Image from "@/components/Image";
 import Input from "@/components/input/Input";
-import LoadingScreen from "@/components/LoadingScreen";
 import { ReviewComment } from "@/components/shared/ReviewComment";
 import { ReviewStars } from "@/components/shared/ReviewStars";
 import Text from "@/components/text/Text";
@@ -48,7 +47,7 @@ export default function Review() {
   );
 
   const reviewMutations = ProgramReviewQueries.useCreate();
-  const leftReview = false; // reviewsList?.items?.filter((review) => review.userId === user?.id);
+  const leftReview = reviewsList?.items?.some((review) => review.userId === user?.id);
 
   // Calculate overall rating and rating counts
   const ratingStats = useMemo(() => {
@@ -79,8 +78,11 @@ export default function Review() {
   }, [reviewsList]);
 
   const handleBack = () => {
-    router.push("/(app)/(tabs)");
-    isProgramDataLoading;
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.push(`/program-details?id=${id}`);
+    }
   };
 
   const handleTextChange = (e: string) => {

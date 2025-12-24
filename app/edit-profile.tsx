@@ -54,23 +54,6 @@ const EditProfile = () => {
 
   const children = watch("children") || [];
 
-  // useEffect(() => {
-  //   if (userSettings) {
-  //     setValue("nickname", );
-  //     setValue("address1", );
-  //     setValue("address2", );
-  //     setValue("city", );
-  //     setValue("state", );
-  //     setValue("zip", userSettings.zip || "");
-  //     setValue("notificationEnabled", userSettings.notificationEnabled);
-  //     setValue("children",  || []);
-
-  //     if (userSettings.state) {
-  //       setStateValue(userSettings.state);
-  //     }
-  //   }
-  // }, [userSettings, setValue]);
-
   const handleAddChild = () => {
     setValue("children", [
       ...children,

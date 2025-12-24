@@ -18,7 +18,23 @@ export const useProgramFavorite = (programId?: string) => {
   const isFavorited = favoritedList?.some((item) => item.programId === programId) ?? false;
 
   const toggleFavorite = (data: FavoriteModels.UnfavoriteProgramRequestDTO) => {
-    if (isFavorited) {
+    let shouldUnfavorite = false;
+
+    if (isFavorited && programId) {
+      // Case 1: programId provided and is favorited
+      shouldUnfavorite = true;
+    } else if (!programId) {
+      // Case 2: programId not provided, check from data
+      if (data.sessionId) {
+        // Check against favoritedSessionsList
+        shouldUnfavorite = favoritedSessionsList.includes(data.sessionId);
+      } else if (data.programId) {
+        // Check against favoritedProgramsList
+        shouldUnfavorite = favoritedProgramsList.includes(data.programId);
+      }
+    }
+
+    if (shouldUnfavorite) {
       unfavoriteMutation.mutate(
         { data },
         {

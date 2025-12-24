@@ -5,10 +5,10 @@ import Text from "@/components/text/Text";
 import {
   type FilterItem,
   FilterList,
-  type FilterType,
   FilterTypeEnum,
+  type MinMaxFilter,
+  type PillListItem,
   type SearchFilters,
-  UnitPosition,
   UnitPositionEnum,
   useFilterStore,
 } from "@/modules/search/stores/filterStore";
@@ -84,27 +84,37 @@ export const FilterBuilder = ({ list, onFilterSelect, selectedFilter }: FilterBu
 
     if (!setFiltersData) return "Any";
 
+    let value = setFiltersData[id];
+
     if ((type === FilterTypeEnum.enum.date || type === FilterTypeEnum.enum.time) && setFiltersData) {
-      return DateUtils.formatDate(setFiltersData[id] as Date, type === FilterTypeEnum.enum.time ? "HH:mm a" : "MMM d");
+      value = DateUtils.formatDate(value as Date, type === FilterTypeEnum.enum.time ? "HH:mm a" : "MMM d");
     }
 
-    if (type === FilterTypeEnum.enum.checkbox && Array.isArray(setFiltersData[id])) {
-      const values = setFiltersData[id] as string[];
-      return values.length > 0 ? values.join(", ") : "Any";
+    if (type === FilterTypeEnum.enum.pills && setFiltersData) {
+      const filterDataValues: PillListItem[] = FilterList.find((filter) => filter.id === id)?.values ?? [];
+      value = filterDataValues.find((item) => item.id === value)?.label;
     }
 
-    if (type === FilterTypeEnum.enum.toggle && Array.isArray(setFiltersData[id])) {
-      const values = setFiltersData[id] as string[];
-      return values.length > 0 ? values.join(", ") : "Any";
+    if (type === FilterTypeEnum.enum.checkbox && Array.isArray(value)) {
+      const values = value as string[];
+      value = values.length > 0 ? values.join(", ") : "Any";
+    }
+
+    if (type === FilterTypeEnum.enum.toggle && Array.isArray(value)) {
+      const values = value as string[];
+      value = values.length > 0 ? values.join(", ") : "Any";
+    }
+
+    if (type === FilterTypeEnum.enum.slider) {
+      const values = value as MinMaxFilter;
+      value = `${values.min}-${values.max}`;
     }
 
     if (unit) {
-      return unitPosition === UnitPositionEnum.enum.left
-        ? `${unit} ${setFiltersData[id] as string}`
-        : `${setFiltersData[id] as string} ${unit}`;
+      return unitPosition === UnitPositionEnum.enum.left ? `${unit} ${value as string}` : `${value as string} ${unit}`;
     }
 
-    return setFiltersData[id] as string;
+    return value as string;
   };
 
   return (

@@ -7,7 +7,7 @@ export const SliderFilter = ({ data, filterId }: { data: MinMaxFilter; filterId:
   const selectedValue = filters[filterId];
 
   const handleRangeChange = (range: { min: number; max: number }) => {
-    setFilter(filterId, `${range.min}-${range.max}`);
+    setFilter(filterId, { ...range });
   };
 
   // Parse initial range from stored value

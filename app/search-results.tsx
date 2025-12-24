@@ -15,54 +15,21 @@ import { SearchFilterDrawer } from "@/components/shared/SearchFilterDrawer";
 import { SearchPills } from "@/components/shared/SearchPills";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useProgramFavorite } from "@/hooks/useProgramFavorite";
-import { type FilterValues, SearchFiltersEnum, useFilterStore } from "@/modules/search/stores/filterStore";
+import {
+  type FilterValues,
+  type MinMaxFilter,
+  SearchFiltersEnum,
+  useFilterStore,
+} from "@/modules/search/stores/filterStore";
 import { FilterId, useSearchStore } from "@/modules/search/stores/searchStore";
-import type { ProgramModels } from "@/openapi/program/program.models";
 import { ProgramQueries } from "@/openapi/program/program.queries";
-
-const transformFiltersForAPI = (filters: FilterValues): Partial<ProgramModels.SearchProgramsFilterDto> => {
-  const apiFilters: Partial<ProgramModels.SearchProgramsFilterDto> = {};
-
-  // Transform price (single value) to priceMax
-  if (filters.price) {
-    apiFilters.priceMax = filters.price as number;
-  }
-
-  // Transform rating (array of checkbox values) to single number (highest rating selected)
-  if (filters.rating && Array.isArray(filters.rating)) {
-    const ratings = filters.rating.map((r) => parseInt(r)).filter((r) => !isNaN(r));
-    if (ratings.length > 0) {
-      apiFilters.rating = Math.max(...ratings);
-    }
-  }
-
-  // Transform dayOfWeek (already an array of strings)
-  if (filters.dayOfWeek && Array.isArray(filters.dayOfWeek)) {
-    apiFilters.dayOfWeek = filters.dayOfWeek as string[];
-  }
-
-  // Transform startDate (Date to ISO string)
-  if (filters.startDate) {
-    apiFilters.startDate =
-      filters.startDate instanceof Date ? filters.startDate.toISOString() : (filters.startDate as string);
-  }
-
-  // Transform duration (string to number)
-  if (filters.duration) {
-    const durationNum = parseInt(filters.duration as string);
-    if (!isNaN(durationNum)) {
-      apiFilters.duration = durationNum;
-    }
-  }
-
-  return apiFilters;
-};
 
 const getFilterList = () => {
   return [
     SearchFiltersEnum.enum.dayOfWeek,
     SearchFiltersEnum.enum.price,
     SearchFiltersEnum.enum.rating,
+    SearchFiltersEnum.enum.grades,
     SearchFiltersEnum.enum.startTime,
     SearchFiltersEnum.enum.endDate,
     SearchFiltersEnum.enum.duration,
@@ -76,25 +43,25 @@ export default function SearchResults() {
   const { query } = useLocalSearchParams<{ query?: string }>();
   const [value, setValue] = useState<string>("");
   const { filter } = useSearchStore();
-  const { getSelectedFilters } = useFilterStore();
+  const { getAllFilters } = useFilterStore();
   const [drawerVisible, setDrawerVisible] = useState(false);
-  const [appliedFilters, setAppliedFilters] = useState<FilterValues>({});
+  const [appliedFilters, setAppliedFilters] = useState({});
   const debouncedSearchQuery = useDebounce(value, 400);
 
   useEffect(() => {
     if (query) {
       setValue(query);
     }
-  }, [query]);
+  }, []);
 
   const { toggleFavorite, favoritedProgramsList } = useProgramFavorite();
-
+  console.log("appliedFilters", appliedFilters);
   const { data: searchResults, isLoading } = ProgramQueries.useSearch(
     {
       limit: 20,
       filter: {
         q: debouncedSearchQuery,
-        ...transformFiltersForAPI(appliedFilters),
+        ...appliedFilters,
       },
     },
     {
@@ -104,8 +71,51 @@ export default function SearchResults() {
   );
 
   const handleSearch = () => {
-    const currentFilters = getSelectedFilters();
-    setAppliedFilters(currentFilters as FilterValues);
+    const currentFilters = getAllFilters();
+    console.log("currentFilters", currentFilters);
+
+    let formatedFilters = {
+      ...currentFilters,
+    };
+
+    if (currentFilters.price) {
+      const price = currentFilters.price as MinMaxFilter;
+      const priceRange = {
+        priceMin: price.min,
+        priceMax: price.max,
+      };
+
+      delete formatedFilters.price;
+
+      formatedFilters = {
+        ...formatedFilters,
+        ...priceRange,
+      };
+    }
+
+    if (currentFilters.duration) {
+      formatedFilters = {
+        ...formatedFilters,
+        duration: parseInt(currentFilters.duration as string, 10),
+      };
+    }
+
+    if (currentFilters.dayOfWeek) {
+      formatedFilters = {
+        ...formatedFilters,
+        dayOfWeek: [currentFilters.dayOfWeek as string],
+      };
+    }
+
+    if (currentFilters.grades) {
+      formatedFilters = {
+        ...formatedFilters,
+        grades: [currentFilters.grades as string],
+      };
+    }
+
+    console.log("formatedFilters", formatedFilters);
+    setAppliedFilters(formatedFilters as FilterValues);
     setDrawerVisible(false);
   };
 

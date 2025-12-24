@@ -6,7 +6,7 @@ import { ReviewReportModels } from "./reviewReport.models";
 export namespace ReviewReportApi {
 export const create = (reviewId: string, data: ReviewReportModels.ReportReviewRequestDTO, ) => { 
     return AppRestClient.post( 
-        { resSchema: z.void() }, 
+        { resSchema: z.any() }, 
         `/api/reviews/${reviewId}/report`,
         ZodExtended.parse(ReviewReportModels.ReportReviewRequestDTOSchema, data)
 , 

@@ -89,7 +89,15 @@ export namespace DateUtils {
    * Returns an array of abbreviated weekday names starting with Monday
    * @returns Array of day strings: ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']
    */
-  export const getDaysOfWeek = (): string[] => {
-    return ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
+  export const getDaysOfWeek = (): { id: string; label: string }[] => {
+    return [
+      { id: "monday", label: "MON" },
+      { id: "tuesday", label: "TUE" },
+      { id: "wednesday", label: "WED" },
+      { id: "thursday", label: "THU" },
+      { id: "friday", label: "FRI" },
+      { id: "saturday", label: "SAT" },
+      { id: "sunday", label: "SUN" },
+    ];
   };
 }

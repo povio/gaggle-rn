@@ -12,6 +12,7 @@ import { StringUtils } from "@/utils/string.utils";
 
 import IconButton from "../buttons/IconButton";
 import PillButton from "../buttons/PillButton";
+import { Loader } from "./Loader";
 
 interface ProgramCardProps {
   data: ProgramModels.SearchProgramsResponseDTO;
@@ -110,7 +111,7 @@ export const ProgramCard = ({ data, callback, isFavored }: ProgramCardProps) => 
           width="100%"
           justifyContent="space-between"
         >
-          {data?.grades?.length > 0 && (
+          {data?.grades?.length > 0 ? (
             <Box
               flexDirection="row"
               gap="2"
@@ -126,6 +127,8 @@ export const ProgramCard = ({ data, callback, isFavored }: ProgramCardProps) => 
                 );
               })}
             </Box>
+          ) : (
+            <Box visible />
           )}
           {data.priceAmount > 0 ? (
             <PillButton

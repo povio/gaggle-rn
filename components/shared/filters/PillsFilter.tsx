@@ -1,26 +1,26 @@
 import Box from "@/components/Box";
 import PillButton from "@/components/buttons/PillButton";
-import { type SearchFilters, useFilterStore } from "@/modules/search/stores/filterStore";
+import { type PillListItem, type SearchFilters, useFilterStore } from "@/modules/search/stores/filterStore";
 
-export const PillsFilter = ({ data, filterId }: { data: string[]; filterId: SearchFilters }) => {
+export const PillsFilter = ({ data, filterId }: { data: PillListItem[]; filterId: SearchFilters }) => {
   const { setFilter, filters } = useFilterStore();
   const selectedValue = filters[filterId];
 
   return (
     <Box
       flexDirection={"row"}
-      justifyContent={"space-between"}
+      // justifyContent={"space-between"}
       alignItems={"center"}
       flexWrap={"wrap"}
-      gap="2"
+      gap="1"
     >
       {data.map((item) => (
         <PillButton
-          key={item}
-          label={item}
+          key={item.id}
+          label={item.label}
           variant="outlined"
-          onPress={() => setFilter(filterId, item)}
-          checked={item === selectedValue}
+          onPress={() => setFilter(filterId, item.id)}
+          checked={item.id === selectedValue}
           size="l"
         />
       ))}

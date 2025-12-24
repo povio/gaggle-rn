@@ -15,7 +15,11 @@ export default function ReviewList() {
   const { id } = useLocalSearchParams<{ id: string }>();
 
   const handleBack = () => {
-    router.push(`/program-details?id=${id}`);
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.push(`/program-details?id=${id}`);
+    }
   };
 
   const { data: programData, isLoading: isProgramDataLoading } = ProgramQueries.useGetDetails(

@@ -10,8 +10,10 @@ import BusIcon from "@/assets/icons/BusIcon";
 import ClockIcon from "@/assets/icons/ClockIcon";
 import DollarSignIcon from "@/assets/icons/DollarSignIcon";
 import FullCalendarIcon from "@/assets/icons/FullCalendarIcon";
+import SmileyFaceIcon from "@/assets/icons/SmileyFaceIcon";
 import StarAltIcon from "@/assets/icons/StarAltIcon";
 import TicketIcon from "@/assets/icons/TicketIcon";
+import { UserModels } from "@/openapi/user/user.models";
 import { DateUtils } from "@/utils/date.utils";
 
 // Schemas
@@ -27,8 +29,14 @@ export const SearchFiltersEnum = z.enum([
   "duration",
   "toggleTester",
   "embeded-toggle",
+  "grades",
 ]);
 export type SearchFilters = z.infer<typeof SearchFiltersEnum>;
+
+export interface PillListItem {
+  id: string | number;
+  label: string;
+}
 
 export const FilterTypeEnum = z.enum(["pills", "date", "slider", "time", "checkbox", "toggle", "embeded-toggle"]);
 export type FilterType = z.infer<typeof FilterTypeEnum>;
@@ -56,6 +64,11 @@ export interface FilterItem {
   unit?: string;
 }
 
+const ageOptions = Object.values(UserModels.GradeEnum).map((value) => ({
+  id: value,
+  label: value.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
+}));
+
 // testing purposes
 export const FilterList: FilterItem[] = [
   {
@@ -69,18 +82,27 @@ export const FilterList: FilterItem[] = [
     label: "Day of Week",
     id: "dayOfWeek",
     type: "pills",
-    helperText: "Weeks",
     values: DateUtils.getDaysOfWeek(),
     iconComponent: FullCalendarIcon,
+  },
+  {
+    label: "Grades",
+    id: "grades",
+    type: "pills",
+    values: ageOptions,
+    iconComponent: BlankUserIcon,
   },
   {
     label: "Duration",
     id: "duration",
     type: "pills",
-    helperText: "Hours",
+    helperText: "Weeks",
     unit: "h",
     unitPosition: UnitPositionEnum.enum.right,
-    values: ["1", "2", "3", "4", "5", "6", "7", "8"],
+    values: Array.from({ length: 8 }, (_, i) => ({
+      id: i + 1,
+      label: String(i + 1),
+    })),
     iconComponent: AlarmClockIcon,
   },
   {
@@ -111,28 +133,10 @@ export const FilterList: FilterItem[] = [
     label: "Rating",
     id: "rating",
     type: "checkbox",
-    values: [
-      {
-        label: "5",
-        id: "5",
-      },
-      {
-        label: "4",
-        id: "4",
-      },
-      {
-        label: "3",
-        id: "3",
-      },
-      {
-        label: "2",
-        id: "2",
-      },
-      {
-        label: "1",
-        id: "",
-      },
-    ],
+    values: Array.from({ length: 5 }, (_, i) => ({
+      id: i + 1,
+      label: String(i + 1),
+    })),
     iconComponent: StarAltIcon,
   },
   {
@@ -177,8 +181,13 @@ export const FilterList: FilterItem[] = [
   },
 ];
 
+export interface PriceRange {
+  priceMin: number;
+  priceMax: number;
+}
+
 // Filter values can be string, number, string array, boolean, or null
-export type FilterValue = string | number | boolean | null | Date | string[];
+export type FilterValue = string | number | boolean | null | Date | string[] | MinMaxFilter;
 
 // Filter state type
 export type FilterValues = Partial<Record<SearchFilters, FilterValue>>;
@@ -193,6 +202,7 @@ interface FilterActions {
   clearFilter: (filterId: SearchFilters) => void;
   clearAllFilters: () => void;
   getSelectedFilters: (filterId?: SearchFilters) => FilterValues | FilterValue | undefined;
+  getAllFilters: () => FilterValues;
 }
 
 const createInitialState = (): FilterState => ({
@@ -254,6 +264,10 @@ export const useFilterStore = create<FilterState & FilterActions>((set, get) => 
     if (filterId !== undefined) {
       return filters[filterId];
     }
+    return filters;
+  },
+  getAllFilters: () => {
+    const filters = get().filters;
     return filters;
   },
 }));

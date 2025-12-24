@@ -40,7 +40,7 @@ export const ReviewComment = ({ data }: ReviewCommentProps) => {
               variant="variant-11"
               textAlign="left"
             >
-              {data.userId}
+              {data.nickname || data.userId}
             </Text>
 
             <ReviewStars

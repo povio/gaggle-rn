@@ -85,7 +85,7 @@ export const getById = (programId: string, ) => {
 
 export const update = (programId: string, data: ProgramModels.ImportUpdateProgramRequestDTO, ) => { 
     return AppRestClient.patch( 
-        { resSchema: z.void() }, 
+        { resSchema: z.any() }, 
         `/api/import/programs/${programId}`,
         ZodExtended.parse(ProgramModels.ImportUpdateProgramRequestDTOSchema, data)
 , 

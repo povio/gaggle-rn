@@ -1,10 +1,13 @@
 import { useState } from "react";
 
-import { FilterList, type SearchFilters } from "@/modules/search/stores/filterStore";
+import ArrowLeftIcon from "@/assets/icons/ArrowLeftIcon";
+import { FilterList, type SearchFilters, useFilterStore } from "@/modules/search/stores/filterStore";
 
 import Box from "../Box";
-import Drawer, { type DrawerProps } from "../modals/Drawer";
-import { FilterModalContent } from "../modals/ModalContent";
+import Button from "../buttons/Button";
+import IconButton from "../buttons/IconButton";
+import Drawer from "../modals/Drawer";
+import Text from "../text/Text";
 import { FilterBuilder } from "./filters/FilterBuilder";
 
 interface SearchFilterDrawerProps {
@@ -15,6 +18,7 @@ interface SearchFilterDrawerProps {
 }
 
 export const SearchFilterDrawer = ({ isOpen, onClose, onCallback, filters }: SearchFilterDrawerProps) => {
+  const { clearAllFilters, clearFilter } = useFilterStore();
   const [selectedFilter, setSelectedFilter] = useState<SearchFilters | null>(null);
 
   const handleFilterSelect = (filterId: SearchFilters) => {
@@ -30,6 +34,11 @@ export const SearchFilterDrawer = ({ isOpen, onClose, onCallback, filters }: Sea
     onClose();
   };
 
+  const handleClearAllFilters = () => {
+    clearAllFilters();
+    onCallback();
+  };
+
   const selectedFilterData = selectedFilter ? FilterList.find((f) => f.id === selectedFilter) : null;
   const IconComponent = selectedFilterData?.iconComponent;
 
@@ -39,22 +48,86 @@ export const SearchFilterDrawer = ({ isOpen, onClose, onCallback, filters }: Sea
         visible={isOpen}
         onClose={handleClose}
       >
-        <FilterModalContent
-          title="General Filter"
-          filters={
-            <FilterBuilder
-              list={filters}
-              onFilterSelect={handleFilterSelect}
-              selectedFilter={selectedFilter}
-              onBackToList={handleBackToList}
+        <Box
+          gap="4"
+          paddingLeft="8"
+          paddingBottom="8"
+          paddingRight="8"
+        >
+          {selectedFilter && handleBackToList ? (
+            <Box
+              flexDirection="row"
+              alignItems="center"
+              gap="2"
+            >
+              <IconButton
+                icon={
+                  <ArrowLeftIcon
+                    width={20}
+                    height={20}
+                  />
+                }
+                onPress={handleBackToList}
+                size="xs"
+                variant="transparent"
+                iconColor="text-primary"
+              />
+              {IconComponent && (
+                <Box
+                  width={20}
+                  height={20}
+                >
+                  <IconComponent />
+                </Box>
+              )}
+              <Box
+                gap={"8"}
+                flexDirection={"row"}
+              >
+                <Text variant="variant-13-prominent">{selectedFilterData?.label || null}</Text>
+                <Button
+                  variant="text"
+                  textVariant="variant-8"
+                  label="Clear"
+                  onPress={() => clearFilter(selectedFilter)}
+                  width="fit"
+                />
+              </Box>
+            </Box>
+          ) : (
+            <Box
+              flexDirection={"row"}
+              gap={"8"}
+            >
+              <Text variant="variant-13-prominent">General Filter</Text>
+              <Button
+                variant="text"
+                textVariant="variant-8"
+                label="Clear All"
+                onPress={handleClearAllFilters}
+                width="fit"
+              />
+            </Box>
+          )}
+          <FilterBuilder
+            list={filters}
+            onFilterSelect={handleFilterSelect}
+            selectedFilter={selectedFilter}
+            onBackToList={handleBackToList}
+          />
+          <Box
+            gap="2"
+            marginTop={"4"}
+          >
+            <Button
+              variant="secondary"
+              textVariant="variant-2-prominent"
+              label="SEARCH"
+              onPress={onCallback}
+              width="fit"
             />
-          }
-          primaryButtonText="SEARCH"
-          onPrimaryButtonPress={onCallback}
-          selectedFilter={selectedFilterData?.label || null}
-          selectedFilterIcon={IconComponent ? <IconComponent /> : null}
-          onBackToList={handleBackToList}
-        />
+          </Box>
+        </Box>
       </Drawer>
     </Box>
   );
