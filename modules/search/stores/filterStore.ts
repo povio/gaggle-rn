@@ -103,7 +103,7 @@ export const FilterList: FilterItem[] = [
     type: "slider",
     values: {
       min: 0,
-      max: 5000,
+      max: 1000,
     },
     iconComponent: DollarSignIcon,
   },

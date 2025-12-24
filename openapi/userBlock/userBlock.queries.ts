@@ -1,14 +1,17 @@
-import { useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { QueryModule } from "../queryModules";
 import { MutationEffectsOptions, useMutationEffects } from "../useMutationEffects";
-import { AppMutationOptions } from "../react-query.types";
+import { AppQueryOptions, AppMutationOptions } from "../react-query.types";
 import { UserBlockApi } from "./userBlock.api";
 
 export namespace UserBlockQueries {
 
 export const moduleName = QueryModule.UserBlock;
 
-
+export const keys = {
+    all: [moduleName] as const,
+    listBlockedUserIds: () => [...keys.all, "/api/users/blocked/ids", ] as const,
+};
 
 
 
@@ -36,6 +39,28 @@ export const useBlockUser = (options?: AppMutationOptions<typeof UserBlockApi.bl
     },
   });
 };
+
+
+
+
+ /** 
+ * Query `useListBlockedUserIds`
+ * @param { AppQueryOptions } options Query options
+ * @returns { UseQueryResult<UserBlockModels.ListBlockedUsersMetaResponseDTO> } 
+ * @statusCodes [200, 401]
+ */
+export const useListBlockedUserIds = <TData>(options?: AppQueryOptions<typeof UserBlockApi.listBlockedUserIds, TData>) => {
+  
+  
+  return useQuery({
+    queryKey: keys.listBlockedUserIds(),
+    queryFn: UserBlockApi.listBlockedUserIds
+    ,
+    ...options,
+  });
+};
+
+
 
 
 

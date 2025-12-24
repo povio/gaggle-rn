@@ -71,7 +71,7 @@ export type GetProviderDetailsResponseDTO = z.infer<typeof GetProviderDetailsRes
  * @property { boolean } isFeatured  
  * @property { number } displayOrder  
  */
-export const ImportUpdateProviderRequestDTOSchema = z.object({ name: z.string(), email: z.string(), phone: z.string(), websiteUrl: z.string(), logoUrl: z.string(), ourTake: z.string(), parentsLike: z.string(), keepInMind: z.string(), isTopRated: z.boolean(), isFeatured: z.boolean(), displayOrder: z.number() });
+export const ImportUpdateProviderRequestDTOSchema = z.object({ name: z.string(), email: z.string().nullish(), phone: z.string().nullish(), websiteUrl: z.string().nullish(), logoUrl: z.string().nullish(), ourTake: z.string().nullish(), parentsLike: z.string().nullish(), keepInMind: z.string().nullish(), isTopRated: z.boolean().nullish(), isFeatured: z.boolean().nullish(), displayOrder: z.number().nullish() });
 export type ImportUpdateProviderRequestDTO = z.infer<typeof ImportUpdateProviderRequestDTOSchema>;
 
 

@@ -2,6 +2,7 @@ import { AppRestClient } from "../configured-rest-client";
 import { z } from "zod";
 import { ZodExtended } from "../zod.extended";
 import { FavoriteModels } from "./favorite.models";
+import { CommonModels } from "../common/common.models";
 
 export namespace FavoriteApi {
 export const listUser = (limit: number, page?: number, cursor?: string, ) => { 
@@ -21,23 +22,23 @@ export const listUser = (limit: number, page?: number, cursor?: string, ) => {
     )
 };
 
-export const program = (data: FavoriteModels.FavoriteProgramRequestDTO, ) => {
-    return AppRestClient.post(
-        { resSchema: z.any() },
+export const program = (data: FavoriteModels.FavoriteProgramRequestDTO, ) => { 
+    return AppRestClient.post( 
+        { resSchema: CommonModels.StatusResponseDtoSchema }, 
         `/api/favorites`,
         ZodExtended.parse(FavoriteModels.FavoriteProgramRequestDTOSchema, data)
-,
-
+, 
+        
     )
 };
 
-export const unProgram = (data: FavoriteModels.UnfavoriteProgramRequestDTO, ) => {
-    return AppRestClient.delete(
-        { resSchema: z.any() },
+export const unProgram = (data: FavoriteModels.UnfavoriteProgramRequestDTO, ) => { 
+    return AppRestClient.delete( 
+        { resSchema: CommonModels.StatusResponseDtoSchema }, 
         `/api/favorites`,
         ZodExtended.parse(FavoriteModels.UnfavoriteProgramRequestDTOSchema, data)
-,
-
+, 
+        
     )
 };
 

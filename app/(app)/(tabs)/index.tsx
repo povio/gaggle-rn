@@ -35,10 +35,6 @@ export default function Home() {
     }
   };
 
-  const handleCloseDrawer = () => {
-    setDrawerVisible(false);
-  };
-
   const getFilterList = () => {
     return [
       SearchFiltersEnum.enum.dayOfWeek,
@@ -60,88 +56,94 @@ export default function Home() {
       <View style={styles.topElipsis} />
       <View style={styles.header}>
         <Box
-          flex={1}
-          justifyContent="center"
-          alignItems="center"
-          marginTop="4"
-          paddingTop="10"
-          gap="4"
+          flexDirection={"column"}
+          width={"100%"}
+          gap={"4"}
         >
           <Box
-            flexDirection="row"
-            width="100%"
-            justifyContent="center"
-            position="relative"
-          >
-            <Text
-              variant="variant-5-prominent"
-              color="interactive-primary-idle"
-              textAlign="center"
-            >
-              Hi there, {settings?.nickname || "unknown"}!
-            </Text>
-            <Box
-              position="absolute"
-              right={20}
-              top={-15}
-            >
-              <IconButton
-                variant="secondary"
-                iconColor="button-tertiary-text"
-                icon={
-                  <NotificationIcon
-                    width={24}
-                    height={24}
-                  />
-                }
-                onPress={() => {}}
-                style={styles.notificationButton}
-              />
-            </Box>
-          </Box>
-          <Box
-            flexDirection="row"
+            flex={1}
             justifyContent="center"
             alignItems="center"
-            position="relative"
+            marginTop="4"
+            paddingTop="10"
+            gap="4"
           >
-            <Input
-              label=""
-              textVariant="variant-11"
-              leftElement={
-                <SearchIcon
-                  width={21}
-                  height={21}
-                />
-              }
-              placeholder="Search activity"
-              variant="default"
-              value={value}
-              onChangeText={onChange}
-              onSubmitEditing={handleSearch}
-            />
             <Box
-              position="absolute"
-              right={10}
-              top={4}
+              flexDirection="row"
+              width="100%"
+              justifyContent="center"
+              position="relative"
             >
-              <IconButton
-                variant="secondary"
-                iconColor="button-tertiary-text"
-                icon={
-                  <GroupIcon
-                    width={24}
-                    height={24}
+              <Text
+                variant="variant-5-prominent"
+                color="interactive-primary-idle"
+                textAlign="center"
+              >
+                Hi there, {settings?.nickname || "unknown"}!
+              </Text>
+              <Box
+                position="absolute"
+                right={20}
+                top={-15}
+              >
+                <IconButton
+                  variant="secondary"
+                  iconColor="button-tertiary-text"
+                  icon={
+                    <NotificationIcon
+                      width={24}
+                      height={24}
+                    />
+                  }
+                  onPress={() => {}}
+                  style={styles.notificationButton}
+                />
+              </Box>
+            </Box>
+            <Box
+              flexDirection="row"
+              justifyContent="center"
+              alignItems="center"
+              position="relative"
+            >
+              <Input
+                label=""
+                textVariant="variant-11"
+                leftElement={
+                  <SearchIcon
+                    width={21}
+                    height={21}
                   />
                 }
-                onPress={() => setDrawerVisible(true)}
-                style={styles.settingsButton}
+                placeholder="Search programs"
+                variant="default"
+                value={value}
+                onChangeText={onChange}
+                onSubmitEditing={handleSearch}
               />
+              <Box
+                position="absolute"
+                right={10}
+                top={4}
+              >
+                <IconButton
+                  variant="secondary"
+                  iconColor="button-tertiary-text"
+                  icon={
+                    <GroupIcon
+                      width={24}
+                      height={24}
+                    />
+                  }
+                  onPress={() => setDrawerVisible(true)}
+                  style={styles.settingsButton}
+                />
+              </Box>
             </Box>
           </Box>
-        </Box>
 
-        <IndexTopMenu />
+          <IndexTopMenu />
+        </Box>
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -168,7 +170,7 @@ export default function Home() {
 
       <SearchFilterDrawer
         isOpen={drawerVisible}
-        onClose={handleCloseDrawer}
+        onClose={() => setDrawerVisible(false)}
         filters={getFilterList()}
         onCallback={handleSearch}
       />
@@ -183,10 +185,10 @@ const styles = StyleSheet.create({
   },
   topElipsis: {
     position: "absolute",
-    top: -300,
+    top: -235,
     left: -68,
     width: 550,
-    height: 535,
+    height: 480,
     backgroundColor: "#F5C344",
     borderRadius: 325,
   },

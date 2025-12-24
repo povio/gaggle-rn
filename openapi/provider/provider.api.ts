@@ -31,7 +31,7 @@ export const listPrograms = (providerId: string, limit: number, page?: number, c
 
 export const follow = (providerId: string, ) => { 
     return AppRestClient.post( 
-        { resSchema: z.any() }, 
+        { resSchema: z.void() }, 
         `/api/providers/${providerId}/follow`,
         
     )
@@ -39,7 +39,7 @@ export const follow = (providerId: string, ) => {
 
 export const unfollow = (providerId: string, ) => { 
     return AppRestClient.delete( 
-        { resSchema: z.any() }, 
+        { resSchema: z.void() }, 
         `/api/providers/${providerId}/follow`,
         
     )

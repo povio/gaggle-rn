@@ -6,6 +6,7 @@ export enum FilterId {
   SPORTS = "sports",
   CLASSES = "classes",
   PARTY = "party",
+  PHOTOGRAPHY = "photography",
 }
 
 interface SearchState {

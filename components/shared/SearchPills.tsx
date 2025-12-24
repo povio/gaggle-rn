@@ -54,7 +54,7 @@ export const SearchPills = ({ results }: SearchPillsProps) => {
 
           return (
             <PillButton
-              label={`${item.label} • ${count}`}
+              label={`${item.label} • ${count ?? 0}`}
               onPress={() => setFilter(item.id)}
               variant="toggle"
               key={item.id}

@@ -9,24 +9,77 @@ import Box from "@/components/Box";
 import IconButton from "@/components/buttons/IconButton";
 import Input from "@/components/input/Input";
 import { EmptyState } from "@/components/shared/EmptyState";
+import { Loader } from "@/components/shared/Loader";
 import { ProgramCard } from "@/components/shared/ProgramCard";
+import { SearchFilterDrawer } from "@/components/shared/SearchFilterDrawer";
 import { SearchPills } from "@/components/shared/SearchPills";
 import { useDebounce } from "@/hooks/useDebounce";
+import { useProgramFavorite } from "@/hooks/useProgramFavorite";
+import { type FilterValues, SearchFiltersEnum, useFilterStore } from "@/modules/search/stores/filterStore";
 import { FilterId, useSearchStore } from "@/modules/search/stores/searchStore";
-import { FavoriteQueries } from "@/openapi/favorite/favorite.queries";
+import type { ProgramModels } from "@/openapi/program/program.models";
 import { ProgramQueries } from "@/openapi/program/program.queries";
-import { RestUtils } from "@/utils/rest/rest.utils";
-import { showToast } from "@/utils/toast";
+
+const transformFiltersForAPI = (filters: FilterValues): Partial<ProgramModels.SearchProgramsFilterDto> => {
+  const apiFilters: Partial<ProgramModels.SearchProgramsFilterDto> = {};
+
+  // Transform price (single value) to priceMax
+  if (filters.price) {
+    apiFilters.priceMax = filters.price as number;
+  }
+
+  // Transform rating (array of checkbox values) to single number (highest rating selected)
+  if (filters.rating && Array.isArray(filters.rating)) {
+    const ratings = filters.rating.map((r) => parseInt(r)).filter((r) => !isNaN(r));
+    if (ratings.length > 0) {
+      apiFilters.rating = Math.max(...ratings);
+    }
+  }
+
+  // Transform dayOfWeek (already an array of strings)
+  if (filters.dayOfWeek && Array.isArray(filters.dayOfWeek)) {
+    apiFilters.dayOfWeek = filters.dayOfWeek as string[];
+  }
+
+  // Transform startDate (Date to ISO string)
+  if (filters.startDate) {
+    apiFilters.startDate =
+      filters.startDate instanceof Date ? filters.startDate.toISOString() : (filters.startDate as string);
+  }
+
+  // Transform duration (string to number)
+  if (filters.duration) {
+    const durationNum = parseInt(filters.duration as string);
+    if (!isNaN(durationNum)) {
+      apiFilters.duration = durationNum;
+    }
+  }
+
+  return apiFilters;
+};
+
+const getFilterList = () => {
+  return [
+    SearchFiltersEnum.enum.dayOfWeek,
+    SearchFiltersEnum.enum.price,
+    SearchFiltersEnum.enum.rating,
+    SearchFiltersEnum.enum.startTime,
+    SearchFiltersEnum.enum.endDate,
+    SearchFiltersEnum.enum.duration,
+    SearchFiltersEnum.enum.toggleTester,
+    SearchFiltersEnum.enum["embeded-toggle"],
+  ];
+};
 
 export default function SearchResults() {
   const router = useRouter();
   const { query } = useLocalSearchParams<{ query?: string }>();
   const [value, setValue] = useState<string>("");
   const { filter } = useSearchStore();
-
-  const debouncedSearchQuery = useDebounce(value, 300);
-  const unfavoriteMutation = FavoriteQueries.useUnProgram();
-  const favoriteMutation = FavoriteQueries.useProgram();
+  const { getSelectedFilters } = useFilterStore();
+  const [drawerVisible, setDrawerVisible] = useState(false);
+  const [appliedFilters, setAppliedFilters] = useState<FilterValues>({});
+  const debouncedSearchQuery = useDebounce(value, 400);
 
   useEffect(() => {
     if (query) {
@@ -34,14 +87,15 @@ export default function SearchResults() {
     }
   }, [query]);
 
-  const { data: favoritesData, isLoading: isFavoritesDataLoading } = FavoriteQueries.useListUserIds();
-
-  const favIds = favoritesData?.items.map((item) => item.programId);
+  const { toggleFavorite, favoritedProgramsList } = useProgramFavorite();
 
   const { data: searchResults, isLoading } = ProgramQueries.useSearch(
     {
       limit: 20,
-      filter: debouncedSearchQuery ? { q: debouncedSearchQuery } : undefined,
+      filter: {
+        q: debouncedSearchQuery,
+        ...transformFiltersForAPI(appliedFilters),
+      },
     },
     {
       enabled: true,
@@ -49,50 +103,14 @@ export default function SearchResults() {
     },
   );
 
-  const onChange = (value: string) => {
-    setValue(value);
+  const handleSearch = () => {
+    const currentFilters = getSelectedFilters();
+    setAppliedFilters(currentFilters as FilterValues);
+    setDrawerVisible(false);
   };
 
   const handleBack = () => {
     router.push("/(app)/(tabs)");
-  };
-
-  const handleFavoriteSession = (programId: string) => {
-    const data = {
-      programId,
-    };
-
-    const isFav = favIds?.find((item) => item === programId);
-
-    if (isFav !== undefined) {
-      unfavoriteMutation.mutate(
-        { data },
-        {
-          onSuccess: async () => {},
-          onError: (error) => {
-            const errorMessage = RestUtils.extractServerErrorMessage(error);
-            showToast({
-              variant: "error",
-              message: errorMessage || "Failed to save to favorites",
-            });
-          },
-        },
-      );
-    } else {
-      favoriteMutation.mutate(
-        { data },
-        {
-          onSuccess: async () => {},
-          onError: (error) => {
-            const errorMessage = RestUtils.extractServerErrorMessage(error);
-            showToast({
-              variant: "error",
-              message: errorMessage || "Failed to save favorite",
-            });
-          },
-        },
-      );
-    }
   };
 
   return (
@@ -141,7 +159,7 @@ export default function SearchResults() {
                 placeholder="Search activity"
                 variant="default"
                 value={value}
-                onChangeText={onChange}
+                onChangeText={(e) => setValue(e)}
               />
               <Box
                 position="absolute"
@@ -157,7 +175,7 @@ export default function SearchResults() {
                       height={24}
                     />
                   }
-                  onPress={() => {}}
+                  onPress={() => setDrawerVisible(true)}
                   style={styles.settingsButton}
                 />
               </Box>
@@ -168,7 +186,21 @@ export default function SearchResults() {
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        {!searchResults?.items || searchResults.items.length === 0 || filter !== FilterId.ALL ? (
+        {isLoading && (
+          <Box
+            width={"100%"}
+            height={"100%"}
+            flexDirection={"row"}
+            justifyContent={"center"}
+            alignItems={"center"}
+          >
+            <Loader
+              width={45}
+              height={45}
+            />
+          </Box>
+        )}
+        {!isLoading && (!searchResults?.items || searchResults.items.length === 0 || filter !== FilterId.ALL) ? (
           <EmptyState callback={handleBack} />
         ) : (
           <Box
@@ -177,16 +209,22 @@ export default function SearchResults() {
             paddingHorizontal="5"
             paddingVertical="4"
           >
-            {searchResults.items.map((item) => (
+            {searchResults?.items?.map((item) => (
               <ProgramCard
                 key={item.programId}
                 data={item}
-                callback={handleFavoriteSession}
-                isFavored={favIds?.includes(item.programId) ? true : false}
+                callback={() => toggleFavorite({ programId: item.programId })}
+                isFavored={favoritedProgramsList.includes(item.programId) ?? false}
               />
             ))}
           </Box>
         )}
+        <SearchFilterDrawer
+          isOpen={drawerVisible}
+          onClose={() => setDrawerVisible(false)}
+          filters={getFilterList()}
+          onCallback={handleSearch}
+        />
       </ScrollView>
     </Box>
   );

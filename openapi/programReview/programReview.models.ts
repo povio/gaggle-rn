@@ -29,12 +29,13 @@ export type PostProgramReviewRequestDTO = z.infer<typeof PostProgramReviewReques
  * @property { string } id  
  * @property { string } userId  
  * @property { string } userProfileImageUrl  
+ * @property { string } nickname  
  * @property { number } rating  
  * @property { string } content  
  * @property { string[] } imageUrls  
  * @property { string } createdAt  
  */
-export const ListProgramReviewsResponseDTOSchema = z.object({ id: z.string(), userId: z.string(), userProfileImageUrl: z.string().nullish(), rating: z.number(), content: z.string(), imageUrls: z.array(z.string()), createdAt: z.string() });
+export const ListProgramReviewsResponseDTOSchema = z.object({ id: z.string(), userId: z.string(), userProfileImageUrl: z.string().nullish(), nickname: z.string().nullish(), rating: z.number(), content: z.string(), imageUrls: z.array(z.string()), createdAt: z.string() });
 export type ListProgramReviewsResponseDTO = z.infer<typeof ListProgramReviewsResponseDTOSchema>;
 
 

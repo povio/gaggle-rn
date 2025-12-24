@@ -1,5 +1,4 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 
 import ArrowLeftIcon from "@/assets/icons/ArrowLeftIcon";
@@ -12,18 +11,16 @@ import { ActivityPreviews } from "@/components/shared/ActivityPreview";
 import { BookingDrawer } from "@/components/shared/BookingDrawer";
 import ReviewSegment from "@/components/shared/ReviewSegment";
 import Text from "@/components/text/Text";
-import { FavoriteQueries } from "@/openapi/favorite/favorite.queries";
+import { useProgramFavorite } from "@/hooks/useProgramFavorite";
 import { ProgramQueries } from "@/openapi/program/program.queries";
-import { RestUtils } from "@/utils/rest/rest.utils";
-import { showToast } from "@/utils/toast";
+import { StringUtils } from "@/utils/string.utils";
 
 export default function ProgramDetails() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id?: string }>();
   const programId = id || "";
 
-  const unfavoriteMutation = FavoriteQueries.useUnProgram();
-  const favoriteMutation = FavoriteQueries.useProgram();
+  const { isFavorited, toggleFavorite } = useProgramFavorite(programId);
 
   const { data: programData } = ProgramQueries.useGetDetails(
     {
@@ -33,48 +30,9 @@ export default function ProgramDetails() {
       enabled: !!id,
     },
   );
-  console.log("programData", programData);
-  const { data: favoriteSessionList } = FavoriteQueries.useListUserIds();
-  const isFav = favoriteSessionList?.items.some((item) => item.programId === programId) ?? false;
 
   const handleBack = () => {
     router.push("/(app)/(tabs)");
-  };
-
-  const handleFavoriteSession = () => {
-    const data = {
-      programId,
-    };
-
-    if (isFav) {
-      unfavoriteMutation.mutate(
-        { data },
-        {
-          onSuccess: async () => {},
-          onError: (error) => {
-            const errorMessage = RestUtils.extractServerErrorMessage(error);
-            showToast({
-              variant: "error",
-              message: errorMessage || "Failed to unfollow",
-            });
-          },
-        },
-      );
-    } else {
-      favoriteMutation.mutate(
-        { data },
-        {
-          onSuccess: async () => {},
-          onError: (error) => {
-            const errorMessage = RestUtils.extractServerErrorMessage(error);
-            showToast({
-              variant: "error",
-              message: errorMessage || "Failed to save favorite",
-            });
-          },
-        },
-      );
-    }
   };
 
   return (
@@ -144,8 +102,12 @@ export default function ProgramDetails() {
               >
                 <IconButton
                   icon={<HeartIcon />}
-                  iconColor={isFav ? "interactive-active" : "interactive-icon-inactive"}
-                  onPress={handleFavoriteSession}
+                  iconColor={isFavorited ? "interactive-active" : "interactive-icon-inactive"}
+                  onPress={() =>
+                    toggleFavorite({
+                      programId,
+                    })
+                  }
                   variant="transparent"
                   style={styles.headerIcon}
                 />
@@ -170,7 +132,7 @@ export default function ProgramDetails() {
                   programData?.tags.map((tag, index) => (
                     <PillButton
                       key={index}
-                      label={tag.name.replace("_", " ").toUpperCase()}
+                      label={StringUtils.capitalize(tag.name.replace("_", " "))}
                       onPress={() => {}}
                       variant="primary"
                       textVariant="variant-11"

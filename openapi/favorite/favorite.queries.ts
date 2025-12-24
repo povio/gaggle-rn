@@ -75,7 +75,7 @@ export const useListUserInfinite = <TData>({ limit, cursor }: { limit: number, c
  * Mutation `useProgram`
  * @param { FavoriteModels.FavoriteProgramRequestDTO } mutation.data Body parameter
  * @param { AppMutationOptions & MutationEffectsOptions } options Mutation options
- * @returns { UseMutationResult<any> } 
+ * @returns { UseMutationResult<CommonModels.StatusResponseDto> } 
  * @statusCodes [201, 401]
  */
 export const useProgram = (options?: AppMutationOptions<typeof FavoriteApi.program, { data: FavoriteModels.FavoriteProgramRequestDTO,  }> & MutationEffectsOptions) => {
@@ -104,8 +104,8 @@ export const useProgram = (options?: AppMutationOptions<typeof FavoriteApi.progr
  * Mutation `useUnProgram`
  * @param { FavoriteModels.UnfavoriteProgramRequestDTO } mutation.data Body parameter
  * @param { AppMutationOptions & MutationEffectsOptions } options Mutation options
- * @returns { UseMutationResult<any> } 
- * @statusCodes [204, 401]
+ * @returns { UseMutationResult<CommonModels.StatusResponseDto> } 
+ * @statusCodes [200, 401]
  */
 export const useUnProgram = (options?: AppMutationOptions<typeof FavoriteApi.unProgram, { data: FavoriteModels.UnfavoriteProgramRequestDTO,  }> & MutationEffectsOptions) => {
   

@@ -10,7 +10,7 @@ import Image from "@/components/Image";
 import { ActivityPreviews } from "@/components/shared/ActivityPreview";
 import { ProgramCard } from "@/components/shared/ProgramCard";
 import Text from "@/components/text/Text";
-import { FavoriteQueries } from "@/openapi/favorite/favorite.queries";
+import { useProgramFavorite } from "@/hooks/useProgramFavorite";
 import { ProviderQueries } from "@/openapi/provider/provider.queries";
 import { RestUtils } from "@/utils/rest/rest.utils";
 import { showToast } from "@/utils/toast";
@@ -27,11 +27,10 @@ export default function ProviderDetails() {
     { enabled: !!providerId },
   );
 
-  const { data: favoriteSessionList } = FavoriteQueries.useListUserIds();
   const { data: providerFollowing } = ProviderQueries.useListFollowedIds();
-
-  const favIds = favoriteSessionList?.items.map((item) => item.programId);
   const isFollowing = providerFollowing?.items.includes(providerId);
+
+  const { toggleFavorite, favoritedProgramsList } = useProgramFavorite();
 
   const { data: providerPrograms } = ProviderQueries.useListPrograms(
     {
@@ -44,59 +43,9 @@ export default function ProviderDetails() {
 
   const followMutation = ProviderQueries.useFollow();
   const unFollowMutation = ProviderQueries.useUnfollow();
-  const unfavoriteMutation = FavoriteQueries.useUnProgram();
-  const favoriteMutation = FavoriteQueries.useProgram();
 
   const handleBack = () => {
     router.push("/(app)/(tabs)");
-  };
-
-  const handleFavoriteSession = (programId: string) => {
-    const data = {
-      programId,
-    };
-
-    const isFav = favIds?.find((item) => item === programId);
-
-    if (isFav !== undefined) {
-      unfavoriteMutation.mutate(
-        { data },
-        {
-          onSuccess: async () => {
-            showToast({
-              variant: "success",
-              message: "Service unfavorited",
-            });
-          },
-          onError: (error) => {
-            const errorMessage = RestUtils.extractServerErrorMessage(error);
-            showToast({
-              variant: "error",
-              message: errorMessage || "Failed to unfollow",
-            });
-          },
-        },
-      );
-    } else {
-      favoriteMutation.mutate(
-        { data },
-        {
-          onSuccess: async () => {
-            showToast({
-              variant: "success",
-              message: "Service favorited",
-            });
-          },
-          onError: (error) => {
-            const errorMessage = RestUtils.extractServerErrorMessage(error);
-            showToast({
-              variant: "error",
-              message: errorMessage || "Failed to save favorite",
-            });
-          },
-        },
-      );
-    }
   };
 
   const handleFallowProvider = () => {
@@ -121,6 +70,10 @@ export default function ProviderDetails() {
       },
     );
   };
+
+  if (!providerPrograms) {
+    return null;
+  }
 
   return (
     <Box
@@ -352,13 +305,13 @@ export default function ProviderDetails() {
             </Text>
             {providerPrograms && providerPrograms?.items?.length > 0 ? (
               providerPrograms?.items?.map((card) => {
-                const isFav = favIds?.find((id) => id === card.programId);
+                const isFav = favoritedProgramsList?.find((id) => id === card.programId);
                 return (
                   <ProgramCard
                     isFavored={isFav !== undefined}
                     data={card}
                     key={card.programId}
-                    callback={handleFavoriteSession}
+                    callback={() => toggleFavorite({ programId: card.programId })}
                   />
                 );
               })

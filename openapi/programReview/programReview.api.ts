@@ -23,7 +23,7 @@ export const list = (programId: string, limit: number, page?: number, cursor?: s
 
 export const create = (programId: string, data: ProgramReviewModels.PostProgramReviewRequestDTO, ) => { 
     return AppRestClient.post( 
-        { resSchema: z.any() }, 
+        { resSchema: z.void() }, 
         `/api/programs/${programId}/reviews`,
         ZodExtended.parse(ProgramReviewModels.PostProgramReviewRequestDTOSchema, data)
 , 

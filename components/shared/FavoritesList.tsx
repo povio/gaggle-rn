@@ -1,24 +1,13 @@
 import { useMemo } from "react";
 import { ActivityIndicator, ScrollView, StyleSheet } from "react-native";
 
-import { cards } from "@/data/mock/activities";
+import Text from "@/components/text/Text";
 import { FavoriteQueries } from "@/openapi/favorite/favorite.queries";
+import type { ProgramModels } from "@/openapi/program/program.models";
 
 import Box from "../Box";
 import LoadingScreen from "../LoadingScreen";
 import { ProgramCard } from "./ProgramCard";
-
-export interface Card {
-  provider: string;
-  location?: string;
-  price?: string;
-  icon: string;
-  label: string;
-  tags: string[];
-  id: number | string;
-  startDate?: string;
-  endDate?: string;
-}
 
 export const FavoritesList = () => {
   const {
@@ -41,7 +30,7 @@ export const FavoritesList = () => {
   }, [favoritesData]);
 
   // Use mock data if server returns no items
-  const displayData = allItems.length > 0 ? allItems : cards;
+  const displayData = allItems.length > 0 ? allItems : [];
 
   const handleUnfavorite = (id: number | string) => {
     // Find the item to get programId and sessionId
@@ -77,16 +66,25 @@ export const FavoritesList = () => {
       onScroll={handleScroll}
       scrollEventThrottle={400}
     >
-      {displayData?.map((item) => {
-        return (
-          <ProgramCard
-            data={item}
-            key={item.programId || item.id}
-            callback={handleUnfavorite}
-            isFavored
-          />
-        );
-      })}
+      {displayData.length > 0 ? (
+        displayData?.map((item) => {
+          return (
+            <ProgramCard
+              data={item as ProgramModels.SearchProgramsResponseDTO}
+              key={item?.programId || item?.id}
+              callback={handleUnfavorite}
+              isFavored
+            />
+          );
+        })
+      ) : (
+        <Text
+          variant="variant-11"
+          color={"text-disabled"}
+        >
+          You do not have any favorites
+        </Text>
+      )}
       {isFetchingNextPage && (
         <Box paddingVertical="4">
           <ActivityIndicator size="large" />

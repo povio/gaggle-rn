@@ -16,7 +16,7 @@ export namespace LocationModels {
  * @property { number } latitude  
  * @property { number } longitude  
  */
-export const ImportUpdateLocationRequestDTOSchema = z.object({ providerId: z.uuid(), name: z.string(), address1: z.string(), address2: z.string(), city: z.string(), state: z.string(), zip: z.string(), neighborhood: z.string(), latitude: z.number(), longitude: z.number() });
+export const ImportUpdateLocationRequestDTOSchema = z.object({ providerId: z.uuid(), name: z.string(), address1: z.string().nullish(), address2: z.string().nullish(), city: z.string().nullish(), state: z.string().nullish(), zip: z.string().nullish(), neighborhood: z.string().nullish(), latitude: z.number().nullish(), longitude: z.number().nullish() });
 export type ImportUpdateLocationRequestDTO = z.infer<typeof ImportUpdateLocationRequestDTOSchema>;
 
 

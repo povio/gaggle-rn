@@ -6,6 +6,7 @@ import CheckCircleIcon from "@/assets/icons/CheckCircleIcon";
 import CopyIcon from "@/assets/icons/CopyIcon";
 import LetterIcon from "@/assets/icons/LetterIcon";
 import PhoneIcon from "@/assets/icons/PhoneIcon";
+import { useProgramFavorite } from "@/hooks/useProgramFavorite";
 import { FavoriteQueries } from "@/openapi/favorite/favorite.queries";
 import type { ProgramModels } from "@/openapi/program/program.models";
 
@@ -27,11 +28,7 @@ export const BookingDrawer = ({ programData }: BookingDrawerProps) => {
   const [copied, setCopied] = useState(false);
   const sessionData = programData.sessions;
 
-  const { data: favoriteSessionList } = FavoriteQueries.useListUserIds();
-  const favList =
-    favoriteSessionList?.items
-      .filter((item) => item.programId === programData.id && item.sessionId)
-      .map((item) => item.sessionId) ?? [];
+  const { favoritedSessionsList, toggleFavorite } = useProgramFavorite(programData.id);
 
   const handleBookingUrl = () => {
     Linking.openURL(programData?.bookingUrl);
@@ -63,8 +60,9 @@ export const BookingDrawer = ({ programData }: BookingDrawerProps) => {
           >
             {sessionData.map((card) => (
               <SessionCard
-                isFavored={favList.includes(card.id)}
+                isFavored={favoritedSessionsList.includes(card.id)}
                 data={card}
+                callback={toggleFavorite}
                 programId={programData.id}
                 key={card.id}
               />

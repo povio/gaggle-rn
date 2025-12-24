@@ -23,12 +23,16 @@ export const IndexTopMenu = () => {
       justifyContent="center"
       alignItems="center"
       height={120}
+      gap={"4"}
     >
-      <Pressable onPress={() => handleFilterClick(FilterId.CAMPS)}>
+      <Pressable
+        alignSelf={"flex-start"}
+        onPress={() => handleFilterClick(FilterId.CAMPS)}
+      >
         <Box
           justifyContent="center"
           alignItems="center"
-          marginRight="4"
+          // marginRight="4"
         >
           <Box
             justifyContent="center"
@@ -55,12 +59,12 @@ export const IndexTopMenu = () => {
 
       <Pressable
         onPress={() => handleFilterClick(FilterId.CLASSES)}
-        alignSelf="flex-end"
+        alignSelf="center"
       >
         <Box
           justifyContent="center"
           alignItems="center"
-          marginRight="4"
+          // marginRight="4"
           alignSelf="flex-end"
         >
           <Box
@@ -88,13 +92,13 @@ export const IndexTopMenu = () => {
       </Pressable>
 
       <Pressable
-        onPress={() => handleFilterClick(FilterId.SPORTS)}
         alignSelf="flex-end"
+        onPress={() => handleFilterClick(FilterId.SPORTS)}
       >
         <Box
           justifyContent="center"
           alignItems="center"
-          marginRight="4"
+          // marginRight="4"
           alignSelf="flex-end"
         >
           <Box
@@ -121,7 +125,10 @@ export const IndexTopMenu = () => {
         </Box>
       </Pressable>
 
-      <Pressable onPress={() => handleFilterClick(FilterId.PARTY)}>
+      <Pressable
+        alignSelf="center"
+        onPress={() => handleFilterClick(FilterId.PARTY)}
+      >
         <Box
           justifyContent="center"
           alignItems="center"
@@ -149,6 +156,38 @@ export const IndexTopMenu = () => {
           </Text>
         </Box>
       </Pressable>
+
+      <Pressable
+        alignSelf={"flex-start"}
+        onPress={() => handleFilterClick(FilterId.PHOTOGRAPHY)}
+      >
+        <Box
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Box
+            justifyContent="center"
+            alignItems="center"
+            backgroundColor="elevation-background"
+            borderRadius="full"
+            style={styles.iconButton}
+          >
+            <Image
+              source={require("@/assets/illustrations/camera.svg")}
+              style={styles.topIcon}
+              contentFit="contain"
+            />
+          </Box>
+          <Text
+            variant="variant-12"
+            color="interactive-primary-idle"
+            textAlign="center"
+            marginTop="2"
+          >
+            Party
+          </Text>
+        </Box>
+      </Pressable>
     </Box>
   );
 };
@@ -158,8 +197,8 @@ const styles = StyleSheet.create({
     cursor: "pointer",
   },
   iconButton: {
-    minHeight: 66,
-    width: 66,
+    minHeight: 60,
+    width: 60,
     boxShadow: "0px 3px 9px 9px rgba(0,0,0,0.1)",
   },
   iconCircle: {

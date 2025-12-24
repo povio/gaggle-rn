@@ -1,4 +1,3 @@
-import { useTheme } from "@shopify/restyle";
 import { useRouter } from "expo-router";
 import { StyleSheet } from "react-native";
 
@@ -9,8 +8,7 @@ import Pressable from "@/components/Pressable";
 import Text from "@/components/text/Text";
 import { MockIcons } from "@/data/mock/activities";
 import type { ProgramModels } from "@/openapi/program/program.models";
-import { DateUtils } from "@/utils/date.utils";
-import type { Theme } from "@/utils/theme/restyleTheme";
+import { StringUtils } from "@/utils/string.utils";
 
 import IconButton from "../buttons/IconButton";
 import PillButton from "../buttons/PillButton";
@@ -74,13 +72,19 @@ export const ProgramCard = ({ data, callback, isFavored }: ProgramCardProps) => 
                 flexDirection="row"
                 gap="2"
               >
-                <Text variant="variant-4">Provider Name</Text>
+                <Text
+                  numberOfLines={1}
+                  maxWidth={140}
+                  variant="variant-4"
+                >
+                  {data.providerName}
+                </Text>
                 {data.locationName && (
                   <Text
                     variant="variant-4"
                     color="text-disabled"
                     numberOfLines={1}
-                    maxWidth={170}
+                    maxWidth={120}
                     ellipsizeMode="tail"
                   >{`| ${data.locationName}`}</Text>
                 )}
@@ -113,7 +117,7 @@ export const ProgramCard = ({ data, callback, isFavored }: ProgramCardProps) => 
               flexWrap={"wrap"}
               maxWidth={"80%"}
             >
-              {data.grades.map((tag) => {
+              {StringUtils.compressGrades(data.grades).map((tag) => {
                 return (
                   <PillButton
                     label={tag}

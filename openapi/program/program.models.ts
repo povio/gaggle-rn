@@ -3,18 +3,18 @@ import { CommonModels } from "../common/common.models";
 
 export namespace ProgramModels {
 /** 
- * TimeslotDTOSchema 
+ * AdminProgramTimeslotDtoSchema 
  * @type { object }
  * @property { string } dayOfWeek  
  * @property { string } startTime  
  * @property { string } endTime  
  */
-export const TimeslotDTOSchema = z.object({ dayOfWeek: z.string(), startTime: z.string(), endTime: z.string() });
-export type TimeslotDTO = z.infer<typeof TimeslotDTOSchema>;
+export const AdminProgramTimeslotDtoSchema = z.object({ dayOfWeek: z.string().nullable(), startTime: z.string().nullable(), endTime: z.string().nullable() }).partial();
+export type AdminProgramTimeslotDto = z.infer<typeof AdminProgramTimeslotDtoSchema>;
 
 
 /** 
- * SessionInputDTOSchema 
+ * AdminProgramSessionInputDtoSchema 
  * @type { object }
  * @property { string } id  
  * @property { string } name  
@@ -22,13 +22,13 @@ export type TimeslotDTO = z.infer<typeof TimeslotDTOSchema>;
  * @property { string } location  
  * @property { string } startDate  
  * @property { string } endDate  
- * @property { TimeslotDTO[] } timeslots  
+ * @property { AdminProgramTimeslotDto[] } timeslots  
  * @property { number } priceAmount  
  * @property { string } priceCurrency  
  * @property { string[] } grades  
  */
-export const SessionInputDTOSchema = z.object({ id: z.string().nullable(), name: z.string().nullable(), description: z.string().nullable(), location: z.string().nullable(), startDate: z.string().nullable(), endDate: z.string().nullable(), timeslots: z.array(TimeslotDTOSchema).nullable(), priceAmount: z.number().nullable(), priceCurrency: z.string().nullable(), grades: z.array(z.string()).nullable() }).partial();
-export type SessionInputDTO = z.infer<typeof SessionInputDTOSchema>;
+export const AdminProgramSessionInputDtoSchema = z.object({ id: z.string().nullable(), name: z.string().nullable(), description: z.string().nullable(), location: z.string().nullable(), startDate: z.string().nullable(), endDate: z.string().nullable(), timeslots: z.array(AdminProgramTimeslotDtoSchema).nullable(), priceAmount: z.number().nullable(), priceCurrency: z.string().nullable(), grades: z.array(z.string()).nullable() }).partial();
+export type AdminProgramSessionInputDto = z.infer<typeof AdminProgramSessionInputDtoSchema>;
 
 
 /** 
@@ -54,10 +54,39 @@ export type SessionInputDTO = z.infer<typeof SessionInputDTOSchema>;
  * @property { string } policiesUrl  
  * @property { string } policiesText  
  * @property { string[] } tagNames  
- * @property { SessionInputDTO[] } sessions  
+ * @property { AdminProgramSessionInputDto[] } sessions  
  */
-export const ImportUpdateProgramRequestDTOSchema = z.object({ providerId: z.string(), locationId: z.string(), name: z.string(), description: z.string(), ourTake: z.string(), parentsLike: z.string(), keepInMind: z.string(), category: z.string(), subcategory: z.string(), programUrl: z.string(), bookingUrl: z.string(), iconImageUrl: z.string(), additionalImages: z.array(z.string()), priceAmount: z.number(), priceCurrency: z.string(), grades: z.array(z.string()), isTopRated: z.boolean(), policiesUrl: z.string(), policiesText: z.string(), tagNames: z.array(z.string()), sessions: z.array(SessionInputDTOSchema) });
+export const ImportUpdateProgramRequestDTOSchema = z.object({ providerId: z.string(), locationId: z.string(), name: z.string(), description: z.string().nullish(), ourTake: z.string().nullish(), parentsLike: z.string().nullish(), keepInMind: z.string().nullish(), category: z.string().nullish(), subcategory: z.string().nullish(), programUrl: z.string().nullish(), bookingUrl: z.string().nullish(), iconImageUrl: z.string().nullish(), additionalImages: z.array(z.string()).nullish(), priceAmount: z.number().nullish(), priceCurrency: z.string().nullish(), grades: z.array(z.string()).nullish(), isTopRated: z.boolean().nullish(), policiesUrl: z.string().nullish(), policiesText: z.string().nullish(), tagNames: z.array(z.string()).nullish(), sessions: z.array(AdminProgramSessionInputDtoSchema).nullish() });
 export type ImportUpdateProgramRequestDTO = z.infer<typeof ImportUpdateProgramRequestDTOSchema>;
+
+
+/** 
+ * TimeslotDTOSchema 
+ * @type { object }
+ * @property { string } dayOfWeek  
+ * @property { string } startTime  
+ * @property { string } endTime  
+ */
+export const TimeslotDTOSchema = z.object({ dayOfWeek: z.string(), startTime: z.string(), endTime: z.string() });
+export type TimeslotDTO = z.infer<typeof TimeslotDTOSchema>;
+
+
+/** 
+ * ImportSessionInputDtoSchema 
+ * @type { object }
+ * @property { string } id  
+ * @property { string } name  
+ * @property { string } description  
+ * @property { string } location  
+ * @property { string } startDate  
+ * @property { string } endDate  
+ * @property { TimeslotDTO[] } timeslots  
+ * @property { number } priceAmount  
+ * @property { string } priceCurrency  
+ * @property { string[] } grades  
+ */
+export const ImportSessionInputDtoSchema = z.object({ id: z.string(), name: z.string(), description: z.string(), location: z.string(), startDate: z.string(), endDate: z.string(), timeslots: z.array(TimeslotDTOSchema), priceAmount: z.number(), priceCurrency: z.string(), grades: z.array(z.string()) });
+export type ImportSessionInputDto = z.infer<typeof ImportSessionInputDtoSchema>;
 
 
 /** 
@@ -84,9 +113,9 @@ export type ImportUpdateProgramRequestDTO = z.infer<typeof ImportUpdateProgramRe
  * @property { string } policiesUrl  
  * @property { string } policiesText  
  * @property { string[] } tagIds  
- * @property { SessionInputDTO[] } sessions  
+ * @property { ImportSessionInputDto[] } sessions  
  */
-export const ImportGetProgramByIdResponseDTOSchema = z.object({ id: z.string(), providerId: z.string(), locationId: z.string(), name: z.string(), description: z.string(), ourTake: z.string(), parentsLike: z.string(), keepInMind: z.string(), category: z.string(), subcategory: z.string(), programUrl: z.string(), bookingUrl: z.string(), iconImageUrl: z.string(), additionalImages: z.array(z.string()), priceAmount: z.number(), priceCurrency: z.string(), grades: z.array(z.string()), isTopRated: z.boolean(), policiesUrl: z.string(), policiesText: z.string(), tagIds: z.array(z.string()), sessions: z.array(SessionInputDTOSchema) });
+export const ImportGetProgramByIdResponseDTOSchema = z.object({ id: z.string(), providerId: z.string(), locationId: z.string(), name: z.string(), description: z.string(), ourTake: z.string(), parentsLike: z.string(), keepInMind: z.string(), category: z.string(), subcategory: z.string(), programUrl: z.string(), bookingUrl: z.string(), iconImageUrl: z.string(), additionalImages: z.array(z.string()), priceAmount: z.number(), priceCurrency: z.string(), grades: z.array(z.string()), isTopRated: z.boolean(), policiesUrl: z.string(), policiesText: z.string(), tagIds: z.array(z.string()), sessions: z.array(ImportSessionInputDtoSchema) });
 export type ImportGetProgramByIdResponseDTO = z.infer<typeof ImportGetProgramByIdResponseDTOSchema>;
 
 
@@ -103,8 +132,9 @@ export type ImportGetProgramByIdResponseDTO = z.infer<typeof ImportGetProgramByI
  * @property { number } priceAmount  
  * @property { string } priceCurrency  
  * @property { string[] } grades  
+ * @property { string[] } lockedFields  
  */
-export const SessionDTOSchema = z.object({ id: z.string(), name: z.string(), description: z.string(), location: z.string(), startDate: z.string(), endDate: z.string(), timeslots: z.array(TimeslotDTOSchema), priceAmount: z.number(), priceCurrency: z.string(), grades: z.array(z.string()) });
+export const SessionDTOSchema = z.object({ id: z.string(), name: z.string(), description: z.string(), location: z.string(), startDate: z.string(), endDate: z.string(), timeslots: z.array(TimeslotDTOSchema), priceAmount: z.number(), priceCurrency: z.string(), grades: z.array(z.string()), lockedFields: z.array(z.string()).nullish() });
 export type SessionDTO = z.infer<typeof SessionDTOSchema>;
 
 
@@ -113,6 +143,7 @@ export type SessionDTO = z.infer<typeof SessionDTOSchema>;
  * @type { object }
  * @property { string } id  
  * @property { string } providerId  
+ * @property { string } providerPhone  
  * @property { string } providerName  
  * @property { string } locationName  
  * @property { string } name  
@@ -137,8 +168,27 @@ export type SessionDTO = z.infer<typeof SessionDTOSchema>;
  * @property { CommonModels.TagDTO[] } tags  
  * @property { SessionDTO[] } sessions  
  */
-export const GetProgramDetailsResponseDTOSchema = z.object({ id: z.string(), providerId: z.string(), providerName: z.string(), locationName: z.string(), name: z.string(), description: z.string(), ourTake: z.string(), parentsLike: z.string(), keepInMind: z.string(), category: z.string(), subcategory: z.string(), programUrl: z.string(), bookingUrl: z.string(), iconImageUrl: z.string(), additionalImages: z.array(z.string()), priceAmount: z.number(), priceCurrency: z.string(), grades: z.array(z.string()), isTopRated: z.boolean(), avgRating: z.number(), reviewCount: z.number(), policiesUrl: z.string(), policiesText: z.string(), tags: z.array(CommonModels.TagDTOSchema), sessions: z.array(SessionDTOSchema) });
+export const GetProgramDetailsResponseDTOSchema = z.object({ id: z.string(), providerId: z.string(), providerPhone: z.string().nullish(), providerName: z.string(), locationName: z.string(), name: z.string(), description: z.string(), ourTake: z.string(), parentsLike: z.string(), keepInMind: z.string(), category: z.string(), subcategory: z.string(), programUrl: z.string(), bookingUrl: z.string(), iconImageUrl: z.string(), additionalImages: z.array(z.string()), priceAmount: z.number(), priceCurrency: z.string(), grades: z.array(z.string()), isTopRated: z.boolean(), avgRating: z.number(), reviewCount: z.number(), policiesUrl: z.string(), policiesText: z.string(), tags: z.array(CommonModels.TagDTOSchema), sessions: z.array(SessionDTOSchema) });
 export type GetProgramDetailsResponseDTO = z.infer<typeof GetProgramDetailsResponseDTOSchema>;
+
+
+/** 
+ * SearchProgramsResponseDTOSchema 
+ * @type { object }
+ * @property { string } programId  
+ * @property { string } title  
+ * @property { string } description  
+ * @property { string } locationName  
+ * @property { string } providerName  
+ * @property { boolean } isTopRated  
+ * @property { number } priceAmount  
+ * @property { string } priceCurrency  
+ * @property { string } iconImageUrl  
+ * @property { string[] } grades  
+ * @property { CommonModels.TagDTO[] } tags  
+ */
+export const SearchProgramsResponseDTOSchema = z.object({ programId: z.string(), title: z.string(), description: z.string(), locationName: z.string(), providerName: z.string(), isTopRated: z.boolean(), priceAmount: z.number(), priceCurrency: z.string(), iconImageUrl: z.string(), grades: z.array(z.string()), tags: z.array(CommonModels.TagDTOSchema) });
+export type SearchProgramsResponseDTO = z.infer<typeof SearchProgramsResponseDTOSchema>;
 
 
 /** 
@@ -159,23 +209,6 @@ export type ProgramPaginationFilterDto = z.infer<typeof ProgramPaginationFilterD
  */
 export const ImportFindProgramByUrlResponseDTOSchema = z.object({ id: z.string(), found: z.boolean() });
 export type ImportFindProgramByUrlResponseDTO = z.infer<typeof ImportFindProgramByUrlResponseDTOSchema>;
-
-
-/** 
- * SearchProgramsResponseDTOSchema 
- * @type { object }
- * @property { string } programId  
- * @property { string } title  
- * @property { string } description  
- * @property { string } locationName  
- * @property { boolean } isTopRated  
- * @property { number } priceAmount  
- * @property { string } priceCurrency  
- * @property { string } iconImageUrl  
- * @property { string[] } grades  
- */
-export const SearchProgramsResponseDTOSchema = z.object({ programId: z.string(), title: z.string(), description: z.string(), locationName: z.string(), isTopRated: z.boolean(), priceAmount: z.number(), priceCurrency: z.string(), iconImageUrl: z.string(), grades: z.array(z.string()) });
-export type SearchProgramsResponseDTO = z.infer<typeof SearchProgramsResponseDTOSchema>;
 
 
 /** 

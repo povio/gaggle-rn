@@ -7,66 +7,22 @@ import Image from "@/components/Image";
 import Pressable from "@/components/Pressable";
 import Text from "@/components/text/Text";
 import { MockIcons } from "@/data/mock/activities";
-import { FavoriteQueries } from "@/openapi/favorite/favorite.queries";
+import type { FavoriteModels } from "@/openapi/favorite/favorite.models";
 import type { ProgramModels } from "@/openapi/program/program.models";
 import { DateUtils } from "@/utils/date.utils";
-import { RestUtils } from "@/utils/rest/rest.utils";
-import { showToast } from "@/utils/toast";
 
 import IconButton from "../buttons/IconButton";
 import PillButton from "../buttons/PillButton";
 
 interface SessionCardProps {
   data: ProgramModels.SessionInputDTO;
-  callback?: (id: string | number) => void;
+  callback: (data: FavoriteModels.UnfavoriteProgramRequestDTO) => void;
   isFavored: boolean;
   programId: string;
 }
 
 export const SessionCard = ({ data, callback, isFavored, programId }: SessionCardProps) => {
   const router = useRouter();
-
-  const unfavoriteMutation = FavoriteQueries.useUnProgram();
-  const favoriteMutation = FavoriteQueries.useProgram();
-
-  const handleFavoriteSession = (sessionId: string | undefined | null) => {
-    if (!sessionId) return;
-
-    const data = {
-      programId,
-      sessionId,
-    };
-
-    if (isFavored) {
-      unfavoriteMutation.mutate(
-        { data },
-        {
-          onSuccess: async () => {},
-          onError: (error) => {
-            const errorMessage = RestUtils.extractServerErrorMessage(error);
-            showToast({
-              variant: "error",
-              message: errorMessage || "Failed to unfollow",
-            });
-          },
-        },
-      );
-    } else {
-      favoriteMutation.mutate(
-        { data },
-        {
-          onSuccess: async () => {},
-          onError: (error) => {
-            const errorMessage = RestUtils.extractServerErrorMessage(error);
-            showToast({
-              variant: "error",
-              message: errorMessage || "Failed to save favorite",
-            });
-          },
-        },
-      );
-    }
-  };
 
   const handleCardPress = () => {
     router.push(`/program-details?id=${data.id}`);
@@ -172,7 +128,12 @@ export const SessionCard = ({ data, callback, isFavored, programId }: SessionCar
           </Box>
           <IconButton
             variant="transparent"
-            onPress={() => handleFavoriteSession(data.id)}
+            onPress={() =>
+              callback({
+                programId,
+                sessionId: data.id,
+              })
+            }
             style={styles.heartIcon}
             iconColor={isFavored ? "interactive-active" : "interactive-icon-inactive"}
             icon={
