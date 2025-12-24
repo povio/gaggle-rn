@@ -49,10 +49,7 @@ export default function Home() {
   };
 
   return (
-    <Box
-      flex={1}
-      backgroundColor="elevation-background"
-    >
+    <Box backgroundColor="elevation-background">
       <View style={styles.topElipsis} />
       <View style={styles.header}>
         <Box
@@ -72,6 +69,7 @@ export default function Home() {
               width="100%"
               justifyContent="center"
               position="relative"
+              paddingTop="1"
             >
               <Text
                 variant="variant-5-prominent"
@@ -83,7 +81,7 @@ export default function Home() {
               <Box
                 position="absolute"
                 right={20}
-                top={-15}
+                top={-8}
               >
                 <IconButton
                   variant="secondary"
@@ -104,6 +102,7 @@ export default function Home() {
               justifyContent="center"
               alignItems="center"
               position="relative"
+              marginHorizontal="20"
             >
               <Input
                 label=""
@@ -122,8 +121,8 @@ export default function Home() {
               />
               <Box
                 position="absolute"
-                right={10}
-                top={4}
+                right={20}
+                top={20}
               >
                 <IconButton
                   variant="secondary"
