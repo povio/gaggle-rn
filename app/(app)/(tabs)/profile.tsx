@@ -1,15 +1,14 @@
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import ArrowLeftIcon from "@/assets/icons/ArrowLeftIcon";
 import CogIcon from "@/assets/icons/CogIcon";
 import EditIcon from "@/assets/icons/EditIcon";
 import Box from "@/components/Box";
 import IconButton from "@/components/buttons/IconButton";
 import Image from "@/components/Image";
 import LoadingScreen from "@/components/LoadingScreen";
-import { ActivityCard } from "@/components/shared/ActivityCard";
 import type { Card } from "@/components/shared/FavoritesList";
 import { SmallProviderCard } from "@/components/shared/SmallProviderCard";
 import Text from "@/components/text/Text";
@@ -19,8 +18,9 @@ import { UserQueries } from "@/openapi/user/user.queries";
 
 const ProfilePage = () => {
   const router = useRouter();
+  const { top } = useSafeAreaInsets();
   const [data, setData] = useState<Card[] | null>(null);
-  const { user, settings } = useUserStore();
+  const { settings } = useUserStore();
 
   const { data: userData } = UserQueries.useGetMyProfile();
 
@@ -51,12 +51,11 @@ const ProfilePage = () => {
           style={styles.topElipsis}
           contentFit="contain"
         />
-        <View style={styles.header}>
+        <View style={[styles.header, { paddingTop: top }]}>
           <Box
-            flex={1}
             justifyContent="center"
             alignItems="center"
-            marginTop="10"
+            marginTop="4"
             gap="4"
           >
             <Box

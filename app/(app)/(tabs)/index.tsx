@@ -1,6 +1,7 @@
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import GroupIcon from "@/assets/icons/GroupIcon";
 import NotificationIcon from "@/assets/icons/NotificationIcon";
@@ -19,6 +20,7 @@ import { HomeQueries } from "@/openapi/home/home.queries";
 
 export default function Home() {
   const router = useRouter();
+  const { top } = useSafeAreaInsets();
   const { settings } = useUserStore();
   const [value, setValue] = useState<string>("");
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -51,7 +53,7 @@ export default function Home() {
   return (
     <Box backgroundColor="elevation-background">
       <View style={styles.topElipsis} />
-      <View style={styles.header}>
+      <View style={[styles.header, { paddingTop: top }]}>
         <Box
           flexDirection={"column"}
           width={"100%"}
@@ -61,7 +63,6 @@ export default function Home() {
             justifyContent="center"
             alignItems="center"
             marginTop="4"
-            paddingTop="10"
             gap="4"
           >
             <Box

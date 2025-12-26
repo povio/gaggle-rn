@@ -118,20 +118,18 @@ export default function SearchResults() {
     setAppliedFilters(formatedFilters as FilterValues);
     setDrawerVisible(false);
   };
+  const { clearAllFilters } = useFilterStore();
 
   const handleBack = () => {
+    clearAllFilters();
     router.push("/(app)/(tabs)");
   };
 
   return (
-    <Box
-      flex={1}
-      backgroundColor="elevation-background"
-    >
+    <View style={styles.container}>
       <View style={styles.topElipsis} />
       <View style={styles.header}>
         <Box
-          flex={1}
           justifyContent="center"
           alignItems="center"
           marginTop="10"
@@ -236,11 +234,15 @@ export default function SearchResults() {
           onCallback={handleSearch}
         />
       </ScrollView>
-    </Box>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#F8F8F8",
+  },
   header: {
     position: "relative",
     zIndex: 1,

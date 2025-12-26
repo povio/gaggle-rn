@@ -3,6 +3,7 @@ import { ArrowLeftIcon } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
 import { Controller } from "react-hook-form";
 import { ScrollView, StyleSheet, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import CloseIcon from "@/assets/icons/CloseIcon";
 import Box from "@/components/Box";
@@ -26,6 +27,7 @@ import { showToast } from "@/utils/toast";
 
 const EditProfile = () => {
   const router = useRouter();
+  const { top } = useSafeAreaInsets();
   const [stateValue, setStateValue] = useState("");
   const updateSettingsMutation = UserQueries.useUpdateMySettings();
   const { settings: userSettings } = useUserStore();
@@ -134,7 +136,7 @@ const EditProfile = () => {
   };
 
   return (
-    <ScrollView style={styles.scrollView}>
+    <ScrollView style={[styles.scrollView, { paddingTop: top }]}>
       <Box
         flex={1}
         backgroundColor="elevation-background"
@@ -146,7 +148,7 @@ const EditProfile = () => {
           justifyContent={"center"}
           alignItems={"center"}
           marginBottom="6"
-          marginTop={"10"}
+          marginTop={"4"}
           position={"relative"}
         >
           <Box
