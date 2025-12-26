@@ -1,6 +1,7 @@
 import { type ExternalPathString, type RelativePathString, useRouter } from "expo-router";
 
 import ArrowLeftIcon from "@/assets/icons/ArrowLeftIcon";
+import { useFilterStore } from "@/modules/search/stores/filterStore";
 
 import Box from "../Box";
 import IconButton from "../buttons/IconButton";
@@ -9,19 +10,20 @@ interface GoBackProps {
   url?: RelativePathString | ExternalPathString;
   left?: number;
   top?: number;
+  resetFilter?: boolean;
 }
 
-export const GoBack = ({ url, left, top }: GoBackProps) => {
+export const GoBack = ({ url, left, top, resetFilter = false }: GoBackProps) => {
   const router = useRouter();
+  const { clearAllFilters } = useFilterStore();
 
   const handleBack = () => {
-    if (url) {
-      router.push(url);
-    } else {
-      try {
-        router.back();
-      } catch {
-        router.push("/");
+    if (resetFilter) {
+      clearAllFilters();
+      if (url) {
+        router.replace(url);
+      } else {
+        router.replace("/(app)/(tabs)");
       }
     }
   };
